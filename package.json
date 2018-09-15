@@ -1,0 +1,17 @@
+{
+  "name": "nudle",
+  "version": "1.0.1",
+  "description": "Food store manager",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "rebuild": "cd node_modules/sqlite3 && npm run prepublish && echo 'chemin' pwd && node-gyp configure --module_name=node_sqlite3 --module_path=nudle/node_modules/sqlite3/lib/binding/electron-v1.4-win32-x64 && node-gyp node-gyp rebuild --target=0.36.0 --arch=x64 --target_platform=win32 --dist-url=https://atom.io/download/atom-shell --module_name=node_sqlite3 --module_path=nudle/node_modules/sqlite3/lib/binding/electron-v1.4-win32-x64 --runtime=electron"
+  },
+  "author": "Hubert Formin",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^2.0.9",
+    "jquery": "^3.3.1",
+    "sqlite3": "^4.0.2"
+  }
+}

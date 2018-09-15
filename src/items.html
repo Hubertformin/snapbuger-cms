@@ -1,0 +1,74 @@
+<div class="routePage" ng-controller="itemsCtr">
+    <div class="box">
+        <div class="header green darken-2">
+            <h2 class="white-text">
+                Categories<br><small>View and create</small>
+            </h2>
+        </div>
+        <div class="body">
+            <ul class="collapsible">
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">add</i>Create Category</div>
+                    <div class="collapsible-body">
+                        <div class="row">
+                            <form class="col s12">
+                                <div class="row">
+                                    <div class="input-field col s6">
+                                        <input id="category_name" type="text" name="Category_name" class="validate">
+                                        <label for="category_name">Category Name</label>
+                                    </div>
+                                    <div class="input-field col s6">
+                                        <select name="available" id="available">
+                                            <option value="availabel">Available</option>
+                                            <option value="unavailable">Unavailable</option>
+                                        </select>
+                                        <label for="available">Status</label>
+                                    </div>
+                                </div>
+                                <button style="float:right" class="waves-effect waves-light btn green darken-3">Add</button>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <table id="categories" class="mdl-data-table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Category name</th>
+                        <th>status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--Item box -->
+    <div class="box">
+        <div class="header lime darken-2">
+            <h2 class="white-text">
+                Create Item <br><small></small>
+            </h2>
+        </div>
+        <div class="body">
+
+
+        </div>
+    </div>
+
+
+
+    <!--Modal add modal -->
+    <div id="createModal" class="modal modal-fixed-footer">
+        <div class="modal-content">
+            <h4>Modal Header</h4>
+            <p>A bunch of text</p>
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:void(0)" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+        </div>
+    </div>
+
+</div>

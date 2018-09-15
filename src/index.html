@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nudel v1.0.1</title>
+    <link rel="stylesheet" href="css/materialize.css">
+    <link rel="stylesheet" href="css/materialicons/icone91f.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/owl.theme.default.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/dataTable.material.css">
+    <script>
+    var jQuery = require('jquery'),$ = require('jquery')
+    </script>
+    <script src="js/materialize.js"></script>
+   <script src="js/angular.min.js"></script>
+   <script src="js/angular-route.js"></script>
+   <script src="js/owl.carousel.min.js"></script>
+   <script src="js/jquery.mousewheel.min.js"></script>
+
+</head>
+<body ng-app="mainApp" ng-controller="mainCtr">
+<!-- login page-->
+ <section id="login" class="grey lighten-2">
+     <div class="center">
+         <form action="action" id="loginForm" class="z-depth-2 white">
+           <h2 class="pink-text text-accent-3 font-kaushan">SnapBurger</h2>
+            <div class="row">
+                <div class="input-field col s12">
+                  <input id="username" type="text" class="validate">
+                  <label for="username">Username</label>
+                </div>
+                <div class="input-field col s12">
+                  <input id="password" type="password" class="validate">
+                  <label for="password">Password</label>
+                </div>
+                <button class="btn waves-effect waves-light" type="submit" name="action">Login
+                    <i class="material-icons right">person</i>
+                  </button>
+            </div>
+         </form>
+     </div>
+ </section>
+  <ul id="slide-out" class="sidenav sidenav-fixed">
+    <li><div class="user-view">
+      <div class="background">
+        <img src="img/office.jpg">
+      </div>
+      <a href="#user"><img class="circle" src="img/yuna.jpg"></a>
+      <a href="#name"><span class="white-text name">Randalls Ndobs</span></a>
+      <a href="#email"><span class="white-text email">@Manager</span></a>
+    </div></li>
+    <li><a href="#/!"><i class="material-icons">dvr</i>Dashboard</a></li>
+    <li><a href="#!items"><i class="material-icons">dns</i>Products</a></li>
+    <li><a href="##"><i class="material-icons">settings</i>Settings</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="subheader">Admin</a></li>
+    <li><a href="#!"><i class="material-icons">event_note</i>Reports</a></li>
+    <li><a href="#!emp"><i class="material-icons">people</i>Employees</a></li>
+  </ul>
+  <!-- main section -->
+  <header>
+    <nav class="navbar">
+      <a href="#" class="logo-link">Nudle</a>
+      <form action="#" id="nav-form">
+        <i class="material-icons search">search</i>
+        <input type="search" autofocus name="search" id="" placeholder="Search..">
+        <div class="close-search" onclick="showSearchBar(false)">
+            <i class="material-icons">close</i>
+        </div>
+      </form>
+      <ul class="nav-list-right">
+        <li onclick="showSearchBar(true)"><a href="#"><i class="material-icons">search</i> </a></li>
+        <li><a href="#"><i class="material-icons">settings_power</i></a></li>
+        <li><a href="#"><i class="material-icons">settings</i></a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <section id="body" ng-view></section>
+  </main>
+   <script src="js/datatables.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/controller.js"></script>
+</body>
+</html>
