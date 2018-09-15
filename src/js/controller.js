@@ -84,6 +84,7 @@ app.controller("itemsCtr",($scope)=>{
     ]
     $('#categories').DataTable( {
         data:data,
+        keys: true,
         columnDefs: [
             {
                 targets: [ 0, 1, 2 ],
