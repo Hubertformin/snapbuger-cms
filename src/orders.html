@@ -1,0 +1,92 @@
+<style>span.badge.new:after {content: "";}
+    .notingtoshow{position: absolute;top:0;bottom:0;right:0;left:0;background:#fff;z-index:6}
+    .center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+</style>
+   <section class="white">
+    <div class="row">
+        <div class="col s4" style="padding-right: 0;">
+            <div class="collection" style="margin-top:0;">
+                <div class="preview" style="height: 572px;overflow-y: auto;overflow-x: hidden;">
+                    <a href="javascript:void(0)" class="collection-item list" ng-click="previewOrders($index,$event)" ng-repeat="x in orders track by $index" data-index="$index">
+                        <span ng-show="x.first" class="new badge teal">new</span>
+                        <span ng-show="x.second" class="new badge orange darken-4">In progress</span>
+                        <span ng-show="x.third" class="new badge green light-green darken-2">done</span>
+                        <span class="name teal-text darken-2">{{x.name}}</span>
+                        <p class="req">{{x.details}}</p>
+                       <p class="right-align time" style="margin:0;"><small>{{x.date}}</small></p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col s8" style="padding: 0;position:relative;">
+           <div ng-hide="hideNothingToShowOrders" class="notingtoshow">
+               <div class="center">
+                   <span class="grey-text text-lighten-1"><i class="material-icons large">visibility</i></span>
+                   <h5 style="font-family:Raleway" class="grey-text text-lighten-1">Click orders on left pane to view details.</h5>
+               </div>
+           </div>
+            <nav class="nav-extended">
+                <div class="nav-wrapper">
+                    <a href="#!" class="brand-logo">{{currentOrder.inv}}</a>
+                    <ul class="right hide-on-med-and-down">
+                        <li><a>{{currentOrder.plan}}</a></li>
+                        <li><a></a></li>
+                        <li><a>{{currentOrder.date}}</a></li>
+                    </ul>
+                </div>
+                <div class="nav-content">
+                    <span class="nav-title align-center" style="padding-left:6px;">{{currentOrder.name}}</span>
+                    <a ng-show="currentOrder.first" ng-click="processOrder('new')" class="btn-floating btn-large halfway-fab waves-effect waves-light light-blue darken-4"><i class="material-icons">add</i></a>
+                    <a ng-show="currentOrder.second" ng-click="processOrder('complete')" class="btn-floating btn-large halfway-fab waves-effect waves-light teal darken-4"><i class="material-icons">arrow_forward</i></a>
+                    <a ng-show="currentOrder.third" ng-click="processOrder('delete')" class="btn-floating btn-large halfway-fab waves-effect waves-light grey"><i class="material-icons">delete</i></a>
+                </div>
+            </nav>
+            <div class="details">
+                <div class="row">
+                    <div class="col s6">
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">phone</i> Number</h6>
+                            <p>{{currentOrder.number}}</p>
+                        </div>
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">account_box</i> Role</h6>
+                            <p>{{currentOrder.role}}</p>
+                        </div>
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">book</i> Type</h6>
+                            <p>{{currentOrder.type}}</p>
+                        </div>
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">local_shipping</i> Delivery</h6>
+                            <p>{{currentOrder.delivery}}</p>
+                        </div>
+                    </div>
+                    <div class="col s6">
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">mail</i> Email</h6>
+                            <p>{{currentOrder.email}}</p>
+                        </div>
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">navigation</i> Location</h6>
+                            <p>{{currentOrder.location}}</p>
+                        </div>
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">developer_board</i> Services</h6>
+                            <p>{{currentOrder.services}}</p>
+                        </div>
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">dns</i> Navbar items</h6>
+                            <p>{{currentOrder.nav_items}}</p>
+                        </div>
+                    </div>
+                    <div class="col s12">
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">dvr</i> Details</h6>
+                            <p>{{currentOrder.details}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,81 @@
+<style>
+    span.badge.new{background-color: purple;}.list-tittle{color:orange;}
+    span.badge.new:after {content: "";}
+</style>
+   <section class="white">
+    <div class="row">
+        <div class="col s4" style="padding-right: 0;">
+            <div class="collection" style="margin-top:0;">
+               <div class="preview" style="height: 572px;overflow-y: auto;overflow-x: hidden;">
+                <a href="javascript:void(0)" class="collection-item list" ng-repeat="x in req" ng-click="previewReq($index,$event)">
+                    <span ng-show="x.first" class="new badge teal">new</span>
+                        <span ng-show="x.second" class="new badge green darken-4">Accepted</span>
+                        <span ng-show="x.third" class="new badge red darken-2">Rejected</span>
+                    <span class="name orange-text text-darken-2">{{x.name}}</span>
+                    <p class="req">{{x.skill}}</p>
+                   <p class="right-align time" style="margin:0;"><small>{{x.date}}</small></p>
+                </a>
+                </div>
+            </div>
+        </div>
+        <div class="col s8" style="padding: 0;position:relative;">
+           <div ng-hide="hideNothingToShowReq" class="notingtoshow">
+               <div class="center">
+                   <span class="grey-text text-lighten-1"><i class="material-icons large">visibility</i></span>
+                   <h5 style="font-family:Raleway" class="grey-text text-lighten-1">Click orders on left pane to view details.</h5>
+               </div>
+           </div>
+            <nav class="nav-extended orange">
+                <div class="nav-wrapper">
+                    <a href="#!" class="brand-logo">{{currentReq.name}}</a>
+                    <ul class="right hide-on-med-and-down">
+                        <li><a></a></li>
+                        <li><a>{{x.date}}</a></li>
+                    </ul>
+                </div>
+                <div class="nav-content">
+                    <a ng-show="currentReq.first" ng-click="processReq('accept')" style="right:101px;" class="btn-floating btn-large halfway-fab waves-effect waves-light green darken-4"><i class="material-icons">done</i></a>
+                    <a ng-show="currentReq.first" ng-click="processReq('decline')" class="btn-floating btn-large halfway-fab waves-effect waves-light red darken-4"><i class="material-icons">not_interested</i></a>
+                    <a ng-show="currentReq.third" ng-click="processReq('accept')" style="right:101px;" class="btn-floating btn-large halfway-fab waves-effect waves-light green darken-4"><i class="material-icons">undo</i></a>
+                    <a ng-show="currentReq.third || currentReq.second" ng-click="processReq('delete')" class="btn-floating btn-large halfway-fab waves-effect waves-light grey"><i class="material-icons">delete</i></a>
+                </div>
+            </nav>
+            <div class="details" style="height:470px;">
+                <div class="row">
+                    <div class="col s6">
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">phone</i> Number</h6>
+                            <p>{{currentReq.num}}</p>
+                        </div>
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">account_box</i> Nickname</h6>
+                            <p>{{currentReq.nick}}</p>
+                        </div>
+                    </div>
+                    <div class="col s6">
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">email</i> Email</h6>
+                            <p>{{currentReq.email}}</p>
+                        </div>
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">navigation</i> Location</h6>
+                            <p>{{currentReq.location}}</p>
+                        </div>
+                    </div>
+                    <div class="col s12">
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">info</i> About</h6>
+                            <p>{{currentReq.about}}</p>
+                        </div>
+                    </div>
+                    <div class="col s12">
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">developer_mode</i> Skill(s)</h6>
+                            <p>{{currentReq.skill}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

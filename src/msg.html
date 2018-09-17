@@ -1,0 +1,101 @@
+<style>
+    span.badge.new {
+        background-color: #0d47a1;
+    }
+
+    .list-tittle {
+        color: #0d47a1;
+    }
+
+    div.details {
+        height: 470px;
+    }
+
+    div.details {
+        height: 470px;
+    }
+span.badge.new:after {content: "";}
+    .notingtoshow{position: absolute;top:0;bottom:0;right:0;left:0;background:#fff;z-index:6}
+    .center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+</style>
+<script>
+    var elems = document.querySelectorAll('.modal');
+    var instances = M.Modal.init(elems,{dismissible:false});
+</script>
+<section class="white">
+    <div class="row">
+        <div class="col s4" style="padding-right: 0;">
+            <div class="collection" style="margin-top:0;">
+                <div class="preview" style="height: 572px;overflow-y: auto;overflow-x: hidden;">
+                    <a href="javascript:void(0)" ng-click="previewMsg($index,$event)" class="collection-item list" ng-repeat="x in msg">
+                        <span ng-show="x.first" class="new badge blue">new</span>
+                        <span ng-show="x.second" class="new badge green">replied</span>
+                        <span class="name blue-text darken-4">{{x.name}}</span>
+                        <p class="req">{{x.msg}}</p>
+                       <p class="right-align time" style="margin:0;"><small>{{x.date}}</small></p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col s8" style="padding: 0;position:relative;">
+           <div ng-hide="hideNothingToShowMsg" class="notingtoshow">
+               <div class="center">
+                   <span class="grey-text text-lighten-1"><i class="material-icons large">visibility</i></span>
+                   <h5 style="font-family:Raleway" class="grey-text text-lighten-1">Click orders on left pane to view details.</h5>
+               </div>
+           </div>
+            <nav class="nav-extended blue darken-4">
+                <div class="nav-wrapper">
+                    <a href="#!" class="brand-logo">{{currentMsg.name}}</a>
+                    <ul class="right hide-on-med-and-down">
+                        <li><a></a></li>
+                        <li><a>{{currentMsg.date}}</a></li>
+                    </ul>
+                </div>
+                <div class="nav-content">
+                   <button data-target="modal1" class="btn-floating btn-large halfway-fab waves-effect waves-light btn modal-trigger"><i class="material-icons">reply</i></button>
+                </div>
+            </nav>
+            <div class="details">
+                <div class="row">
+                    <div class="col s6">
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">phone</i> Number</h6>
+                            <p>None</p>
+                        </div>
+                    </div>
+                    <div class="col s6">
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">email</i> Email</h6>
+                            <p>{{currentMsg.email}}</p>
+                        </div>
+                    </div>
+                    <div class="col s12">
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">bookmark</i> Subject</h6>
+                            <p>Feed Back</p>
+                        </div>
+                    </div>
+                    <div class="col s12">
+                        <div class="list-detail">
+                            <h6 class="list-tittle"><i class="material-icons">chat_bubble</i> Message</h6>
+                            <p>{{currentMsg.msg}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Modal Structure -->
+ <div id="modal1" class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <h4>Modal Header</h4>
+      <p>A bunch of text</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+    </div>
+  </div>

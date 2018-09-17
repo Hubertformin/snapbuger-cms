@@ -2,12 +2,10 @@
 ::-webkit-scrollbar {
     width: 6px;
 }
-
 /* Track */
 ::-webkit-scrollbar-track {
     background: #f1f1f1;
 }
-
 /* Handle */
 ::-webkit-scrollbar-thumb {
     background: #03725f;
@@ -95,8 +93,37 @@ nav{
         }
     }
 }
+.create-btn-default{
+    display: flex;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    line-height: 1.5;
+    padding: 1rem;
+    background-color: #fff;
+    margin:15px 0;
+    border: 1px solid #ddd;
+    box-shadow:0px 5px 5px rgba(0,0,0,0.3);
+}
+//
+.notify{
+    display: none;
+    position: fixed;
+    bottom:12%;
+    color: white;
+    text-align: center;
+    padding: 10px 25px;
+    left: 40%;
+    z-index: 1999;
+    width: 300px;
+    cursor: pointer;
+    i{
+        font-style: normal;
+        float: right;
+    }
+}
+/*route page */
 .routePage{padding:10px 14px;}
-.box {
+.box,.modal-content {
     background: #fff;
     min-height: 50px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -171,3 +198,47 @@ nav{
     background:rgba(0,0,0,0.4);
     z-index:0;
 }
+/*data Tables */
+.paginate_button{
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 15px;
+    &.next,&.previous{
+        margin: 0 10px;
+        background:#01579b;
+        color:white;
+    }
+    &.current{
+        border-radius:50%;
+        background:#1b5e20 ;
+        color: #fff;
+    }
+}
+.btn-export-pdf{
+    background:#ef6c00!important;
+    &:focus,&:active,&:hover{
+        background-color: #e65100!important;
+    }
+}
+/**/
+tbody{
+    tr{
+        cursor: pointer;
+        &:hover{
+            background:#f1f1f1;
+        }
+    }
+}
+//modals
+.modal-content{
+    padding:0!important;
+    border-radius:0!important;
+    .inner-body{
+        padding:24px;
+    }
+}
+#updateCategoryModal{
+    height: 350px!important;
+    border-radius:0!important;
+}
+

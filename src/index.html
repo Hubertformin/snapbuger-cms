@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Nudel v1.0.1</title>
+    <title>Nudle v1.0.1</title>
     <link rel="stylesheet" href="css/materialize.css">
     <link rel="stylesheet" href="css/materialicons/icone91f.css">
+    <link rel="stylesheet" href="css/animate.min.css">
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/owl.theme.default.css">
     <link rel="stylesheet" href="css/owl.carousel.min.css">
-    <link rel="stylesheet" href="dist/dataTables/datatables.css">
+    <link rel="stylesheet" href="css/dataTable.material.css">
     <link rel="stylesheet" href="dist/dataTables/Buttons-1.5.2/css/buttons.dataTables.css">
     <script>
     var jQuery = require('jquery'),$ = require('jquery')
@@ -20,9 +21,10 @@
    <script src="js/jquery.mousewheel.min.js"></script>
 
 </head>
-<body ng-app="mainApp" ng-controller="mainCtr">
+<body>
+<section ng-app="mainApp" ng-controller="mainCtr">
 <!-- login page-->
- <section id="login" class="grey lighten-2">
+ <section id="login" class="cyan lighten-2">
      <div class="center">
          <form action="action" id="loginForm" class="z-depth-2 white">
            <h2 class="pink-text text-accent-3 font-kaushan">SnapBurger</h2>
@@ -57,7 +59,7 @@
     <li><div class="divider"></div></li>
     <li><a class="subheader">Admin</a></li>
     <li><a href="#!"><i class="material-icons">event_note</i>Reports</a></li>
-    <li><a href="#!emp"><i class="material-icons">people</i>Employees</a></li>
+    <li><a href="#!emp"><i class="material-icons">people</i>Staff</a></li>
   </ul>
   <!-- main section -->
   <header>
@@ -71,7 +73,7 @@
         </div>
       </form>
       <ul class="nav-list-right">
-        <li onclick="showSearchBar(true)"><a href="#"><i class="material-icons">search</i> </a></li>
+        <li onclick="showSearchBar(true)"><a href="javascript:void(0)"><i class="material-icons">search</i> </a></li>
         <li><a href="#"><i class="material-icons">settings_power</i></a></li>
         <li><a href="#"><i class="material-icons">settings</i></a></li>
       </ul>
@@ -80,8 +82,14 @@
   <main>
     <section id="body" ng-view></section>
   </main>
+<!--  notifications-->
+<div class="notify green accent-4 waves-light" id="success"><span class="msg"></span><i class="yellow-text font-raleway">close</i></div>
+<div class="notify red accent-4 waves-light" id="error"><span class="msg"></span><i class="yellow-text font-raleway">close</i></div>
+
+<!--  -->
+    </section>
    <script src="dist/dataTables/datatables.min.js"></script>
-   <script src="dist/dataTables/Buttons-1.5.2/js/buttons.html5.min.js"></script>
+   <script src="js/sweetalert.js"></script>
     <script src="js/main.js"></script>
     <script src="js/controller.js"></script>
 </body>
