@@ -1,9 +1,8 @@
 <!--
 =================================================
 ** ISSUES TO FIX :
-    1. ng-model does not update until 'onchange'
-    2.Refresh Datable
-    3.Category with status unavailable should be disabled in other selects
+    1.ng repeat of refreshes when ng-model is changed after submit
+    1* `Try to use save databes on submit and refetch data`
 ===================================================
 -->
   <div class="routePage" ng-controller="itemsCtr">
@@ -11,7 +10,7 @@
     <div class="box">
         <div class="header green darken-2">
             <h2 class="white-text">
-                Categories<br><small>Manage categories</small>
+                Categories<br><small>Manage categories (Click to edit)</small>
             </h2>
         </div>
         <div class="body">
@@ -23,12 +22,12 @@
                             <form action="#" id="createCategoryForm" class="col s12" name="categoriesForm">
                                 <div class="row">
                                     <div class="input-field col s6">
-                                        <input data-error="Invalid Name" id="category_name" type="text" name="category_name" ng-model="category_name" class="validate">
+                                        <input data-error="Invalid Name" id="category_name" type="text" ng-model="category_name" name="category_name" class="validate">
                                         <label for="category_name">Category Name</label>
                                     </div>
                                     <div class="input-field col s6">
                                         <label style="transform: translateY(-21px);" for="category_status">Status</label>
-                                        <select class="browser-default" name="category_status" ng-model="category_status" class="validate" id="category_status">
+                                        <select class="browser-default" name="category_status"  class="validate" ng-model="category_status" id="category_status">
                                             <option value="available">Available</option>
                                             <option value="unavailable">Unavailable</option>
                                         </select>
@@ -41,16 +40,39 @@
                     </div>
                 </li>
             </ul>
-            <table id="categories" class="mdl-data-table" style="width:100%">
+            <div class="searchCategoriesTable">
+                <input type="search" name="" placeholder="Search Table.." id="">
+            </div>
+            <table id="categoriesTable" class="mdl-data-table" style="width:100%">
                 <thead>
                     <tr>
+                        <th>#</th>
                         <th>Category name</th>
                         <th>status</th>
-                        <th>Action</th>
+                        <th><i class="material-icons">build</i></th>
                     </tr>
                 </thead>
                 <tbody>
+                <tr ng-repeat="x in categories">
+                    <td>{{$index+1}}</td>
+                    <td><input ng-change="updateCategories($index)" type="text" ng-model="x.name"></td>
+                    <td>
+                       <select ng-change="updateCategories($index)" ng-model="x.status" class="browser-default">
+                            <option value="available">Available</option>
+                            <option value="unavailable">Unavailable</option>
+                        </select>
+                    </td>
+                    <td><i ng-click="deleteCategories($index)" class="material-icons">delete</i></td>
+                </tr>
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th>#</th>
+                        <th>Category name</th>
+                        <th>status</th>
+                        <th></th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
@@ -58,7 +80,7 @@
     <div class="box">
         <div class="header teal darken-2">
             <h2 class="white-text">
-                Items <br><small>Manage products</small>
+                Items <br><small>Manage products (Click to edit)</small>
             </h2>
         </div>
         <div class="body">
@@ -108,19 +130,44 @@
                 </li>
             </ul>
 
-            <table id="items" class="mdl-data-table" style="width:100%">
+            <table id="itemsTable" class="mdl-data-table" style="width:100%">
                 <thead>
                     <tr>
+                        <th>#</th>
                         <th>Item name</th>
                         <th>Rate</th>
                         <th>Category</th>
-                        <th>status</th>
-                        <th>Action</th>
+                        <th>Status</th>
+                        <th><i ng-click="deleteItems($index)" class="material-icons">build</i></th>
                     </tr>
                 </thead>
                 <tbody>
-
+                    <tr ng-repeat="x in items">
+                        <td>{{$index+1}}</td>
+                        <td><input ng-change="updateItems($index)" type="text" ng-model="x.name"></td>
+                        <td><input ng-change="updateItems($index)" type="number" ng-model="x.rate"></td>
+                        <td>
+                            <select ng-change="updateItems($index)" class="browser-default" ng-model="x.category" name="" id="">
+                                <option ng-disabled="!o.action" ng-repeat="o in categories" value="{{o.name}}">{{o.name}}</option>
+                            </select>
+                        </td>
+                        <td>
+                         <select ng-change="updateItems($index)" ng-model="x.status" class="browser-default">
+                            <option value="available">Available</option>
+                            <option value="unavailable">Unavailable</option>
+                        </select>
+                        </td>
+                        <td><i class="material-icons">delete</i></td>
+                    </tr>
                 </tbody>
+                <tfoot>
+                    <th>#</th>
+                    <th>Item name</th>
+                    <th>Rate</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th></th>
+                </tfoot>
             </table>
         </div>
     </div>
@@ -128,91 +175,5 @@
 
 
     <!--Modal: Update categories! -->
-    <div id="updateCategoryModal" class="modal modal-fixed-footer">
-      <form class="col s12">
-        <div class="modal-content">
-            <div class="header green darken-2">
-                <h2 class="white-text">
-                    Categories<br><small>Update</small>
-                </h2>
-            </div>
-            <div class="inner-body">
-                <div class="row">
-                        <div class="row">
-                            <div class="input-field col s6">
-                                <input id="updateCategory_name" ng-model="updateCategories.name" placeholder="Name" type="text">
-                            </div>
-                            <div class="input-field col s6">
-                                <label style="transform: translateY(-21px);" for="updateCategory_status">Status</label>
-                                <select ng-model="updateCategories.status" class="browser-default" name="updateCategory_status" id="updateCategory_status">
-                                   <option value="">Select Status</option>
-                                    <option value="available">Available</option>
-                                    <option value="unavailable">Unavailable</option>
-                                </select>
-                            </div>
-                        </div>
-                </div>
-
-            </div>
-        </div>
-        <div class="modal-footer">
-            <a href="javascript:void(0)" class="modal-close waves-effect waves-red btn-flat">Cancel</a>
-            <button ng-disabled="updateCategoriesBtn" id="updateCategoriesBtn" href="javascript:void(0)" class="waves-effect waves-green btn-flat green white-text">Update</button>
-        </div>
-       </form>
-    </div>
-    <!--Modal: Update Items -->
-    <div id="updateItemsModal" class="modal modal-fixed-footer">
-        <form action="#" id="updateItemsForm">
-            <div class="modal-content">
-                <div class="header teal darken-2">
-                    <h2 class="white-text">
-                        Update Items<br><small>change</small>
-                    </h2>
-                </div>
-                <div class="inner-body">
-                    <div class="row">
-                        <div class="input-field col s6">
-                            <input id="first_name" ng-model="updateItems.name" placeholder="Name" type="text" class="validate">
-                        </div>
-                        <div class="input-field col s6">
-                            <label style="transform: translateY(-21px);" for="updateItems_status">Status</label>
-                            <select ng-model="updateItems.status" class="browser-default" name="updateItems_status" id="updateItems_status">
-                                    <option value="available">Available</option>
-                                    <option value="unavailable">Unavailable</option>
-                                </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s6">
-                            <div class="row">
-                                <div class="col s2 teal darken-1" style="transform: translateY(10px);text-align: center;color:#fff;padding:6px 10px;">FCFA</div>
-                                <div class="col s10">
-                                    <div class="input-field" style="transform: translateY(-15px);">
-                                        <input id="updateItem_rate" type="number" name="item_rate" ng-model="updateItems.rate" class="validate">
-                                        <label for="updateItem_rate">Rate</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col s6">
-                            <select name="item_category" ng-model="updateItems.category" id="#" class="browser-default">
-                                <option value="" selected disabled>Select category</option>
-                                <option ng-repeat="x in categories" value="{{x.name}}" ng-disabled="!x.action">{{x.name}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col s12">
-                        <button type="button" class="waves-effect waves-default btn btn-block red darken-3">Delete</button>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <a href="javascript:void(0)" class="modal-close waves-effect waves-red btn-flat">Cancel</a>
-                <button ng-disabled="updateItemsBtn" id="updateCategoriesBtn" href="javascript:void(0)" class="waves-effect waves-green btn-flat teal white-text">Update</button>
-            </div>
-        </form>
-    </div>
-
 
 </div>

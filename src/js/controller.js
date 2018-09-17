@@ -1,5 +1,4 @@
-//Require fucntions and classes
-require('../src/js/main.js');
+
 //the notification class
 const notifications = new Alerts();
 //angular module
@@ -16,6 +15,19 @@ app.config(($routeProvider)=>{
         templateUrl:"employee.html"
     })
 })
+
+/*app.directive('PascalCase',()=>{
+    return {
+        require:'ngModel',
+        link:(scope,elem,attr,mCtr)=>{
+            function convert(val){
+               val = val[0].toUpperCase()+val.slice(1); 
+               return val;
+            }
+            mCtr.$parsers.push(convert);
+        }
+    }
+})*/
 
 app.controller("mainCtr",($scope)=>{
 
@@ -43,11 +55,11 @@ app.controller("mainCtr",($scope)=>{
         {name:"Fai Brian",position:"Manager",age:19,startDate:"2018/05/21",salary:"N/A"},
     ]
     //items
-    $scope.Gcategories = [
+    $scope.categories = [
         {name:"Food",status:"available",action:true},
         {name:"Wine",status:"unavailable",action:false}
     ]
-    $scope.items_data = [
+    $scope.items = [
         {name:"Burger",rate:2000,category:"Food",status:"available",action:"N/A"}
     ]
 })
@@ -93,167 +105,74 @@ app.controller("dashCtr",($scope)=>{
 })
 //itemsCtr
 app.controller("itemsCtr",($scope)=>{
-    $scope.categories = $scope.Gcategories;
     $scope.category_status = "available";$scope.item_status = "available";
-
-    var elems = document.querySelectorAll('.modal');
-    var instances = M.Modal.init(elems);
     //initializing collapse
     var elems = document.querySelectorAll('.collapsible');
     var instances = M.Collapsible.init(elems);
-    //initializing select
-    var elems = document.querySelectorAll('select');
-    var instances = M.FormSelect.init(elems);
     //categories table
-    var categoriesTable = jQuery('#categories').DataTable( {
-        data:$scope.categories,
-        columns:[
-            {data:"name"},
-            {data:"status"},
-            {data:"action"}
-        ],
-        columnDefs: [
-            {
-                targets: [ 0, 1, 2 ],
-                className: 'mdl-data-table__cell--non-numeric'
-            }
-        ]
-    } );
-    //row click to update or delete category tabIndex is initiallized
-    $scope.categoriesTableIndex;
-    jQuery('#categories tbody').on( 'click', 'tr', function () {
-        $scope.updateCategoriesBtn = false;
-        var instance = M.Modal.getInstance(jQuery('#updateCategoryModal'));
-        //
-        instance.open();
-        $scope.categoriesTableIndex = categoriesTable.row( this ).index()
-        $scope.updateCategories = $scope.categories[$scope.categoriesTableIndex];
-        //alert( 'Row index: '+table.row( this ).index() );
-    } );
-    //on submit
-    jQuery('#updateCategoriesBtn').on('click',()=>{
-        if($scope.updateCategories.name == ''){
-            notifications.notify({msg:"You must insert valid values!",type:"error"})
-            return false;
-        }
-        if($scope.updateCategories.status == 'available'){
-            $scope.updateCategories.action = true;
-        }else{
-            $scope.updateCategories.action = false;
-        }
-        $scope.categories[$scope.categoriesTableIndex] = $scope.updateCategories;
-        /*=====================================================================================
-        update Category database here!
-        =====================================================================================*/
-        console.log($scope.categories[$scope.categoriesTableIndex]);
-        //actions to do after datatables refresh
-        notifications.notify({msg:"Changed!",type:"success"})
-        jQuery('#categories').DataTable().draw(true);
-    })
-    //functions 1.to create category
+    //1. Create Categories
     jQuery('#createCategoryForm').on('submit',(e)=>{
         e.preventDefault();
-        if(typeof $scope.category_name !== 'string') {jQuery('.categories_error').html('Enter a name!'); return false;}
-        if(/[a-zA-Z0-9]/.test($scope.category_name) == false){ jQuery('.categories_error').html("Invalid name must contain letters or numbers!"); return false;}
-        if(typeof $scope.category_status !== 'string') {jQuery('.categories_error').html("Please select status!"); return false;}
-        jQuery('.categories_error').html('');
+        if($scope.category_name == '') return false;
         let action = true;
-        if($scope.category_status != 'available'){action = false;}
-        var newData = {name:$scope.category_name,status:$scope.category_status,action:action};
-        console.log(newData)
-        $scope.categories.push(newData);
-        //reseting form
-        document.querySelector('#createCategoryForm').reset();
-        //reseting category status variable
-        $scope.category_status = "available";
-        //showing message
-        swal("Done!", "Category Created!", "success");
-        //redrawing adding and drawing
-        jQuery('#categories').DataTable().rows.add([newData]).draw();
-        //for delete
-        //table.row( $button.parents('tr') ).remove().draw();
-
+        if($scope.category_status != "available"){
+            action = false;
+        }
+        $scope.categories.push({name:$scope.category_name,status:$scope.category_status,action:action})
+        $scope.$apply();
+        notifications.notify({msg:"Added!",type:"done"})
+        //console.log( $scope.categories);
     })
-    //Item DataTable
-    var itemsTable = jQuery('#items').DataTable( {
-        data:$scope.items_data,
-        columns:[
-            {data:'name'},
-            {data:'rate'},
-            {data:'category'},
-            {data:'status'},
-            {data:'action'},
-        ],
-        dom: 'Bfrtip',
-        buttons: [ {
-            extend: 'excelHtml5',
-            text:'Export as Excel',
-            filename:'Categories',
-            customize: function( xlsx ) {
-                var sheet = xlsx.xl.worksheets['sheet1.xml'];
-
-                jQuery('row c[r^="C"]', sheet).attr( 's', '2' );
-                }
-            },
-            {
-                extend: 'pdf',
-                filename:'Categories',
-                title:'Snap Burger',
-                className:'btn-export-pdf',
-                message:'Categories Table',
-                text: 'Export as PDF',
-                exportOptions: {
-                    modifier: {
-                        page: 'current'
-                    }
-                }
+    $scope.updateCategories = (i)=>{
+        if($scope.categories[i].status == "available"){
+            $scope.categories[i].action = true;
+        }else{
+            $scope.categories[i].action = false;
+        }
+        //console.log($scope.categories);
+    }
+    //deleting categories
+    $scope.deleteCategories = (i)=>{
+        //confirm(`Are you sure `);
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to revert this!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+                $scope.categories.splice(i,1);
+                $scope.$apply();
+              swal("Deleted!", {
+                icon: "success",
+              });
+            } else {
+              swal("Your imaginary file is safe!");
             }
-         ],
-        columnDefs: [
-            {
-                targets: [ 0, 1, 2 ],
-                className: 'mdl-data-table__cell--non-numeric'
-            }
-        ]
-    } );
-    //submit item
+          });
+    }
+    //Create Items
     jQuery('#createItemForm').on('submit',(e)=>{
         e.preventDefault();
-        if(typeof $scope.item_name !== 'string' || typeof $scope.item_status !== 'string' || typeof $scope.item_rate !== 'number' || typeof $scope.item_category !== 'string') {
-            jQuery('.item_error').html('Please fill all fields!');
-            console.log("an error!")
+        if($scope.item_name == '' || $scope.item_rate == '' || $scope.item_category == ''){
+            notifications.notify({msg:"Please fill all fields!",type:"error"});
             return false;
         }
-        let newData = {name:$scope.item_name,rate:$scope.item_rate,status:$scope.item_status,category:$scope.item_category,action:"N/A"};
-        jQuery('.item_error').html('');
-        $scope.items_data.push(newData)
-        document.querySelector('#createItemForm').reset();
-        swal("Done!", "Item Created!", "success");
-        jQuery('#items').DataTable().rows.add([newData]).draw();
-    });
-    //update items
-    $scope.itemTableIndex;
-    jQuery('#items tbody').on( 'click', 'tr', function () {
-        var instance = M.Modal.getInstance(jQuery('#updateItemsModal'));
-        //
-        instance.open();
-        $scope.itemTableIndex = itemsTable.row( this ).index()
-        $scope.updateItems = $scope.items_data[$scope.itemTableIndex];
-        //alert( 'Row index: '+table.row( this ).index() );
-    } );
-    jQuery('#updateItemsForm').on('submit',(e)=>{
-        e.preventDefault();
-        if($scope.updateItems.name == "" || $scope.updateItems.rate == ""){
-            Alerts.notify({msg:"No empty fields!",type:"error"})
-            return false;
-        }
-        $scope.items_data[$scope.itemTableIndex] = $scope.updateItems;
-        /*====================================================================
-        Update Items here
-        =====================================================================*/
-        notifications.notify({msg:"Done!",type:"success"})
-        console.log($scope.items_data)
+        $scope.items.push({name:$scope.item_name,rate:$scope.item_rate,category:$scope.item_category,status:$scope.item_status})
+        $scope.$apply();
+        //reseting variables
+        $scope.item_name = '';
+        //nitifications
+        notifications.notify({msg:"Added!",type:"done"})
     })
+    //update Itemms
+    $scope.updateItems = (i)=>{
+        //console.log($scope.items);
+    }
+    //delet
+
 })
 app.controller("staffCtr",($scope)=>{
     var elems = document.querySelectorAll('select');

@@ -55,5 +55,7 @@ class Alerts{
         }
     }
 }
-
-module.exports = {Alerts}
+function searchTable(e,table){
+    var value = e.target.value;
+    var table = document.get
+}
