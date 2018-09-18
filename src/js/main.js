@@ -55,7 +55,22 @@ class Alerts{
         }
     }
 }
-function searchTable(e,table){
-    var value = e.target.value;
-    var table = document.get
+function searchTable(e,tb){
+    var value = e.target.value.toLowerCase();
+    var table = document.querySelector(tb);
+    var tr = table.querySelectorAll('tbody tr');
+    console.log(tr);
+    tr.forEach(elem => {
+        console.log(elem)
+        var td = elem.querySelectorAll('td');
+        td.forEach((item,i) =>{
+            var input = item.querySelectorAll('input')
+            if(i)
+            if(input.value.toLowerCase().indexOf(value)>-1){
+                item.display = 'none';
+            }else{
+                item.display = 'block';
+            }
+        })
+    })
 }
