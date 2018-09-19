@@ -72,3 +72,38 @@ function searchTable(e,tb){
     });
     
 }
+function formatDate(string = ''){
+    date = new Date();
+    var day,month,year;
+    if(string != ''){
+        date = new Date(string);
+    }
+    day = date.getDate();
+    month = date.getMonth()+1;
+    year = date.getFullYear();
+    if(day<10){
+        day = `0${day}`
+    }
+    if(month<10){
+        month = `0${month}`
+    }
+    return `${day}/${month}/${year}`;
+}
+function searchOrderItems(e){
+    var val = jQuery(e.target).val(),items = jQuery('#orderItems .item');
+    val = val.toLowerCase();
+    items.each((i,el)=>{
+        jQuery(el).hide()
+        item_name = jQuery(el).children('div.header').children('dl').children('dt.item-name').html().toLowerCase()
+        item_category = jQuery(el).children('div.header').children('dl').children('dd.item-category').html().toLowerCase()
+        item_status = jQuery(el).children('div.header').children('dl').children('dd.item-status').html().toLowerCase()
+        //search..
+        if(item_name.indexOf(val)> -1){
+            jQuery(el).show();
+        }else if(item_category.indexOf(val)> -1){
+            jQuery(el).show();
+        }else if(item_status.indexOf(val)> -1){
+            jQuery(el).show();
+        }
+    })
+}

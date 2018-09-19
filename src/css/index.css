@@ -10,6 +10,11 @@
 ::-webkit-scrollbar-thumb {
   background: #999; }
 
+hr {
+  border-color: #ddd;
+  margin-top: 5px;
+  margin-bottom: 30px; }
+
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #004d40; }
@@ -41,12 +46,14 @@
 
 body {
   position: relative;
+  overflow-y: scroll;
   background-size: cover;
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat; }
 
-main, header {
+main,
+header {
   position: relative;
   width: calc(100%-250px);
   margin-left: 250px; }
@@ -67,7 +74,7 @@ nav {
     right: 0;
     bottom: 0;
     right: 0;
-    background-color: white;
+    background-color: #f1f1f1;
     -webkit-box-shadow: 0px 5px 26px rgba(0, 0, 0, 0.12);
     box-shadow: 0px 5px 26px rgba(0, 0, 0, 0.12); }
     nav form input {
@@ -82,8 +89,8 @@ nav {
       left: 20px; }
       nav form input:focus {
         border: none !important;
-        -webkit-box-shadow: 0 1px 0 0 #fff !important;
-        box-shadow: 0 1px 0 0 #fff !important; }
+        -webkit-box-shadow: 0 1px 0 0 transparent !important;
+        box-shadow: 0 1px 0 0 transparent !important; }
     nav form i.material-icons {
       display: inline-block !important;
       color: #999 !important;
@@ -170,24 +177,24 @@ nav {
     color: #555;
     padding: 20px; }
 
-.collapsible-header {
+#dashboard .collapsible-header {
   background: #fff;
   padding: 0px !important;
   -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   position: relative;
   border-radius: 2px; }
-  .collapsible-header .header {
+  #dashboard .collapsible-header .header {
     width: 100%;
     color: #555;
     padding: 20px;
     position: relative;
     border-bottom: 1px solid rgba(204, 204, 204, 0.35); }
-    .collapsible-header .header h2 {
+    #dashboard .collapsible-header .header h2 {
       margin: 0;
       font-size: 18px;
       font-weight: normal; }
-    .collapsible-header .header .btn-large {
+    #dashboard .collapsible-header .header .btn-large {
       position: absolute;
       top: 10px;
       right: 6px; }
@@ -298,3 +305,74 @@ table.huberts-tables tbody tr {
 
 table.huberts-tables tfoot {
   border-top: 2px solid #000; }
+
+.datepicker-date-display {
+  display: none !important; }
+
+.datepicker-modal {
+  max-width: 500px !important; }
+  .datepicker-modal .datepicker-controls,
+  .datepicker-modal .datepicker-footer {
+    width: 100% !important; }
+  .datepicker-modal .datepicker-controls .select-month input {
+    width: 100px !important; }
+
+.searchBox {
+  margin-top: 0;
+  margin-bottom: 10px; }
+  .searchBox i {
+    -webkit-transform: translateY(40px);
+    -ms-transform: translateY(40px);
+    transform: translateY(40px);
+    color: #999; }
+  .searchBox input {
+    border: none;
+    border-bottom: 1px solid #999;
+    padding: 10px;
+    padding-left: 26px;
+    width: 100%; }
+    .searchBox input:focus {
+      border-color: #2196f3; }
+
+.scrollContainer {
+  border: 1px solid #ddd;
+  height: 250px;
+  overflow-x: hidden;
+  white-space: nowrap; }
+  .scrollContainer .item {
+    display: inline-block;
+    width: 220px;
+    margin: 10px 7px;
+    border: 1px solid #ddd;
+    height: 225px; }
+    .scrollContainer .item .header {
+      padding: 5px 10px;
+      color: #fff; }
+      .scrollContainer .item .header dt {
+        font-size: 1.6rem; }
+    .scrollContainer .item .body .inputDiv {
+      margin: 10px 5px; }
+      .scrollContainer .item .body .inputDiv::after {
+        content: '';
+        clear: both;
+        display: table; }
+      .scrollContainer .item .body .inputDiv input {
+        height: 37.3px;
+        width: 70%;
+        float: left;
+        text-align: center;
+        border: 1px solid #ddd; }
+      .scrollContainer .item .body .inputDiv .btns {
+        height: 37.3px;
+        outline: none;
+        border: 1px solid #ddd;
+        cursor: pointer;
+        width: 15%;
+        float: left;
+        padding: 5px; }
+        .scrollContainer .item .body .inputDiv .btns:focus {
+          background: #ddd; }
+    .scrollContainer .item .body button {
+      display: block;
+      width: 80%;
+      margin: auto; }

@@ -294,15 +294,43 @@ app.controller("mainCtr", ($scope) => {
 app.controller("dashCtr", ($scope) => {
     var elems = document.querySelectorAll('.collapsible');
     var instances = M.Collapsible.init(elems);
-    /*jQuery('#owlFood').on('mousewheel', '.owl-stage', function (e) {
+    var instance = M.Collapsible.getInstance(jQuery('#OrderCollapse'));
+    instance.open()
+    //datepicker
+     let currentDate = new Date();
+    var thisYear = currentDate.getFullYear();
+    var elems = document.querySelectorAll('.datepicker');
+    var instances = M.Datepicker.init(elems, {
+        format: 'dd/mm/yyyy',
+        minDate: currentDate,
+        defaultDate: currentDate,
+        yearRange: [thisYear, thisYear + 2]
+    });
+    //input current date into date picker input by default
+    jQuery('#orderDate').val(formatDate());
+    jQuery('.scrollContainer').on('mousewheel', function (e) {
         if (e.deltaY < 0) {
-            jQuery(this).trigger('next.owl');
+            jQuery(this).scrollLeft(jQuery(this).scrollLeft()+40);
         } else {
-            jQuery(this).trigger('prev.owl');
+            jQuery(this).scrollLeft(jQuery(this).scrollLeft()-40);
         }
         e.preventDefault();
     });
-    jQuery('#owlDrinks').on('mousewheel', '.owl-stage', function (e) {
+    //add order numbers
+    $scope.addOrderNumber = (e,i)=>{
+        if(jQuery(e.target).is('i')){
+            var val = Number(jQuery(e.target).parent().siblings('input').val());
+            if(val == 1 && i < 0) return false;
+            //console.log(val +i)
+            //console.log(num) 
+            jQuery(e.target).parent().siblings('input').val(val+i);
+        }else{
+            var val = Number(jQuery(e.target).siblings('input').val())
+            if(val == 1 && i < 0) return false;
+                jQuery(e.target).siblings('input').val(val + i);
+        }
+    }
+    /*jQuery('#owlDrinks').on('mousewheel', '.owl-stage', function (e) {
         if (e.deltaY < 0) {
             jQuery(this).trigger('next.owl');
         } else {

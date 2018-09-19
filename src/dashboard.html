@@ -1,4 +1,4 @@
-<div class="routePage" ng-controller="dashCtr">
+<div id="dashboard" class="routePage" ng-controller="dashCtr">
     <!--<div class="header cyan">
         <h2 class="white-text">
             Create new order <br><small>choose Items below.</small>
@@ -7,10 +7,10 @@
     </div>
     <div class="body">
 -->
-    <ul class="collapsible">
+    <ul id="OrderCollapse" class="collapsible">
         <li>
             <div class="collapsible-header">
-                <div class="header blue darken-4">
+                <div class="header blue">
                     <h2 class="white-text">
                         Create new order <br><small>click to create.</small>
                     </h2>
@@ -21,14 +21,45 @@
                     <form class="col s12">
                         <div class="row">
                             <div class="input-field col s6">
-                                <i class="material-icons prefix">account_circle</i>
+                                <i class="material-icons prefix">person</i>
                                 <input id="orderName" type="text" class="validate">
                                 <label for="orderName">Name</label>
                             </div>
                             <div class="input-field col s6">
                                 <i class="material-icons prefix">date_range</i>
-                                <input id="icon_telephone" value="19/09/2018" type="date" class="validate">
-                                <label class="active" for="icon_telephone">Order Date</label>
+                                <input id="orderDate" type="text" class="datepicker">
+                                <label class="active" for="orderDate">Order Date</label>
+                            </div>
+                        </div>
+                        <small>Select Items</small>
+                        <hr>
+                        <div class="row">
+                           <div class="col s12">
+                                <div class="searchBox input-field col s4 offset-s8">
+                                <i class="material-icons">search</i>
+                                <input onkeyup="searchOrderItems(event)" placeholder="Search.." class="browser-default" id="search" type="search">
+                            </div>
+                           </div>
+                            <div id="orderItems" class="col s12 scrollContainer">
+                                <div ng-repeat="x in items" class="item z-depth-2">
+                                    <div class="header cyan darken-4">
+                                        <dl>
+                                          <dt class="item-name">{{x.name}}</dt>
+                                          <dd class="item-category">{{x.category}}</dd>
+                                          <dd class="item-status">{{x.status}}</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="body">
+                                        <div class="inputDiv">
+                                            <button ng-disabled="!x.action" class="browser-default btns" ng-click="addOrderNumber($event,-1)"><i class="material-icons">remove</i></button>
+                                            <input ng-disabled="!x.action" min="1" value="1" class="browser-default" type="number">
+                                            <button ng-disabled="!x.action" class="btns" ng-click="addOrderNumber($event,1)"><i class="material-icons">add</i></button>
+                                        </div>
+                                        <button ng-disabled="!x.action" class="green btn waves-effect waves-light" type="submit">
+                                            <i class="material-icons">add_shopping_cart</i>
+                                      </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>
