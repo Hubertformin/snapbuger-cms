@@ -8,7 +8,7 @@
 }
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #03725f;
+    background: #999;
 }
 
 /* Handle on hover */
@@ -17,10 +17,13 @@
 }
 #login{
     display: none;
+    img{
+        width:150px;height:auto;
+    }
     position: fixed;
     background:#fff;
     top: 0;left: 0;right: 0;bottom: 0;
-    z-index: 9999;
+    z-index: 2999;
     form{
         width: 400px;
         padding: 40px 20px;
@@ -43,13 +46,16 @@ main,header{
     margin-left:250px;
 }
 nav{
-    position: relative;
+    position:fixed;
+    top: 0;
+    z-index: 2;
     padding-left: 15px;
     .logo-link{
-        color:#fff!important;
+        color:#999!important;
     }
     form{
         display: none;
+        z-index: 22;
         padding:10px 20px;
         position: absolute;
         left: 0;right: 0;bottom:0;right: 0;
@@ -84,12 +90,21 @@ nav{
             position: absolute;
             top: 0;
             cursor: pointer;
-            right: 26px;
+            left: 75%;
+            i{
+                font-size: -webkit-xxx-large;
+            }
         }
     }
     ul{
         &.nav-list-right{
-            float:right;
+            a{
+                color: #999!important;
+            }
+            position: absolute;
+            top: 0;
+            left: 69%;
+            color: #999 !important;
         }
     }
 }
@@ -108,12 +123,12 @@ nav{
 .notify{
     display: none;
     position: fixed;
-    bottom:12%;
+    bottom:5%;
     color: white;
     text-align: center;
     padding: 10px 25px;
     left: 40%;
-    z-index: 1999;
+    z-index: 3999;
     width: 300px;
     cursor: pointer;
     i{
@@ -122,8 +137,9 @@ nav{
     }
 }
 /*route page */
-.routePage{padding:10px 14px;}
-.box,.modal-content {
+.routePage{
+    margin-top: 70px; padding:10px 14px;}
+.box {
     background: #fff;
     min-height: 50px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -151,6 +167,31 @@ nav{
         padding: 20px;
     }
 }
+//collapseible
+.collapsible-header{
+    background: #fff;
+    padding: 0px!important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    border-radius: 2px;
+    .header {
+        width:100%;
+        color: #555;
+        padding: 20px;
+        position: relative;
+        border-bottom: 1px solid rgba(204, 204, 204, 0.35);
+        h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: normal;
+        }
+        .btn-large{
+            position: absolute;
+            top:10px;right: 6px;
+        }
+    }
+}
+//block btns
 .btn-block{
     display: block;
     width: 100%;
@@ -226,27 +267,36 @@ nav{
     background: #ddd!important;
 }
 /**/
-.searchCategoriesTable{
-    width: 40%;
-    float: right;
+.searchTable {
+    input{
+        width: 40%!important;
+        float: right!important;
+    }
 }
-table{
+table.huberts-tables{
     input{
         border:none!important;
         margin:0px!important;
         padding-left: 5px!important;
-        width: 60%!important;
+        &:not(.date){
+            //width: 60%!important;
+        }
         &:focus{
             background: #fff!important;
             box-shadow:0px 0px 0px white !important;
         }
     }
     select{
+        cursor: pointer;
         height: 35px!important;
     }
-    thead th{
-        &:hover{
+    thead {
+        border-bottom: 2px solid #000;
+        th{
+            cursor:default;
+            &:focus{
             background:#ddd;
+            }
         }
     }
     tbody{
@@ -260,17 +310,10 @@ table{
             }
         }
     }
-}
-//modals
-.modal-content{
-    padding:0!important;
-    border-radius:0!important;
-    .inner-body{
-        padding:24px;
+    tfoot{
+        border-top: 2px solid #000;
     }
 }
-#updateCategoryModal{
-    height: 350px!important;
-    border-radius:0!important;
-}
+//modals
+
 

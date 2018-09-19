@@ -8,7 +8,7 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #03725f; }
+  background: #999; }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
@@ -22,7 +22,10 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 9999; }
+  z-index: 2999; }
+  #login img {
+    width: 150px;
+    height: auto; }
   #login form {
     width: 400px;
     padding: 40px 20px; }
@@ -49,12 +52,15 @@ main, header {
   margin-left: 250px; }
 
 nav {
-  position: relative;
+  position: fixed;
+  top: 0;
+  z-index: 2;
   padding-left: 15px; }
   nav .logo-link {
-    color: #fff !important; }
+    color: #999 !important; }
   nav form {
     display: none;
+    z-index: 22;
     padding: 10px 20px;
     position: absolute;
     left: 0;
@@ -93,9 +99,16 @@ nav {
       position: absolute;
       top: 0;
       cursor: pointer;
-      right: 26px; }
+      left: 75%; }
+      nav form .close-search i {
+        font-size: -webkit-xxx-large; }
   nav ul.nav-list-right {
-    float: right; }
+    position: absolute;
+    top: 0;
+    left: 69%;
+    color: #999 !important; }
+    nav ul.nav-list-right a {
+      color: #999 !important; }
 
 .create-btn-default {
   display: -webkit-box;
@@ -114,12 +127,12 @@ nav {
 .notify {
   display: none;
   position: fixed;
-  bottom: 12%;
+  bottom: 5%;
   color: white;
   text-align: center;
   padding: 10px 25px;
   left: 40%;
-  z-index: 1999;
+  z-index: 3999;
   width: 300px;
   cursor: pointer; }
   .notify i {
@@ -128,9 +141,10 @@ nav {
 
 /*route page */
 .routePage {
+  margin-top: 70px;
   padding: 10px 14px; }
 
-.box, .modal-content {
+.box {
   background: #fff;
   min-height: 50px;
   -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -138,23 +152,45 @@ nav {
   position: relative;
   margin-bottom: 30px;
   border-radius: 2px; }
-  .box .header, .modal-content .header {
+  .box .header {
     color: #555;
     padding: 20px;
     position: relative;
     border-bottom: 1px solid rgba(204, 204, 204, 0.35); }
-    .box .header h2, .modal-content .header h2 {
+    .box .header h2 {
       margin: 0;
       font-size: 18px;
       font-weight: normal; }
-    .box .header .btn-large, .modal-content .header .btn-large {
+    .box .header .btn-large {
       position: absolute;
       top: 10px;
       right: 6px; }
-  .box .body, .modal-content .body {
+  .box .body {
     font-size: 14px;
     color: #555;
     padding: 20px; }
+
+.collapsible-header {
+  background: #fff;
+  padding: 0px !important;
+  -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+  border-radius: 2px; }
+  .collapsible-header .header {
+    width: 100%;
+    color: #555;
+    padding: 20px;
+    position: relative;
+    border-bottom: 1px solid rgba(204, 204, 204, 0.35); }
+    .collapsible-header .header h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: normal; }
+    .collapsible-header .header .btn-large {
+      position: absolute;
+      top: 10px;
+      right: 6px; }
 
 .btn-block {
   display: block;
@@ -229,39 +265,36 @@ nav {
   background: #ddd !important; }
 
 /**/
-.searchCategoriesTable {
-  width: 40%;
-  float: right; }
+.searchTable input {
+  width: 40% !important;
+  float: right !important; }
 
-table input {
+table.huberts-tables input {
   border: none !important;
   margin: 0px !important;
-  padding-left: 5px !important;
-  width: 60% !important; }
-  table input:focus {
+  padding-left: 5px !important; }
+  table.huberts-tables input:focus {
     background: #fff !important;
     -webkit-box-shadow: 0px 0px 0px white !important;
     box-shadow: 0px 0px 0px white !important; }
 
-table select {
+table.huberts-tables select {
+  cursor: pointer;
   height: 35px !important; }
 
-table thead th:hover {
-  background: #ddd; }
+table.huberts-tables thead {
+  border-bottom: 2px solid #000; }
+  table.huberts-tables thead th {
+    cursor: default; }
+    table.huberts-tables thead th:focus {
+      background: #ddd; }
 
-table tbody tr {
+table.huberts-tables tbody tr {
   cursor: pointer; }
-  table tbody tr:hover {
+  table.huberts-tables tbody tr:hover {
     background: #f1f1f1; }
-  table tbody tr td {
+  table.huberts-tables tbody tr td {
     padding: 9px 5px !important; }
 
-.modal-content {
-  padding: 0 !important;
-  border-radius: 0 !important; }
-  .modal-content .inner-body {
-    padding: 24px; }
-
-#updateCategoryModal {
-  height: 350px !important;
-  border-radius: 0 !important; }
+table.huberts-tables tfoot {
+  border-top: 2px solid #000; }

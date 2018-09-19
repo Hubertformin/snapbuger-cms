@@ -12,6 +12,7 @@
   "dependencies": {
     "electron": "^2.0.9",
     "jquery": "^3.3.1",
-    "sqlite3": "^4.0.2"
+    "sqlite3": "^4.0.2",
+    "tableexport": "^5.0.2"
   }
 }

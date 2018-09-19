@@ -1,5 +1,5 @@
 M.AutoInit();
-jQuery('#loginForm').on('submit',(e)=>{
+/*jQuery('#loginForm').on('submit',(e)=>{
     e.preventDefault();
     jQuery('#loginForm').waitMe({
         effect : 'win8',
@@ -15,7 +15,7 @@ jQuery('#loginForm').on('submit',(e)=>{
             jQuery('#login').fadeOut()
         }
         });
-})
+})*/
 function showSearchBar(type){
     if(type){
         jQuery('#nav-form').slideDown();
@@ -56,21 +56,19 @@ class Alerts{
     }
 }
 function searchTable(e,tb){
-    var value = e.target.value.toLowerCase();
-    var table = document.querySelector(tb);
-    var tr = table.querySelectorAll('tbody tr');
-    console.log(tr);
-    tr.forEach(elem => {
-        console.log(elem)
-        var td = elem.querySelectorAll('td');
-        td.forEach((item,i) =>{
-            var input = item.querySelectorAll('input')
-            if(i)
-            if(input.value.toLowerCase().indexOf(value)>-1){
-                item.display = 'none';
-            }else{
-                item.display = 'block';
-            }
-        })
-    })
+    var i,j,td,input,
+    value = e.target.value.toLowerCase(),
+    table = document.querySelector(tb),
+    tr = table.querySelectorAll('tbody tr');
+    tr.forEach((element,index) => {
+        td = element.querySelectorAll('td')[1];
+        input = td.getElementsByTagName('input')[0].value.toLowerCase();
+        if(input.indexOf(value)>-1){
+            element.style.display = "";
+        }else{
+            element.style.display = "none";
+        }
+       
+    });
+    
 }

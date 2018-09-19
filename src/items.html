@@ -7,14 +7,14 @@
 -->
   <div class="routePage" ng-controller="itemsCtr">
    <!--Categories box -->
-    <div class="box">
-        <div class="header green darken-2">
+    <div class="box collapsible">
+        <div class="collapsible-header header green darken-2">
             <h2 class="white-text">
                 Categories<br><small>Manage categories (Click to edit)</small>
             </h2>
         </div>
         <div class="body">
-            <ul class="collapsible">
+            <ul ng-show="currentUser.is_mgr" class="collapsible">
                 <li>
                     <div class="collapsible-header"><i class="material-icons">add</i>Create Category</div>
                     <div class="collapsible-body">
@@ -40,29 +40,30 @@
                     </div>
                 </li>
             </ul>
-            <div class="searchCategoriesTable">
-                <input type="search" onkeypress="searchTable(event,'#categoriesTable')" name="" placeholder="Search Table.." id="">
+            <div class="searchTable">
+               <span><strong>Total items: {{categories.length}}</strong></span>
+                <input type="search" onkeyup="searchTable(event,'#categoriesTable')" name="" placeholder="Search Table.." id="">
             </div>
-            <table id="categoriesTable" class="mdl-data-table" style="width:100%">
+            <table id="categoriesTable" class="huberts-tables mdl-data-table" style="width:100%">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Category name</th>
                         <th>status</th>
-                        <th><i class="material-icons">build</i></th>
+                        <th ng-show="currentUser.is_mgr"><i class="material-icons">build</i></th>
                     </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="x in categories">
                     <td>{{$index+1}}</td>
-                    <td><input ng-change="updateCategories($index)" type="text" ng-model="x.name"></td>
+                    <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateCategories($index)" type="text" ng-model="x.name"></td>
                     <td>
-                       <select ng-change="updateCategories($index)" ng-model="x.status" class="browser-default">
+                       <select ng-disabled="!currentUser.is_mgr" ng-change="updateCategories($index)" ng-model="x.status" class="browser-default">
                             <option value="available">Available</option>
                             <option value="unavailable">Unavailable</option>
                         </select>
                     </td>
-                    <td><i ng-click="deleteCategories($index)" class="material-icons">delete</i></td>
+                    <td ng-show="currentUser.is_mgr"><i ng-click="deleteCategories($index)" class="material-icons">delete</i></td>
                 </tr>
                 </tbody>
                 <tfoot>
@@ -70,12 +71,12 @@
                         <th>#</th>
                         <th>Category name</th>
                         <th>status</th>
-                        <th></th>
+                        <th ng-show="currentUser.is_mgr"></th>
                     </tr>
                 </tfoot>
             </table>
         </div>
-    </div>
+      </div>
     <!--Item box -->
     <div class="box">
         <div class="header teal darken-2">
@@ -84,7 +85,7 @@
             </h2>
         </div>
         <div class="body">
-            <ul class="collapsible">
+            <ul ng-show="currentUser.is_mgr" class="collapsible">
                 <li>
                     <div class="collapsible-header"><i class="material-icons">add</i>Create Item</div>
                     <div class="collapsible-body">
@@ -106,7 +107,7 @@
                                 <div class="row">
                                     <div class="col s6">
                                         <div class="row">
-                                            <div class="col s2 teal darken-1" style="transform: translateY(10px);text-align: center;color:#fff;padding:6px 10px;">FCFA</div>
+                                            <div class="col s2 teal darken-1" style="transform: translateY(10px);text-align: center;color:#fff;padding:6px 10px;">XAF</div>
                                             <div class="col s10">
                                                 <div class="input-field" style="transform: translateY(-15px);">
                                                     <input data-error="Invalid Rate" id="item_rate" type="number" name="item_rate" ng-model="item_rate" class="validate">
@@ -129,35 +130,38 @@
                     </div>
                 </li>
             </ul>
-
-            <table id="itemsTable" class="mdl-data-table" style="width:100%">
+            <div class="searchTable">
+               <span><strong>Total items: {{items.length}}</strong></span>
+                <input type="search" onkeyup="searchTable(event,'#itemsTable')" name="" placeholder="Search Table.." id="">
+            </div>
+            <table id="itemsTable" class="huberts-tables mdl-data-table" style="width:100%">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Item name</th>
-                        <th>Rate</th>
+                        <th>Rate(XAF)</th>
                         <th>Category</th>
                         <th>Status</th>
-                        <th><i ng-click="deleteItems($index)" class="material-icons">build</i></th>
+                        <th ng-show="currentUser.is_mgr"><i class="material-icons">build</i></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="x in items">
                         <td>{{$index+1}}</td>
-                        <td><input ng-change="updateItems($index)" type="text" ng-model="x.name"></td>
-                        <td><input ng-change="updateItems($index)" type="number" ng-model="x.rate"></td>
+                        <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" type="text" ng-model="x.name"></td>
+                        <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" type="number" ng-model="x.rate"></td>
                         <td>
-                            <select ng-change="updateItems($index)" class="browser-default" ng-model="x.category" name="" id="">
+                            <select ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" class="browser-default" ng-model="x.category" name="" id="">
                                 <option ng-disabled="!o.action" ng-repeat="o in categories" value="{{o.name}}">{{o.name}}</option>
                             </select>
                         </td>
                         <td>
-                         <select ng-change="updateItems($index)" ng-model="x.status" class="browser-default">
+                         <select ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" ng-model="x.status" class="browser-default">
                             <option value="available">Available</option>
                             <option value="unavailable">Unavailable</option>
                         </select>
                         </td>
-                        <td><i class="material-icons">delete</i></td>
+                        <td ng-show="currentUser.is_mgr"><i ng-click="deleteItems($index)" class="material-icons">delete</i></td>
                     </tr>
                 </tbody>
                 <tfoot>
@@ -166,7 +170,7 @@
                     <th>Rate</th>
                     <th>Category</th>
                     <th>Status</th>
-                    <th></th>
+                    <th ng-show="currentUser.is_mgr"></th>
                 </tfoot>
             </table>
         </div>
