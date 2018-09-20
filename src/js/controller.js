@@ -37,8 +37,9 @@ app.config(($routeProvider) => {
 app.controller("mainCtr", ($scope) => {
 
     //All data
-    //items
-    $scope.categories = [
+    $scope.products = {
+        tableNumber:10,
+        categories:[
         {
             name: "Food",
             status: "available",
@@ -59,8 +60,8 @@ app.controller("mainCtr", ($scope) => {
             status: "available",
             action: false
         }
-]
-    $scope.items = [
+        ],    
+        items:[
         {
             name: "Burger",
             rate: 2000,
@@ -139,7 +140,8 @@ app.controller("mainCtr", ($scope) => {
             action: true
         }
 ]
-    //users,staff
+    }    
+//users,staff
     $scope.staffs = [];
     $scope.managers = [];
     $scope.users = [
@@ -295,6 +297,7 @@ app.controller("mainCtr", ($scope) => {
     $scope.currentOrder = {
         name:'',
         date:'',
+        table:1,
         items:[],
         totalPrice:0,
         totalQuantity:0
@@ -326,7 +329,7 @@ app.controller("dashCtr", ($scope) => {
         }
         e.preventDefault();
     });
-    //add order numbers
+    //add order numbers buttons
     $scope.addOrderNumber = (e,i)=>{
         if(jQuery(e.target).is('i')){
             var val = Number(jQuery(e.target).parent().siblings('input').val());
@@ -340,14 +343,6 @@ app.controller("dashCtr", ($scope) => {
                 jQuery(e.target).siblings('input').val(val + i);
         }
     }
-    /*jQuery('#owlDrinks').on('mousewheel', '.owl-stage', function (e) {
-        if (e.deltaY < 0) {
-            jQuery(this).trigger('next.owl');
-        } else {
-            jQuery(this).trigger('prev.owl');
-        }
-        e.preventDefault();
-    });*/
 
 
 })
@@ -367,7 +362,7 @@ app.controller("itemsCtr", ($scope) => {
         if ($scope.category_status != "available") {
             action = false;
         }
-        $scope.categories.push({
+        $scope.products.categories.push({
             name: $scope.category_name,
             status: $scope.category_status,
             action: action
@@ -377,16 +372,16 @@ app.controller("itemsCtr", ($scope) => {
             msg: "Added!",
             type: "done"
         })
-        //console.log( $scope.categories);
+        //console.log( $scope.products.categories);
     })
     //update categories
     $scope.updateCategories = (i) => {
-        if ($scope.categories[i].status == "available") {
-            $scope.categories[i].action = true;
+        if ($scope.products.categories[i].status == "available") {
+            $scope.products.categories[i].action = true;
         } else {
-            $scope.categories[i].action = false;
-            $scope.items.forEach(elems=>{
-                if(elems.category == $scope.categories[i].name){
+            $scope.products.categories[i].action = false;
+            $scope.products.items.forEach(elems=>{
+                if(elems.category == $scope.products.categories[i].name){
                     elems.action = false;
                     elems.status = 'unavailable';
                 }else{
@@ -395,7 +390,7 @@ app.controller("itemsCtr", ($scope) => {
                 }
             })
         }
-        //console.log($scope.categories);
+        //console.log($scope.products.categories);
     }
     //deleting categories
     $scope.deleteCategories = (i) => {
@@ -409,7 +404,7 @@ app.controller("itemsCtr", ($scope) => {
             })
             .then((willDelete) => {
                 if (willDelete) {
-                    $scope.categories.splice(i, 1);
+                    $scope.products.categories.splice(i, 1);
                     $scope.$apply();
                     swal("Deleted!", {
                         icon: "success",
@@ -429,7 +424,7 @@ app.controller("itemsCtr", ($scope) => {
             });
             return false;
         }
-        $scope.items.push({
+        $scope.products.items.push({
             name: $scope.item_name,
             rate: $scope.item_rate,
             category: $scope.item_category,
@@ -446,12 +441,12 @@ app.controller("itemsCtr", ($scope) => {
     })
     //update Itemms
     $scope.updateItems = (i) => {
-        $scope.items[i].action = true;
-        if ($scope.items[i].status !== 'available') {
+        $scope.products.items[i].action = true;
+        if ($scope.products.items[i].status !== 'available') {
 
-            $scope.items[i].action = false;
+            $scope.products.items[i].action = false;
         }
-        //console.log($scope.items[i]);
+        //console.log($scope.products.items[i]);
     }
     //delete Items
     $scope.deleteItems = (i) => {
@@ -465,7 +460,7 @@ app.controller("itemsCtr", ($scope) => {
             })
             .then((willDelete) => {
                 if (willDelete) {
-                    $scope.items.splice(i, 1);
+                    $scope.products.items.splice(i, 1);
                     $scope.$apply();
                     swal("Deleted!", {
                         icon: "success",

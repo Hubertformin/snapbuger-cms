@@ -26,7 +26,14 @@
 hr {
     border-color: #ddd;
     margin-top: 5px;
-    margin-bottom: 30px;
+    margin-bottom: 9px;
+}
+select{
+    &.prefixed{
+        margin-left: 3rem;
+        width: 92%;
+        width: calc(100% - 3rem)
+    }
 }
 
 #login {
@@ -195,6 +202,7 @@ nav {
         h2 {
             margin: 0;
             font-size: 18px;
+            display: inline-block;
             font-weight: normal;
         }
         .btn-large {
@@ -293,32 +301,6 @@ nav {
 
 /*data Tables */
 
-.paginate_button {
-    cursor: pointer;
-    padding: 5px 10px;
-    border-radius: 15px;
-    &.next,
-    &.previous {
-        margin: 0 10px;
-        background: #01579b;
-        color: white;
-    }
-    &.current {
-        border-radius: 50%;
-        background: #1b5e20;
-        color: #fff;
-    }
-}
-
-.btn-export-pdf {
-    background: #ef6c00!important;
-    &:focus,
-    &:active,
-    &:hover {
-        background-color: #e65100!important;
-    }
-}
-
 /**/
 
 .swal-button--cancel:focus {
@@ -389,7 +371,7 @@ table.huberts-tables {
         input {
             width: 100%;
             padding: 10px;
-            border:1px solid #ddd;
+            border: 1px solid #ddd;
             border-radius: 24px
         }
     }
@@ -441,15 +423,26 @@ table.huberts-tables {
 }
 
 //Dash board!
+.collapsible-body {
+    .row {
+        margin-bottom: 0px!important;
+        .col {
+            margin-bottom: 0px!important;
+        }
+    }
+}
+
 .searchBox {
     margin-top: 0;
     margin-bottom: 10px;
     i {
-        transform: translateY(40px);
+        transform: translateY(20px);
         color: #999;
     }
     input {
+        transform: translateY(-20px);
         border: none;
+        background: none;
         border-bottom: 1px solid #999;
         padding: 10px;
         padding-left: 26px;
@@ -462,7 +455,8 @@ table.huberts-tables {
 
 .scrollContainer {
     border: 1px solid #ddd;
-    height: 300px;
+    height: 280px;
+    margin: 10px;
     overflow-x: hidden;
     white-space: nowrap;
     .item {

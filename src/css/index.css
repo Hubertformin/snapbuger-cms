@@ -17,7 +17,12 @@
 hr {
   border-color: #ddd;
   margin-top: 5px;
-  margin-bottom: 30px; }
+  margin-bottom: 9px; }
+
+select.prefixed {
+  margin-left: 3rem;
+  width: 92%;
+  width: calc(100% - 3rem); }
 
 #login {
   display: none;
@@ -167,6 +172,7 @@ nav {
     .box .header h2 {
       margin: 0;
       font-size: 18px;
+      display: inline-block;
       font-weight: normal; }
     .box .header .btn-large {
       position: absolute;
@@ -247,24 +253,6 @@ nav {
   z-index: 0; }
 
 /*data Tables */
-.paginate_button {
-  cursor: pointer;
-  padding: 5px 10px;
-  border-radius: 15px; }
-  .paginate_button.next, .paginate_button.previous {
-    margin: 0 10px;
-    background: #01579b;
-    color: white; }
-  .paginate_button.current {
-    border-radius: 50%;
-    background: #1b5e20;
-    color: #fff; }
-
-.btn-export-pdf {
-  background: #ef6c00 !important; }
-  .btn-export-pdf:focus, .btn-export-pdf:active, .btn-export-pdf:hover {
-    background-color: #e65100 !important; }
-
 /**/
 .swal-button--cancel:focus {
   -webkit-box-shadow: 0 0 0 1px #fff !important;
@@ -350,16 +338,25 @@ table.huberts-tables tfoot {
   .datepicker-modal .datepicker-controls .select-month input {
     width: 100px !important; }
 
+.collapsible-body .row {
+  margin-bottom: 0px !important; }
+  .collapsible-body .row .col {
+    margin-bottom: 0px !important; }
+
 .searchBox {
   margin-top: 0;
   margin-bottom: 10px; }
   .searchBox i {
-    -webkit-transform: translateY(40px);
-    -ms-transform: translateY(40px);
-    transform: translateY(40px);
+    -webkit-transform: translateY(20px);
+    -ms-transform: translateY(20px);
+    transform: translateY(20px);
     color: #999; }
   .searchBox input {
+    -webkit-transform: translateY(-20px);
+    -ms-transform: translateY(-20px);
+    transform: translateY(-20px);
     border: none;
+    background: none;
     border-bottom: 1px solid #999;
     padding: 10px;
     padding-left: 26px;
@@ -369,7 +366,8 @@ table.huberts-tables tfoot {
 
 .scrollContainer {
   border: 1px solid #ddd;
-  height: 300px;
+  height: 280px;
+  margin: 10px;
   overflow-x: hidden;
   white-space: nowrap; }
   .scrollContainer .item {
