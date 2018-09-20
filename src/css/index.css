@@ -8,11 +8,16 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #03725f; }
+  background: #999; }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #004d40; }
+
+hr {
+  border-color: #ddd;
+  margin-top: 5px;
+  margin-bottom: 30px; }
 
 #login {
   display: none;
@@ -22,7 +27,10 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 9999; }
+  z-index: 2999; }
+  #login img {
+    width: 150px;
+    height: auto; }
   #login form {
     width: 400px;
     padding: 40px 20px; }
@@ -38,30 +46,35 @@
 
 body {
   position: relative;
+  overflow-y: scroll;
   background-size: cover;
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat; }
 
-main, header {
+main,
+header {
   position: relative;
   width: calc(100%-250px);
   margin-left: 250px; }
 
 nav {
-  position: relative;
+  position: fixed;
+  top: 0;
+  z-index: 2;
   padding-left: 15px; }
   nav .logo-link {
-    color: #fff !important; }
+    color: #999 !important; }
   nav form {
     display: none;
+    z-index: 22;
     padding: 10px 20px;
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
     right: 0;
-    background-color: white;
+    background-color: #f1f1f1;
     -webkit-box-shadow: 0px 5px 26px rgba(0, 0, 0, 0.12);
     box-shadow: 0px 5px 26px rgba(0, 0, 0, 0.12); }
     nav form input {
@@ -76,8 +89,8 @@ nav {
       left: 20px; }
       nav form input:focus {
         border: none !important;
-        -webkit-box-shadow: 0 1px 0 0 #fff !important;
-        box-shadow: 0 1px 0 0 #fff !important; }
+        -webkit-box-shadow: 0 1px 0 0 transparent !important;
+        box-shadow: 0 1px 0 0 transparent !important; }
     nav form i.material-icons {
       display: inline-block !important;
       color: #999 !important;
@@ -93,9 +106,16 @@ nav {
       position: absolute;
       top: 0;
       cursor: pointer;
-      right: 26px; }
+      left: 75%; }
+      nav form .close-search i {
+        font-size: -webkit-xxx-large; }
   nav ul.nav-list-right {
-    float: right; }
+    position: absolute;
+    top: 0;
+    left: 69%;
+    color: #999 !important; }
+    nav ul.nav-list-right a {
+      color: #999 !important; }
 
 .create-btn-default {
   display: -webkit-box;
@@ -114,12 +134,12 @@ nav {
 .notify {
   display: none;
   position: fixed;
-  bottom: 12%;
+  bottom: 5%;
   color: white;
   text-align: center;
   padding: 10px 25px;
   left: 40%;
-  z-index: 1999;
+  z-index: 3999;
   width: 300px;
   cursor: pointer; }
   .notify i {
@@ -128,9 +148,10 @@ nav {
 
 /*route page */
 .routePage {
+  margin-top: 70px;
   padding: 10px 14px; }
 
-.box, .modal-content {
+.box {
   background: #fff;
   min-height: 50px;
   -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -138,23 +159,45 @@ nav {
   position: relative;
   margin-bottom: 30px;
   border-radius: 2px; }
-  .box .header, .modal-content .header {
+  .box .header {
     color: #555;
     padding: 20px;
     position: relative;
     border-bottom: 1px solid rgba(204, 204, 204, 0.35); }
-    .box .header h2, .modal-content .header h2 {
+    .box .header h2 {
       margin: 0;
       font-size: 18px;
       font-weight: normal; }
-    .box .header .btn-large, .modal-content .header .btn-large {
+    .box .header .btn-large {
       position: absolute;
       top: 10px;
       right: 6px; }
-  .box .body, .modal-content .body {
+  .box .body {
     font-size: 14px;
     color: #555;
     padding: 20px; }
+
+#dashboard .collapsible-header {
+  background: #fff;
+  padding: 0px !important;
+  -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+  border-radius: 2px; }
+  #dashboard .collapsible-header .header {
+    width: 100%;
+    color: #555;
+    padding: 20px;
+    position: relative;
+    border-bottom: 1px solid rgba(204, 204, 204, 0.35); }
+    #dashboard .collapsible-header .header h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: normal; }
+    #dashboard .collapsible-header .header .btn-large {
+      position: absolute;
+      top: 10px;
+      right: 6px; }
 
 .btn-block {
   display: block;
@@ -223,17 +266,148 @@ nav {
     background-color: #e65100 !important; }
 
 /**/
-tbody tr {
+.swal-button--cancel:focus {
+  -webkit-box-shadow: 0 0 0 1px #fff !important;
+  box-shadow: 0 0 0 1px #fff !important;
+  background: #ddd !important; }
+
+/**/
+.searchTable input {
+  width: 40% !important;
+  float: right !important; }
+
+table.huberts-tables input {
+  border: none !important;
+  margin: 0px !important;
+  padding-left: 5px !important; }
+  table.huberts-tables input:focus {
+    background: #fff !important;
+    -webkit-box-shadow: 0px 0px 0px white !important;
+    box-shadow: 0px 0px 0px white !important; }
+
+table.huberts-tables select {
+  cursor: pointer;
+  height: 35px !important; }
+
+table.huberts-tables thead {
+  border-bottom: 2px solid #000; }
+  table.huberts-tables thead th {
+    cursor: default; }
+    table.huberts-tables thead th:focus {
+      background: #ddd; }
+
+table.huberts-tables tbody tr {
   cursor: pointer; }
-  tbody tr:hover {
+  table.huberts-tables tbody tr:hover {
     background: #f1f1f1; }
+  table.huberts-tables tbody tr td {
+    padding: 9px 5px !important; }
 
-.modal-content {
-  padding: 0 !important;
-  border-radius: 0 !important; }
-  .modal-content .inner-body {
-    padding: 24px; }
+table.huberts-tables tfoot {
+  border-top: 2px solid #000; }
 
-#updateCategoryModal {
-  height: 350px !important;
-  border-radius: 0 !important; }
+#promptPasword {
+  width: 420px;
+  -webkit-transform: translateY(45%) !important;
+  -ms-transform: translateY(45%) !important;
+  transform: translateY(45%) !important; }
+  #promptPasword .modal-content {
+    text-align: center; }
+    #promptPasword .modal-content h4 {
+      font-size: 2rem; }
+    #promptPasword .modal-content input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 24px; }
+
+#viewSelectedORders {
+  width: 65%; }
+  #viewSelectedORders .modal-content {
+    background-color: #fff;
+    padding: 0; }
+    #viewSelectedORders .modal-content .box {
+      margin: 0; }
+    #viewSelectedORders .modal-content .body {
+      height: 100%;
+      padding: 0; }
+      #viewSelectedORders .modal-content .body div.table-view {
+        height: 312.1px;
+        overflow-y: scroll; }
+      #viewSelectedORders .modal-content .body table i {
+        cursor: pointer; }
+      #viewSelectedORders .modal-content .body table tfoot th {
+        text-align: center; }
+
+.datepicker-date-display {
+  display: none !important; }
+
+.datepicker-modal {
+  max-width: 500px !important; }
+  .datepicker-modal .datepicker-controls,
+  .datepicker-modal .datepicker-footer {
+    width: 100% !important; }
+  .datepicker-modal .datepicker-controls .select-month input {
+    width: 100px !important; }
+
+.searchBox {
+  margin-top: 0;
+  margin-bottom: 10px; }
+  .searchBox i {
+    -webkit-transform: translateY(40px);
+    -ms-transform: translateY(40px);
+    transform: translateY(40px);
+    color: #999; }
+  .searchBox input {
+    border: none;
+    border-bottom: 1px solid #999;
+    padding: 10px;
+    padding-left: 26px;
+    width: 100%; }
+    .searchBox input:focus {
+      border-color: #2196f3; }
+
+.scrollContainer {
+  border: 1px solid #ddd;
+  height: 300px;
+  overflow-x: hidden;
+  white-space: nowrap; }
+  .scrollContainer .item {
+    display: inline-block;
+    width: 220px;
+    margin: 10px 7px;
+    border: 1px solid #ddd;
+    height: 250px; }
+    .scrollContainer .item .header {
+      padding: 5px 10px;
+      color: #fff; }
+      .scrollContainer .item .header dt {
+        font-size: 1.6rem; }
+    .scrollContainer .item .body .inputDiv {
+      margin: 10px 5px; }
+      .scrollContainer .item .body .inputDiv::after {
+        content: '';
+        clear: both;
+        display: table; }
+      .scrollContainer .item .body .inputDiv input {
+        height: 37.3px;
+        width: 70%;
+        float: left;
+        text-align: center;
+        border: 1px solid #ddd; }
+      .scrollContainer .item .body .inputDiv .btns {
+        height: 37.3px;
+        outline: none;
+        border: 1px solid #ddd;
+        cursor: pointer;
+        width: 15%;
+        float: left;
+        padding: 5px; }
+        .scrollContainer .item .body .inputDiv .btns:focus {
+          background: #ddd; }
+    .scrollContainer .item .body button {
+      display: block;
+      width: 80%;
+      margin: auto; }
+      .scrollContainer .item .body button[type="submit"] {
+        background-color: #2e7d32; }

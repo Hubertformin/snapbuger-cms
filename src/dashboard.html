@@ -1,116 +1,141 @@
-<div class="routePage" ng-controller="dashCtr">
-    <div class="box">
-        <div class="header cyan">
-            <h2 class="white-text">
-                Create new order <br><small>choose Items below.</small>
-            </h2>
-            <button disabled class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></button>
-        </div>
-        <div class="body">
-            <div class="row">
-                <form class="col s12">
-                    <div class="row">
-                        <div class="input-field col s6">
-                            <input id="first_name" type="text" class="validate">
-                            <label for="first_name">First Name</label>
+<div id="dashboard" class="routePage" ng-controller="dashCtr">
+    <!--<div class="header cyan">
+        <h2 class="white-text">
+            Create new order <br><small>choose Items below.</small>
+        </h2>
+        <button disabled class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></button>
+    </div>
+    <div class="body">
+-->
+    <ul id="OrderCollapse" class="collapsible">
+        <li>
+            <div class="collapsible-header">
+                <div class="header cyan darken-4">
+                    <h2 class="white-text">
+                        Create new order <br><small>click to create.</small>
+                    </h2>
+                </div>
+            </div>
+            <div class="collapsible-body">
+                <div class="row">
+                    <form class="col s12">
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">person</i>
+                                <input id="orderName" type="text" class="validate">
+                                <label for="orderName">Name</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">date_range</i>
+                                <input id="orderDate" type="text" class="datepicker">
+                                <label class="active" for="orderDate">Order Date</label>
+                            </div>
                         </div>
-                        <div class="input-field col s6">
-                            <input id="last_name" type="tel" class="validate">
-                            <label for="last_name">Phone</label>
-                        </div>
-                        <!--Select-->
-                        <div class="input-field col s12">
-                            <select>
-                              <option value="" disabled selected>Select Table Number</option>
-                              <option value="1">Table 1</option>
-                              <option value="2">Table 2</option>
-                              <option value="3">Table 3</option>
-                            </select>
+                        <small>Select Items</small>
+                        <hr>
+                        <div class="row">
+                            <div class="col s12">
+                                <div class="col s8 selected-items">
+                                    <button data-target="viewSelectedORders" ng-disabled="currentOrder.items.length == 0" class="btn waves-effect waves-default orange modal-trigger">Selected items({{currentOrder.items.length}})</button>
+                                </div>
+                                <div class="searchBox input-field col s4">
+                                    <i class="material-icons">search</i>
+                                    <input onkeyup="searchOrderItems(event)" placeholder="Search.." class="browser-default" id="search" type="search">
+                                </div>
+                            </div>
+                            <div id="orderItems" class="col s12 scrollContainer">
+                                <div ng-repeat="x in items" class="item z-depth-2">
+                                    <div class="header cyan darken-4">
+                                        <dl>
+                                            <dt class="item-name">{{x.name}}</dt>
+                                            <dd class="item-category">{{x.category}}</dd>
+                                            <dd class="item-status">{{x.status}}</dd>
+                                            <dd class="item-price">{{x.rate | currency : "XAF ":0}}</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="body">
+                                        <div class="inputDiv">
+                                            <button ng-disabled="!x.action" class="browser-default btns" ng-click="addOrderNumber($event,-1)"><i class="material-icons">remove</i></button>
+                                            <input ng-disabled="!x.action" min="1" value="1" class="browser-default" type="number">
+                                            <button ng-disabled="!x.action" class="btns" ng-click="addOrderNumber($event,1)"><i class="material-icons">add</i></button>
+                                        </div>
+                                        <button data-clicked="false" ng-click="addOrder($event,$index)" ng-disabled="!x.action" class="btn waves-effect waves-light" type="submit">
+                                            Add
+                                      </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col s12">
-                            <span class="food-items">Food</span>
-                            <div class="owl-carousel owl-theme" id="owlDrinks">
-                                <!--<div class="item" style="background-image:url(img/food/specials.jpg)">
-                                    <div class="dark-wrapper"></div>
-                                    <h4 class="card-title">King Burger</h4>
-                                    <input type="number" min="1" value="1">
-                                    <p class="waves-effect waves-light btn btn-block">Add</p>
-                                </div>-->
-                                <div class="item">
-                                    <div class="list" style="background-image:url(img/food/specials.jpg)">
-                                    <div class="dark-wrapper"></div>
-                                    <h4 class="card-title">King Burger</h4>
-                                    <input type="number" min="1" value="1">
-                                    <p class="waves-effect waves-light btn btn-block">Add</p>
-                                </div>
-                                </div>
-                                <div class="item">
-                                    <h4>2</h4>
-                                </div>
-                                <div class="item">
-                                    <h4>3</h4>
-                                </div>
-                                <div class="item">
-                                    <h4>4</h4>
-                                </div>
-                                <div class="item">
-                                    <h4>5</h4>
-                                </div>
-                                <div class="item">
-                                    <h4>6</h4>
-                                </div>
-                                <div class="item">
-                                    <h4>7</h4>
-                                </div>
-                                <div class="item">
-                                    <h4>8</h4>
-                                </div>
-                                <div class="item">
-                                    <h4>9</h4>
-                                </div>
-                                <div class="item">
-                                    <h4>10</h4>
-                                </div>
-                                <div class="item">
-                                    <h4>11</h4>
-                                </div>
-                                <div class="item">
-                                    <h4>12</h4>
-                                </div>
-                            </div>
+                           <div class="col s4 offset-s8">
+                               <button class="btn waves-effect waves-light">Complete</button>
+                           </div>
                         </div>
-                        <!--<div class="col s12">
-                            <span class="food-items">Drinks</span>
-                            <div class="owl-carousel owl-theme" id="owlFood">
-                                <div class="item" style="background-image:url(img/drinks/baileys.jpg)">
-                                    <div class="dark-wrapper"></div>
-                                    <h4 class="card-title">Baileys</h4>
-                                    <input type="number" min="1" value="1">
-                                    <p class="waves-effect waves-light btn btn-block">Add</p>
-                                </div>
-                                <div class="item" style="background-image:url(img/drinks/cocktail.jpg)">
-                                    <div class="dark-wrapper"></div>
-                                    <h4 class="card-title">Cocktail</h4>
-                                    <input type="number" min="1" value="1">
-                                    <p class="waves-effect waves-light btn btn-block">Add</p>
-                                </div>
-                                <div class="item" style="background-image:url(img/drinks/lemonade.jpg)">
-                                    <div class="dark-wrapper"></div>
-                                    <h4 class="card-title">Lemonade</h4>
-                                    <input type="number" min="1" value="1">
-                                    <p class="waves-effect waves-light btn btn-block">Add</p>
-                                </div>
-                                <div class="item" style="background-image:url(img/drinks/whisk.jpg)">
-                                    <div class="dark-wrapper"></div>
-                                    <h4 class="card-title">Whisky</h4>
-                                    <input type="number" min="1" value="1">
-                                    <p class="waves-effect waves-light btn btn-block">Add</p>
-                                </div>
-                            </div>
-                        </div>-->
-                    </div>
-                </form>
+                    </form>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <!--End of main page-->
+</div>
+<!--Modals-->
+<div id="viewSelectedORders" class="modal modal-fixed-footer">
+    <div class="modal-content">
+        <div class="box">
+            <div class="header orange darken-2">
+                <h2 class="white-text">
+                    Selected Items ({{currentOrder.items.length}})
+                </h2>
+            </div>
+            <div class="body">
+                <!--
+                <table class="striped highlight centered">
+                    <thead>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th><i class="material-icons">build</i></th>
+                    </thead>
+                </table>
+                -->
+                 <div class="table-view">
+                   <table class="centered">
+                       <thead>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th><i class="material-icons">build</i></th>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="x in currentOrder.items">
+                            <td>{{$index+1}}</td>
+                            <td>{{x.name}}</td>
+                            <td>{{x.quantity}}</td>
+                            <td>{{x.category}}</td>
+                            <td>{{x.rate}}</td>
+                            <td><i ng-click="deleteSelectedItem($index)" class="material-icons">delete</i></td>
+                        </tr>
+                    </tbody>
+                    </table>
+                 </div>
+                   <table class="centered">
+                    <tfoot>
+                        <th>Total:</th>
+                        <th></th>
+                        <th>{{currentOrder.totalQuantity}}</th>
+                        <th></th>
+                        <th>{{currentOrder.totalPrice | currency : "XAF ":0}}</th>
+                        <th></th>
+                    </tfoot>
+                </table>
             </div>
         </div>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-close waves-effect waves-orange btn-flat">close</a>
     </div>
 </div>

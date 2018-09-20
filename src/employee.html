@@ -1,10 +1,4 @@
-<style>
-    select{display:block!important;width:150px;}
-    .dataTables_length,.dataTables_filter{
-    display: inline-block;
-    width:50%;
-}
-</style>
+
 <div class="routePage" ng-controller="staffCtr">
     <div class="box">
         <div class="header grey darken-2">
@@ -13,60 +7,116 @@
             </h2>
         </div>
         <div class="body">
-            <table id="staff" datatable="ng" dt-options="dtOptions" class="mdl-data-table" style="width:100%">
+            <ul class="collapsible">
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">person_add</i>Create Staff</div>
+                    <div class="collapsible-body">
+                        <form action="#" id="createStaffsForm">
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input id="name" type="text" ng-model="staff_name" class="validate">
+                                    <label for="name">Name</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input id="password" type="text" ng-model="staff_password"  class="validate">
+                                    <label for="position">Password</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input id="position" type="text" ng-model="staff_position"  class="validate">
+                                    <label for="position">Position</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input id="startDate" type="text" ng-model="today" class="datepicker">
+                                    <label for="startDate">Start Date</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input id="salary" type="text" ng-model="staff_salary"  class="validate">
+                                    <label for="salary">Salary</label>
+                                </div>
+                                <div class="col s12">
+                                    <button type="submit" class="align-right waves-effect waves-green btn teal">Add</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+            <table id="staff" datatable="ng" dt-options="dtOptions" class="huberts-tables mdl-data-table" style="width:100%">
                 <thead>
                     <tr>
                         <th>Name</th>
                         <th>Position</th>
-                        <th>Age</th>
                         <th>Start Date</th>
-                        <th>Salary</th>
+                        <th>Salary(XAF)</th>
+                        <th>Status</th>
+                        <th><i class="material-icons">build</i></th>
                     </tr>
                 </thead>
                 <tbody>
+                    <tr ng-repeat="x in staffs">
+                        <td><input ng-change="updateStaffs($index)" type="text" ng-model="x.name"></td>
+                        <td><input ng-change="updateStaffs($index)" type="text" ng-model="x.position"></td>
+                        <td><input ng-change="updateStaffs($index)" type="text" ng-model="x.startDate" class="datepicker"></td>
+                        <td><input ng-change="updateStaffs($index)" type="text" ng-model="x.salary"></td>
+                        <td>
+                            <select ng-change="updateStaffs($index)" ng-change="updateStaffs($index)" class="browser-default" ng-model="x.status">
+                            <option value="active">Active</option>
+                            <option value="suspend">Suspend</option>
+                        </select>
+                        </td>
+                        <td><i ng-click="deleteStaffs($index)" class="material-icons">delete</i></td>
+                    </tr>
                 </tbody>
                 <tfoot>
                     <tr>
                         <th>Name</th>
                         <th>Position</th>
-                        <th>Age</th>
                         <th>Start date</th>
                         <th>Salary</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </tfoot>
             </table>
         </div>
     </div>
     <div class="box">
-        <div class="header teal darken-4">
+        <div class="header red darken-4">
             <h2 class="white-text">
                 Managers<br><small>All managers.</small>
             </h2>
         </div>
         <div class="body">
-            <table id="managers" class="mdl-data-table" style="width:100%">
+            <table id="managers" class="huberts-tables mdl-data-table" style="width:100%">
                 <thead>
                     <tr>
                         <th>Name</th>
                         <th>Position</th>
-                        <th>Age</th>
                         <th>Start date</th>
                         <th>Salary</th>
+                        <th><i class="material-icons">build</i></th>
                     </tr>
                 </thead>
                 <tbody>
-
+                    <tr ng-repeat="x in managers">
+                        <td><input type="text" ng-model="x.name"></td>
+                        <td><input readonly type="text" ng-model="x.position"></td>
+                        <td><input class="date" type="text" ng-model="x.startDate"></td>
+                        <td><input type="text" ng-model="x.salary"></td>
+                        <td><i ng-click="deleteManagers($index)" class="material-icons">delete</i></td>
+                    </tr>
                 </tbody>
                 <tfoot>
                     <tr>
                         <th>Name</th>
                         <th>Position</th>
-                        <th>Age</th>
                         <th>Start date</th>
                         <th>Salary</th>
+                        <th></th>
                     </tr>
                 </tfoot>
             </table>
         </div>
     </div>
 </div>
+<!--Create user modal -->
