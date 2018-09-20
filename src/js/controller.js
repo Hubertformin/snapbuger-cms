@@ -290,6 +290,16 @@ app.controller("mainCtr", ($scope) => {
             });
     }
     //=======================================================================================================================
+
+    //Orders
+    $scope.currentOrder = {
+        name:'',
+        date:'',
+        items:[],
+        totalPrice:0,
+        totalQuantity:0
+    }
+
 })
 app.controller("dashCtr", ($scope) => {
     var elems = document.querySelectorAll('.collapsible');
@@ -528,9 +538,11 @@ app.controller("staffCtr", ($scope) => {
     }
     //delete staffs
     $scope.deleteStaffs = (i) => {
-        $scope.staffs.splice(i, 1);
-        //re initializing users
-        $scope.users = $scope.staffs.concat($scope.managers)
-        //$scope.$apply()
+        if(confirm(`Are you sure you want to delete '${$scope.staffs[i].name}'?`)){
+            $scope.staffs.splice(i, 1);
+            //re initializing users
+            $scope.users = $scope.staffs.concat($scope.managers)
+            //$scope.$apply()
+        }
     }
 })

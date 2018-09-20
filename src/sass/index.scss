@@ -16,16 +16,17 @@
     background: #999;
 }
 
-hr {
-    border-color: #ddd;
-    margin-top: 5px;
-    margin-bottom: 30px;
-}
 
 /* Handle on hover */
 
 ::-webkit-scrollbar-thumb:hover {
     background: #004d40;
+}
+
+hr {
+    border-color: #ddd;
+    margin-top: 5px;
+    margin-bottom: 30px;
 }
 
 #login {
@@ -377,6 +378,52 @@ table.huberts-tables {
 }
 
 //modals
+#promptPasword {
+    width: 420px;
+    transform: translateY(45%)!important;
+    .modal-content {
+        text-align: center;
+        h4 {
+            font-size: 2rem;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border:1px solid #ddd;
+            border-radius: 24px
+        }
+    }
+}
+
+#viewSelectedORders {
+    width: 65%;
+    .modal-content {
+        background-color: #fff;
+        .box {
+            margin: 0;
+        }
+        padding:0;
+        .body {
+            height: 100%;
+            padding: 0;
+            div.table-view {
+                height: 312.1px;
+                overflow-y: scroll;
+            }
+            table {
+                i {
+                    cursor: pointer;
+                }
+                tfoot {
+                    th {
+                        text-align: center;
+                    }
+                }
+            }
+        }
+    }
+}
+
 //datepickers
 .datepicker-date-display {
     display: none!important;
@@ -394,27 +441,28 @@ table.huberts-tables {
 }
 
 //Dash board!
-.searchBox{
+.searchBox {
     margin-top: 0;
     margin-bottom: 10px;
-    i{
-         transform: translateY(40px);
+    i {
+        transform: translateY(40px);
         color: #999;
     }
-    input{
+    input {
         border: none;
-        border-bottom:1px solid #999;
-        padding:10px;
+        border-bottom: 1px solid #999;
+        padding: 10px;
         padding-left: 26px;
         width: 100%;
-        &:focus{
+        &:focus {
             border-color: #2196f3;
         }
     }
 }
+
 .scrollContainer {
     border: 1px solid #ddd;
-    height: 250px;
+    height: 300px;
     overflow-x: hidden;
     white-space: nowrap;
     .item {
@@ -422,7 +470,7 @@ table.huberts-tables {
         width: 220px;
         margin: 10px 7px;
         border: 1px solid #ddd;
-        height: 225px;
+        height: 250px;
         .header {
             padding: 5px 10px;
             color: #fff;
@@ -432,22 +480,22 @@ table.huberts-tables {
         }
         .body {
             .inputDiv {
-                margin:10px 5px;
-                &::after{
+                margin: 10px 5px;
+                &::after {
                     content: '';
                     clear: both;
                     display: table;
                 }
                 input {
-                    height:37.3px;
+                    height: 37.3px;
                     width: 70%;
                     float: left;
                     text-align: center;
                     border: 1px solid #ddd;
                 }
                 .btns {
-                    &:focus{
-                        background:#ddd;
+                    &:focus {
+                        background: #ddd;
                     }
                     height: 37.3px;
                     outline: none;
@@ -458,7 +506,10 @@ table.huberts-tables {
                     padding: 5px;
                 }
             }
-            button{
+            button {
+                &[type="submit"] {
+                    background-color: #2e7d32;
+                }
                 display: block;
                 width: 80%;
                 margin: auto;

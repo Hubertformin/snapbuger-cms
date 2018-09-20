@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>SnapBurger CMS</title>
@@ -10,86 +11,108 @@
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="dist/dataTables/Buttons-1.5.2/css/buttons.dataTables.css">
     <script>
-    var jQuery = require('jquery'),$ = require('jquery')
+        var jQuery = require('jquery'),
+            $ = require('jquery')
+
     </script>
     <script src="js/materialize.js"></script>
-   <script src="js/angular.min.js"></script>
-   <script src="js/angular-route.js"></script>
-   <script src="js/jquery.mousewheel.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-route.js"></script>
+    <script src="js/jquery.mousewheel.min.js"></script>
 </head>
+
 <body>
-<section ng-app="mainApp" ng-controller="mainCtr">
-<!-- login page-->
- <section id="login" class="red lighten-1">
-     <div class="center">
-         <form action="action" id="loginForm" class="z-depth-2 white">
-           <img src="img/logo.png" alt="">
-            <div class="row">
-                <div class="input-field col s12">
-                  <input id="username" type="text" ng-model="usernameInput" class="validate">
-                  <label for="username">Username</label>
-                </div>
-                <div class="input-field col s12">
-                  <input id="password" type="password" ng-model="passwordInput" class="validate">
-                  <label for="password">Password</label>
-                </div>
-                <button class="btn waves-effect waves-light" type="submit" name="action">Login
+    <section ng-app="mainApp" ng-controller="mainCtr">
+        <!-- login page-->
+        <section id="login" class="red lighten-1">
+            <div class="center">
+                <form action="action" id="loginForm" class="z-depth-2 white">
+                    <img src="img/logo-round.png" alt="">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="username" type="text" ng-model="usernameInput" class="validate">
+                            <label for="username">Username</label>
+                        </div>
+                        <div class="input-field col s12">
+                            <input id="password" type="password" ng-model="passwordInput" class="validate">
+                            <label for="password">Password</label>
+                        </div>
+                        <button class="btn waves-effect waves-light" type="submit" name="action">Login
                     <i class="material-icons right">person</i>
                   </button>
+                    </div>
+                </form>
             </div>
-         </form>
-     </div>
- </section>
-  <ul id="slide-out" class="sidenav sidenav-fixed">
-    <li><div class="user-view">
-      <div class="background">
-        <img src="img/office.jpg">
-      </div>
-      <a href="#user"><img class="circle" src="img/logo-round.png"></a>
-      <a href="#name"><span class="white-text name">{{currentUser.name}}</span></a>
-      <a href="#email"><span class="white-text email">@SnapBurger</span></a>
-    </div></li>
-    <li><a id="dashboardLink" href="#/!"><i class="material-icons">dvr</i>Dashboard</a></li>
-    <li><a href="#!items"><i class="material-icons">dns</i>Products</a></li>
-    <li><a href="#!settings"><i class="material-icons">settings</i>Settings</a></li>
-    <!--HIDE THIS SECTION TO REGULAR USERS -->
-    <div ng-show="currentUser.is_mgr">
-        <li><div class="divider"></div></li>
-        <li><a class="subheader">Admin</a></li>
-        <li><a href="#!reports"><i class="material-icons">event_note</i>Reports</a></li>
-        <li><a href="#!emp"><i class="material-icons">people</i>Staff</a></li>
-      </div>
-  </ul>
-  <!-- main section -->
-  <header>
-    <nav class="navbar z-depth-2 white">
-      <a href="#" class="logo-link">Nudle</a>
-      <form action="#" id="nav-form">
-        <i class="material-icons search">search</i>
-        <input type="search" autofocus name="search" id="" placeholder="Search..">
-        <div class="close-search" onclick="showSearchBar(false)">
-            <i class="material-icons">close</i>
-        </div>
-      </form>
-      <ul class="nav-list-right">
-        <li onclick="showSearchBar(true)"><a href="javascript:void(0)"><i class="material-icons">search</i> </a></li>
-        <li><a href="javascript:void(0)" ng-click="logOut()"><i class="material-icons">settings_power</i></a></li>
-        <li><a href="#"><i class="material-icons">settings</i></a></li>
-      </ul>
-    </nav>
-  </header>
-  <main>
-    <section id="body" ng-view></section>
-  </main>
-<!--  notifications-->
-<div class="notify green accent-4 waves-light" id="success"><span class="msg"></span><i class="yellow-text font-raleway">close</i></div>
-<div class="notify red accent-4 waves-light" id="error"><span class="msg"></span><i class="yellow-text font-raleway">close</i></div>
+        </section>
+        <ul id="slide-out" class="sidenav sidenav-fixed">
+            <li>
+                <div class="user-view">
+                    <div class="background">
+                        <img src="img/office.jpg">
+                    </div>
+                    <a href="#user"><img class="circle" src="img/logo-round.png"></a>
+                    <a href="#name"><span class="white-text name">{{currentUser.name}}</span></a>
+                    <a href="#email"><span class="white-text email">@SnapBurger</span></a>
+                </div>
+            </li>
+            <li><a id="dashboardLink" href="#/!"><i class="material-icons">dvr</i>Dashboard</a></li>
+            <li><a href="#!items"><i class="material-icons">dns</i>Products</a></li>
+            <li><a href="#!settings"><i class="material-icons">settings</i>Settings</a></li>
+            <!--HIDE THIS SECTION TO REGULAR USERS -->
+            <div ng-show="currentUser.is_mgr">
+                <li>
+                    <div class="divider"></div>
+                </li>
+                <li><a class="subheader">Admin</a></li>
+                <li><a href="#!reports"><i class="material-icons">event_note</i>Reports</a></li>
+                <li><a href="#!emp"><i class="material-icons">people</i>Staff</a></li>
+            </div>
+        </ul>
+        <!-- main section -->
+        <header>
+            <nav class="navbar z-depth-2 white">
+                <a href="#" class="logo-link">Nudle</a>
+                <form action="#" id="nav-form">
+                    <i class="material-icons search">search</i>
+                    <input type="search" autofocus name="search" id="" placeholder="Search..">
+                    <div class="close-search" onclick="showSearchBar(false)">
+                        <i class="material-icons">close</i>
+                    </div>
+                </form>
+                <ul class="nav-list-right">
+                    <li onclick="showSearchBar(true)"><a href="javascript:void(0)"><i class="material-icons">search</i> </a></li>
+                    <li><a href="javascript:void(0)" ng-click="logOut()"><i class="material-icons">settings_power</i></a></li>
+                    <li><a href="#"><i class="material-icons">settings</i></a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <section id="body" ng-view></section>
+        </main>
+        <!--  notifications-->
+        <div class="notify green accent-4 waves-light" id="success"><span class="msg"></span><i class="yellow-text font-raleway">close</i></div>
+        <div class="notify red accent-4 waves-light" id="error"><span class="msg"></span><i class="yellow-text font-raleway">close</i></div>
 
-<!--  -->
+        <!-- Modals -->
+        <!--   password modal-->
+        <div id="promptPasword" class="modal">
+            <form action="#">
+                <div class="modal-content">
+                    <h4>{{passwordPromptTitle}}</h4>
+                    <p>Enter password to confirm this action</p>
+                    <input ng-model="promptPasswordInput" class="browser-default" type="password" placeholder="Enter password" autofocus>
+                </div>
+                <div class="modal-footer red">
+                    <button class="btn-flat waves-effect waves-default white-text">Okay</button>
+                    <a class="modal-close waves-effect waves-default btn-flat white-text">Cancel</a>
+                </div>
+            </form>
+        </div>
     </section>
-   <!--<script src="dist/dataTables/datatables.min.js"></script>-->
-   <script src="js/sweetalert.js"></script>
+    <!--<script src="dist/dataTables/datatables.min.js"></script>-->
+    <script src="js/sweetalert.js"></script>
     <script src="js/main.js"></script>
     <script src="js/controller.js"></script>
 </body>
+
 </html>
