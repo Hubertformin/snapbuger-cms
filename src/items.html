@@ -5,8 +5,19 @@
     1* `Try to use save databes on submit and refetch data`
 ===================================================
 -->
-  <div class="routePage" ng-controller="itemsCtr">
-   <!--Categories box -->
+<div class="routePage" ng-controller="itemsCtr">
+    <!-- Select table number -->
+    <div class="box">
+        <div class="header">
+            <h2>
+                Number of tables<br><small>Enter number of tables</small>
+            </h2>
+            <div class="input-field inline" style="margin:0;margin-left:10px;">
+                <input style="transform:translateY(-16px);margin: 0;" id="tableNumber" min="1" ng-model="products.tableNumber" type="number" class="validate">
+            </div>
+        </div>
+    </div>
+    <!--Categories box -->
     <div class="box collapsible">
         <div class="collapsible-header header green darken-2">
             <h2 class="white-text">
@@ -27,7 +38,7 @@
                                     </div>
                                     <div class="input-field col s6">
                                         <label style="transform: translateY(-21px);" for="category_status">Status</label>
-                                        <select class="browser-default" name="category_status"  class="validate" ng-model="category_status" id="category_status">
+                                        <select class="browser-default" name="category_status" class="validate" ng-model="category_status" id="category_status">
                                             <option value="available">Available</option>
                                             <option value="unavailable">Unavailable</option>
                                         </select>
@@ -41,7 +52,7 @@
                 </li>
             </ul>
             <div class="searchTable">
-               <span><strong>Total items: {{categories.length}}</strong></span>
+                <span><strong>Total items: {{products.categories.length}}</strong></span>
                 <input type="search" onkeyup="searchTable(event,'#categoriesTable')" name="" placeholder="Search Table.." id="">
             </div>
             <table id="categoriesTable" class="huberts-tables mdl-data-table" style="width:100%">
@@ -54,17 +65,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="x in categories">
-                    <td>{{$index+1}}</td>
-                    <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateCategories($index)" type="text" ng-model="x.name"></td>
-                    <td>
-                       <select ng-disabled="!currentUser.is_mgr" ng-change="updateCategories($index)" ng-model="x.status" class="browser-default">
+                    <tr ng-repeat="x in products.categories">
+                        <td>{{$index+1}}</td>
+                        <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateCategories($index)" type="text" ng-model="x.name"></td>
+                        <td>
+                            <select ng-disabled="!currentUser.is_mgr" ng-change="updateCategories($index)" ng-model="x.status" class="browser-default">
                             <option value="available">Available</option>
                             <option value="unavailable">Unavailable</option>
                         </select>
-                    </td>
-                    <td ng-show="currentUser.is_mgr"><i ng-click="deleteCategories($index)" class="material-icons">delete</i></td>
-                </tr>
+                        </td>
+                        <td ng-show="currentUser.is_mgr"><i ng-click="deleteCategories($index)" class="material-icons">delete</i></td>
+                    </tr>
                 </tbody>
                 <tfoot>
                     <tr>
@@ -76,7 +87,7 @@
                 </tfoot>
             </table>
         </div>
-      </div>
+    </div>
     <!--Item box -->
     <div class="box">
         <div class="header teal darken-2">
@@ -117,9 +128,9 @@
                                         </div>
                                     </div>
                                     <div class="col s6">
-                                        <select name="item_category" ng-model="item_category" id="#"  class="browser-default">
+                                        <select name="item_category" ng-model="item_category" id="#" class="browser-default">
                                                 <option value="" selected disabled>Select category</option>
-                                                <option ng-disabled="!x.action" ng-repeat="x in categories" value="{{x.name}}">{{x.name}}</option>
+                                                <option ng-disabled="!x.action" ng-repeat="x in products.categories" value="{{x.name}}">{{x.name}}</option>
                                             </select>
                                     </div>
                                 </div>
@@ -131,7 +142,7 @@
                 </li>
             </ul>
             <div class="searchTable">
-               <span><strong>Total items: {{items.length}}</strong></span>
+                <span><strong>Total items: {{products.items.length}}</strong></span>
                 <input type="search" onkeyup="searchTable(event,'#itemsTable')" name="" placeholder="Search Table.." id="">
             </div>
             <table id="itemsTable" class="huberts-tables mdl-data-table" style="width:100%">
@@ -146,17 +157,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="x in items">
+                    <tr ng-repeat="x in products.items">
                         <td>{{$index+1}}</td>
                         <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" type="text" ng-model="x.name"></td>
                         <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" type="number" ng-model="x.rate"></td>
                         <td>
                             <select ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" class="browser-default" ng-model="x.category" name="" id="">
-                                <option ng-disabled="!o.action" ng-repeat="o in categories" value="{{o.name}}">{{o.name}}</option>
+                                <option ng-disabled="!o.action" ng-repeat="o in products.categories" value="{{o.name}}">{{o.name}}</option>
                             </select>
                         </td>
                         <td>
-                         <select ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" ng-model="x.status" class="browser-default">
+                            <select ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" ng-model="x.status" class="browser-default">
                             <option value="available">Available</option>
                             <option value="unavailable">Unavailable</option>
                         </select>

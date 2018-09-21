@@ -37,8 +37,9 @@ app.config(($routeProvider) => {
 app.controller("mainCtr", ($scope) => {
 
     //All data
-    //items
-    $scope.categories = [
+    $scope.products = {
+        tableNumber:10,
+        categories:[
         {
             name: "Food",
             status: "available",
@@ -59,8 +60,8 @@ app.controller("mainCtr", ($scope) => {
             status: "available",
             action: false
         }
-]
-    $scope.items = [
+        ],    
+        items:[
         {
             name: "Burger",
             rate: 2000,
@@ -139,7 +140,8 @@ app.controller("mainCtr", ($scope) => {
             action: true
         }
 ]
-    //users,staff
+    }    
+//users,staff
     $scope.staffs = [];
     $scope.managers = [];
     $scope.users = [
@@ -295,254 +297,11 @@ app.controller("mainCtr", ($scope) => {
     $scope.currentOrder = {
         name:'',
         date:'',
+        table:1,
         items:[],
         totalPrice:0,
         totalQuantity:0
     }
 
 })
-app.controller("dashCtr", ($scope) => {
-    var elems = document.querySelectorAll('.collapsible');
-    var instances = M.Collapsible.init(elems);
-    var instance = M.Collapsible.getInstance(jQuery('#OrderCollapse'));
-    instance.open()
-    //datepicker
-     let currentDate = new Date();
-    var thisYear = currentDate.getFullYear();
-    var elems = document.querySelectorAll('.datepicker');
-    var instances = M.Datepicker.init(elems, {
-        format: 'dd/mm/yyyy',
-        minDate: currentDate,
-        defaultDate: currentDate,
-        yearRange: [thisYear, thisYear + 2]
-    });
-    //input current date into date picker input by default
-    jQuery('#orderDate').val(formatDate());
-    jQuery('.scrollContainer').on('mousewheel', function (e) {
-        if (e.deltaY < 0) {
-            jQuery(this).scrollLeft(jQuery(this).scrollLeft()+40);
-        } else {
-            jQuery(this).scrollLeft(jQuery(this).scrollLeft()-40);
-        }
-        e.preventDefault();
-    });
-    //add order numbers
-    $scope.addOrderNumber = (e,i)=>{
-        if(jQuery(e.target).is('i')){
-            var val = Number(jQuery(e.target).parent().siblings('input').val());
-            if(val == 1 && i < 0) return false;
-            //console.log(val +i)
-            //console.log(num) 
-            jQuery(e.target).parent().siblings('input').val(val+i);
-        }else{
-            var val = Number(jQuery(e.target).siblings('input').val())
-            if(val == 1 && i < 0) return false;
-                jQuery(e.target).siblings('input').val(val + i);
-        }
-    }
-    /*jQuery('#owlDrinks').on('mousewheel', '.owl-stage', function (e) {
-        if (e.deltaY < 0) {
-            jQuery(this).trigger('next.owl');
-        } else {
-            jQuery(this).trigger('prev.owl');
-        }
-        e.preventDefault();
-    });*/
 
-
-})
-//itemsCtr
-app.controller("itemsCtr", ($scope) => {
-    $scope.category_status = "available";
-    $scope.item_status = "available";
-    //initializing collapse
-    var elems = document.querySelectorAll('.collapsible');
-    var instances = M.Collapsible.init(elems);
-    //categories table
-    //1. Create Categories
-    jQuery('#createCategoryForm').on('submit', (e) => {
-        e.preventDefault();
-        if ($scope.category_name == '') return false;
-        let action = true;
-        if ($scope.category_status != "available") {
-            action = false;
-        }
-        $scope.categories.push({
-            name: $scope.category_name,
-            status: $scope.category_status,
-            action: action
-        })
-        $scope.$apply();
-        notifications.notify({
-            msg: "Added!",
-            type: "done"
-        })
-        //console.log( $scope.categories);
-    })
-    //update categories
-    $scope.updateCategories = (i) => {
-        if ($scope.categories[i].status == "available") {
-            $scope.categories[i].action = true;
-        } else {
-            $scope.categories[i].action = false;
-            $scope.items.forEach(elems=>{
-                if(elems.category == $scope.categories[i].name){
-                    elems.action = false;
-                    elems.status = 'unavailable';
-                }else{
-                    elems.action = true;
-                    elems.status = 'available';
-                }
-            })
-        }
-        //console.log($scope.categories);
-    }
-    //deleting categories
-    $scope.deleteCategories = (i) => {
-        //confirm(`Are you sure `);
-        swal({
-                title: "Are you sure?",
-                text: "Once deleted, you will not be able to revert this!",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    $scope.categories.splice(i, 1);
-                    $scope.$apply();
-                    swal("Deleted!", {
-                        icon: "success",
-                    });
-                } else {
-                    swal("Your imaginary file is safe!");
-                }
-            });
-    }
-    //Create Items
-    jQuery('#createItemForm').on('submit', (e) => {
-        e.preventDefault();
-        if ($scope.item_name == '' || $scope.item_rate == '' || $scope.item_category == '') {
-            notifications.notify({
-                msg: "Please fill all fields!",
-                type: "error"
-            });
-            return false;
-        }
-        $scope.items.push({
-            name: $scope.item_name,
-            rate: $scope.item_rate,
-            category: $scope.item_category,
-            status: $scope.item_status
-        })
-        $scope.$apply();
-        //reseting variables
-        $scope.item_name = '';
-        //nitifications
-        notifications.notify({
-            msg: "Added!",
-            type: "done"
-        })
-    })
-    //update Itemms
-    $scope.updateItems = (i) => {
-        $scope.items[i].action = true;
-        if ($scope.items[i].status !== 'available') {
-
-            $scope.items[i].action = false;
-        }
-        //console.log($scope.items[i]);
-    }
-    //delete Items
-    $scope.deleteItems = (i) => {
-        //confirm(`Are you sure `);
-        swal({
-                title: "Are you sure?",
-                text: "Once deleted, you will not be able to revert this!",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    $scope.items.splice(i, 1);
-                    $scope.$apply();
-                    swal("Deleted!", {
-                        icon: "success",
-                    });
-                } else {
-                    swal("Your imaginary file is safe!");
-                }
-            });
-    }
-
-})
-app.controller("staffCtr", ($scope) => {
-    //initialiing ...
-    var elems = document.querySelectorAll('.modal');
-    var instances = M.Modal.init(elems, {
-        dismissible: false,
-        preventScrolling: true
-    });
-    //collapseible
-    var elems = document.querySelectorAll('.collapsible');
-    var instances = M.Collapsible.init(elems, {
-        accordion: false
-    });
-    //date picker
-    let currentDate = new Date();
-    var thisYear = currentDate.getFullYear();
-    //console.log($scope.today);
-    var elems = document.querySelectorAll('.datepicker');
-    var instances = M.Datepicker.init(elems, {
-        format: 'dd/mm/yyyy',
-        minDate: currentDate,
-        defaultDate: currentDate,
-        yearRange: [thisYear, thisYear + 2]
-    });
-    //create staff
-    jQuery('#createStaffsForm').on('submit', (e) => {
-        e.preventDefault();
-        var inputDate = jQuery('#startDate').val();
-        if (typeof $scope.staff_name == 'undefined' ||
-            typeof $scope.staff_password == 'undefined' ||
-            typeof $scope.staff_position == 'undefined' ||
-            inputDate == '' || typeof $scope.staff_salary == 'undefined') {
-            notifications.notify({
-                type: "error",
-                msg: "Please fill all fields!"
-            })
-            return false;
-        }
-        $scope.staffs.push({
-            name: $scope.staff_name,
-            password: $scope.staff_password,
-            position: $scope.staff_position,
-            startDate: inputDate,
-            salary: $scope.staff_salary,
-            status: "active",
-            is_mgr: false
-        })
-        notifications.notify({
-            type: 1,
-            msg: "Acount Created!"
-        })
-        //re initializing users
-        $scope.users = $scope.staffs.concat($scope.managers)
-        $scope.$apply();
-        //console.log($scope.users)
-    })
-    //update staffs
-    $scope.updateStaffs = (i) => {
-        console.log($scope.staffs)
-    }
-    //delete staffs
-    $scope.deleteStaffs = (i) => {
-        if(confirm(`Are you sure you want to delete '${$scope.staffs[i].name}'?`)){
-            $scope.staffs.splice(i, 1);
-            //re initializing users
-            $scope.users = $scope.staffs.concat($scope.managers)
-            //$scope.$apply()
-        }
-    }
-})

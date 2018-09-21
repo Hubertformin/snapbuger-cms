@@ -1,4 +1,13 @@
 /* width */
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  cursor: pointer;
+  display: block;
+  width: 8px;
+  color: #333;
+  text-align: center;
+  position: relative; }
+
 ::-webkit-scrollbar {
   width: 6px; }
 
@@ -17,7 +26,12 @@
 hr {
   border-color: #ddd;
   margin-top: 5px;
-  margin-bottom: 30px; }
+  margin-bottom: 9px; }
+
+select.prefixed {
+  margin-left: 3rem;
+  width: 92%;
+  width: calc(100% - 3rem); }
 
 #login {
   display: none;
@@ -167,6 +181,7 @@ nav {
     .box .header h2 {
       margin: 0;
       font-size: 18px;
+      display: inline-block;
       font-weight: normal; }
     .box .header .btn-large {
       position: absolute;
@@ -247,24 +262,6 @@ nav {
   z-index: 0; }
 
 /*data Tables */
-.paginate_button {
-  cursor: pointer;
-  padding: 5px 10px;
-  border-radius: 15px; }
-  .paginate_button.next, .paginate_button.previous {
-    margin: 0 10px;
-    background: #01579b;
-    color: white; }
-  .paginate_button.current {
-    border-radius: 50%;
-    background: #1b5e20;
-    color: #fff; }
-
-.btn-export-pdf {
-  background: #ef6c00 !important; }
-  .btn-export-pdf:focus, .btn-export-pdf:active, .btn-export-pdf:hover {
-    background-color: #e65100 !important; }
-
 /**/
 .swal-button--cancel:focus {
   -webkit-box-shadow: 0 0 0 1px #fff !important;
@@ -332,7 +329,7 @@ table.huberts-tables tfoot {
       height: 100%;
       padding: 0; }
       #viewSelectedORders .modal-content .body div.table-view {
-        height: 312.1px;
+        height: 309px;
         overflow-y: scroll; }
       #viewSelectedORders .modal-content .body table i {
         cursor: pointer; }
@@ -350,26 +347,53 @@ table.huberts-tables tfoot {
   .datepicker-modal .datepicker-controls .select-month input {
     width: 100px !important; }
 
+.collapsible-body .row {
+  margin-bottom: 0px !important; }
+  .collapsible-body .row .col {
+    margin-bottom: 0px !important; }
+
+.collapsible-body .footer {
+  padding: 10px; }
+
+.orderPriceDetails {
+  display: inline-block;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  padding: 10px 25px;
+  background: #ddd; }
+  .orderPriceDetails span {
+    font-weight: 900; }
+
 .searchBox {
   margin-top: 0;
-  margin-bottom: 10px; }
+  margin-bottom: 10px;
+  position: relative; }
   .searchBox i {
-    -webkit-transform: translateY(40px);
-    -ms-transform: translateY(40px);
-    transform: translateY(40px);
+    -webkit-transform: translate(10px, 10px);
+    -ms-transform: translate(10px, 10px);
+    transform: translate(10px, 10px);
     color: #999; }
   .searchBox input {
-    border: none;
-    border-bottom: 1px solid #999;
+    -webkit-transform: translateY(-30px);
+    -ms-transform: translateY(-30px);
+    transform: translateY(-30px);
+    border: 1.5px solid #ddd;
+    background: none;
     padding: 10px;
-    padding-left: 26px;
-    width: 100%; }
+    border-radius: 25px;
+    padding-left: 35px;
+    width: 100%;
+    cursor: pointer;
+    -webkit-transition: all 0.6s linear;
+    -o-transition: all 0.6s linear;
+    transition: all 0.6s linear; }
     .searchBox input:focus {
       border-color: #2196f3; }
 
 .scrollContainer {
   border: 1px solid #ddd;
-  height: 300px;
+  height: 280px;
+  margin: 10px;
   overflow-x: hidden;
   white-space: nowrap; }
   .scrollContainer .item {
@@ -411,3 +435,5 @@ table.huberts-tables tfoot {
       margin: auto; }
       .scrollContainer .item .body button[type="submit"] {
         background-color: #2e7d32; }
+        .scrollContainer .item .body button[type="submit"].remove {
+          background: #757575; }
