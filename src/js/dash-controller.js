@@ -89,5 +89,41 @@ app.controller("dashCtr", ($scope) => {
             btn.siblings().children('.btns').css({cursor:"pointer"})
         }
     }
+    ///Finally creating order, first by setting the default table number to 1
+    $scope.orderTableNumber = '1';
+    $scope.createOrder = ()=>{
+        if(typeof $scope.orderName == 'undefined'){
+            notifications.notify({type:"error",msg:"Enter a name!"})
+            return false;
+        }
+        if($scope.currentOrder.items.length == 0){
+            notifications.notify({type:"error",msg:"Please select items"})
+            return false;
+        }
+        //creating current order
+        $scope.currentOrder.name = $scope.orderName;
+        $scope.currentOrder.date = jQuery('#orderDate').val();
+        $scope.currentOrder.table = $scope.orderTableNumber;
+        var current = $scope.currentOrder;
+        //and now pushing to main --
+        //checking if order already exist
+        /*$scope.todaysOrders.forEach(el=>{
+            if(JSON.stringify(el) === JSON.stringify($scope.currentOrder)){
+                notifications.notify({type:"error",msg:"Order already exist!"})
+                return false;
+            }
+        })*/
+        $scope.todaysOrders.push(current);
+        swal({
+            title: "Done!",
+            text: "Added to list of orders!",
+            icon: "success",
+            button: "Okay",
+          });
+          //reseting order custom form
+          $scope.orderName = "";
+          $scope.removeItem('deleteAll') 
+        //console.log($scope.todaysOrders);
+    }
 
 })

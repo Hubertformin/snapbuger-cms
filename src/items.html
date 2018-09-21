@@ -61,28 +61,37 @@
                         <th>#</th>
                         <th>Category name</th>
                         <th>status</th>
-                        <th ng-show="currentUser.is_mgr"><i class="material-icons">build</i></th>
+                        <th class="small" ng-show="currentUser.is_mgr"><i class="material-icons">build</i></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr ng-repeat="x in products.categories">
-                        <td>{{$index+1}}</td>
-                        <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateCategories($index)" type="text" ng-model="x.name"></td>
-                        <td>
-                            <select ng-disabled="!currentUser.is_mgr" ng-change="updateCategories($index)" ng-model="x.status" class="browser-default">
+            </table>
+            <div class="huberts-table-div">
+                <div ng-show="products.categories.length == 0" class="no-data">
+                    <p>No data, Create categories to view</p>
+                </div>
+                <table class="huberts-tables">
+                    <tbody>
+                        <tr ng-repeat="x in products.categories">
+                            <td class="small">{{$index+1}}</td>
+                            <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateCategories($index)" type="text" ng-model="x.name"></td>
+                            <td>
+                                <select ng-disabled="!currentUser.is_mgr" ng-change="updateCategories($index)" ng-model="x.status" class="browser-default">
                             <option value="available">Available</option>
                             <option value="unavailable">Unavailable</option>
                         </select>
-                        </td>
-                        <td ng-show="currentUser.is_mgr"><i ng-click="deleteCategories($index)" class="material-icons">delete</i></td>
-                    </tr>
-                </tbody>
+                            </td>
+                            <td class="small" ng-show="currentUser.is_mgr"><i ng-click="deleteCategories($index)" class="material-icons">delete</i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <table class="huberts-tables">
                 <tfoot>
                     <tr>
                         <th>#</th>
                         <th>Category name</th>
                         <th>status</th>
-                        <th ng-show="currentUser.is_mgr"></th>
+                        <th class="small" ng-show="currentUser.is_mgr"></th>
                     </tr>
                 </tfoot>
             </table>
@@ -145,43 +154,52 @@
                 <span><strong>Total items: {{products.items.length}}</strong></span>
                 <input type="search" onkeyup="searchTable(event,'#itemsTable')" name="" placeholder="Search Table.." id="">
             </div>
-            <table id="itemsTable" class="huberts-tables mdl-data-table" style="width:100%">
+            <table class="huberts-tables mdl-data-table" style="width:100%">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th class="small">#</th>
                         <th>Item name</th>
                         <th>Rate(XAF)</th>
                         <th>Category</th>
                         <th>Status</th>
-                        <th ng-show="currentUser.is_mgr"><i class="material-icons">build</i></th>
+                        <th class="small" ng-show="currentUser.is_mgr"><i class="material-icons">build</i></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr ng-repeat="x in products.items">
-                        <td>{{$index+1}}</td>
-                        <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" type="text" ng-model="x.name"></td>
-                        <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" type="number" ng-model="x.rate"></td>
-                        <td>
-                            <select ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" class="browser-default" ng-model="x.category" name="" id="">
+            </table>
+            <div class="huberts-table-div">
+                <div ng-show="products.items.length == 0" class="no-data">
+                    <p>No data in this table, Create Items to view</p>
+                </div>
+                <table id="itemsTable" class="huberts-tables mdl-data-table" style="width:100%">
+                    <tbody>
+                        <tr ng-repeat="x in products.items">
+                            <td class="small">{{$index+1}}</td>
+                            <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" type="text" ng-model="x.name"></td>
+                            <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" type="number" ng-model="x.rate"></td>
+                            <td>
+                                <select ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" class="browser-default" ng-model="x.category">
                                 <option ng-disabled="!o.action" ng-repeat="o in products.categories" value="{{o.name}}">{{o.name}}</option>
                             </select>
-                        </td>
-                        <td>
-                            <select ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" ng-model="x.status" class="browser-default">
+                            </td>
+                            <td>
+                                <select ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" ng-model="x.status" class="browser-default">
                             <option value="available">Available</option>
                             <option value="unavailable">Unavailable</option>
                         </select>
-                        </td>
-                        <td ng-show="currentUser.is_mgr"><i ng-click="deleteItems($index)" class="material-icons">delete</i></td>
-                    </tr>
-                </tbody>
+                            </td>
+                            <td class="small" ng-show="currentUser.is_mgr"><i ng-click="deleteItems($index)" class="material-icons">delete</i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <table class="huberts-tables" style="width:100%">
                 <tfoot>
                     <th>#</th>
                     <th>Item name</th>
                     <th>Rate</th>
                     <th>Category</th>
                     <th>Status</th>
-                    <th ng-show="currentUser.is_mgr"></th>
+                    <th class="small" ng-show="currentUser.is_mgr"></th>
                 </tfoot>
             </table>
         </div>

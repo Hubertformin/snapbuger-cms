@@ -326,6 +326,16 @@ nav {
     }
 }
 
+div.huberts-table-div{
+    min-height:50px;
+    max-height:500px;
+    overflow-y: auto;
+    .no-data{
+        height:100%;
+        text-align: center;
+        line-height:50px;
+    }
+}
 table.huberts-tables {
     input {
         border: none!important;
@@ -346,6 +356,10 @@ table.huberts-tables {
     thead {
         border-bottom: 2px solid #000;
         th {
+            &.small{
+                width:3%;
+            }
+                width: 16.66%;
             cursor: default;
             &:focus {
                 background: #ddd;
@@ -359,6 +373,10 @@ table.huberts-tables {
                 background: #f1f1f1;
             }
             td {
+                &.small{
+                    width:3%;
+                }
+                width: 16.66%;
                 padding: 9px 5px!important;
             }
         }
@@ -483,9 +501,23 @@ table.huberts-tables {
 .scrollContainer {
     border: 1px solid #ddd;
     height: 280px;
+    position: relative;
     margin: 10px;
     overflow-x: hidden;
     white-space: nowrap;
+    .no-results{
+        display: none;
+        position: absolute;
+        text-align: center;
+        top: 0;left: 0;right: 0;bottom:0;
+        line-height: 250px;
+        p{
+            margin: 0;
+            font-size: xx-large;
+            color: #999;
+            font-family: Raleway;
+        }
+    }
     .item {
         display: inline-block;
         width: 220px;
@@ -528,7 +560,7 @@ table.huberts-tables {
                 }
             }
             button {
-                &[type="submit"] {
+               &[type="submit"] {
                     background-color: #2e7d32;
                     &.remove{
                         background:#757575;
@@ -540,4 +572,28 @@ table.huberts-tables {
             }
         }
     }
+}
+//
+@media only screen and (max-width:992px){
+    main,
+header {
+    position: relative;
+    width:100%;
+    margin-left:0px!important;
+}
+    nav ul.nav-list-right {
+    position: absolute;
+    top: 0;
+    left: 81%;
+    color: #999 !important;
+}
+}
+//
+@media only screen and (max-width:858px){
+nav ul.nav-list-right {
+    position: absolute;
+    top: 0;
+    left: 76%;
+    color: #999 !important;
+}
 }

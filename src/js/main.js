@@ -16,6 +16,14 @@ M.AutoInit();
         }
         });
 })*/
+//to cosesidenav when links are clicked
+jQuery('#slide-out').on('click','a',()=>{
+    if(jQuery(window).width()<992){
+        var sideNav = M.Sidenav.getInstance(jQuery('#slide-out'));
+        sideNav.close();
+    }
+})
+//
 function showSearchBar(type){
     if(type){
         jQuery('#nav-form').slideDown();
@@ -90,7 +98,11 @@ function formatDate(string = ''){
     return `${day}/${month}/${year}`;
 }
 function searchOrderItems(e){
-    var val = jQuery(e.target).val(),items = jQuery('#orderItems .item');
+    var val = jQuery(e.target).val(),items = jQuery('#orderItems .item'),
+    no_result = jQuery('#no-resultsOrder');
+    no_result.hide();
+    //variable to chanege if result is fount
+    var found = false;
     val = val.toLowerCase();
     items.each((i,el)=>{
         jQuery(el).hide()
@@ -98,14 +110,21 @@ function searchOrderItems(e){
         item_category = jQuery(el).children('div.header').children('dl').children('dd.item-category').html().toLowerCase()
         item_status = jQuery(el).children('div.header').children('dl').children('dd.item-status').html().toLowerCase()
         //search..
-        if(item_name.indexOf(val)> -1){
+        if(item_name.indexOf(val) == -1 && item_category.indexOf(val) == -1 && item_status.indexOf(val) == -1){
+            found = false;
+        }
+        else if(item_name.indexOf(val)> -1){
             jQuery(el).show();
+            found = true;
         }else if(item_category.indexOf(val)> -1){
             jQuery(el).show();
+            found = true;
         }else if(item_status.indexOf(val)> -1){
             jQuery(el).show();
+            found = true;
         }
     })
+    if(!found){
+        no_result.show();
+    }
 }
-
-//cheat

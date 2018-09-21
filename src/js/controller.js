@@ -35,9 +35,11 @@ app.config(($routeProvider) => {
 })*/
 
 app.controller("mainCtr", ($scope) => {
-
-    //All data
-    $scope.products = {
+    /*
+    ============ DATABASES ===============
+    */ 
+   
+   $scope.products = {
         tableNumber:10,
         categories:[
         {
@@ -58,7 +60,7 @@ app.controller("mainCtr", ($scope) => {
         {
             name: "Wine",
             status: "available",
-            action: false
+            action: true
         }
         ],    
         items:[
@@ -140,7 +142,7 @@ app.controller("mainCtr", ($scope) => {
             action: true
         }
 ]
-    }    
+    }  
 //users,staff
     $scope.staffs = [];
     $scope.managers = [];
@@ -294,6 +296,7 @@ app.controller("mainCtr", ($scope) => {
     //=======================================================================================================================
 
     //Orders
+    $scope.todaysOrders = []
     $scope.currentOrder = {
         name:'',
         date:'',
@@ -302,6 +305,5 @@ app.controller("mainCtr", ($scope) => {
         totalPrice:0,
         totalQuantity:0
     }
-
 })
 
