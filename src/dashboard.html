@@ -10,7 +10,7 @@
     <ul id="OrderCollapse" class="collapsible">
         <li>
             <div class="collapsible-header">
-                <div class="header cyan darken-4">
+                <div class="header cyan deep-orange darken-2">
                     <h2 class="white-text">
                         Create new order <br><small>click to create.</small>
                     </h2>
@@ -57,8 +57,9 @@
                                 </div>
                             </div>
                             <div id="orderItems" class="col s12 scrollContainer">
+                                <div id="no-resultsOrder" class="no-results"><p>No results</p></div>
                                 <div ng-repeat="x in products.items" class="item z-depth-2">
-                                    <div class="header cyan darken-4">
+                                    <div class="header deep-orange darken-2">
                                         <dl>
                                             <dt class="item-name">{{x.name}}</dt>
                                             <dd class="item-category">{{x.category}}</dd>

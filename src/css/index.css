@@ -408,9 +408,24 @@ table.huberts-tables tfoot {
 .scrollContainer {
   border: 1px solid #ddd;
   height: 280px;
+  position: relative;
   margin: 10px;
   overflow-x: hidden;
   white-space: nowrap; }
+  .scrollContainer .no-results {
+    display: none;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    line-height: 250px; }
+    .scrollContainer .no-results p {
+      margin: 0;
+      font-size: xx-large;
+      color: #999;
+      font-family: Raleway; }
   .scrollContainer .item {
     display: inline-block;
     width: 220px;

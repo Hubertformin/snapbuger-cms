@@ -501,9 +501,23 @@ table.huberts-tables {
 .scrollContainer {
     border: 1px solid #ddd;
     height: 280px;
+    position: relative;
     margin: 10px;
     overflow-x: hidden;
     white-space: nowrap;
+    .no-results{
+        display: none;
+        position: absolute;
+        text-align: center;
+        top: 0;left: 0;right: 0;bottom:0;
+        line-height: 250px;
+        p{
+            margin: 0;
+            font-size: xx-large;
+            color: #999;
+            font-family: Raleway;
+        }
+    }
     .item {
         display: inline-block;
         width: 220px;
@@ -546,7 +560,7 @@ table.huberts-tables {
                 }
             }
             button {
-                &[type="submit"] {
+               &[type="submit"] {
                     background-color: #2e7d32;
                     &.remove{
                         background:#757575;

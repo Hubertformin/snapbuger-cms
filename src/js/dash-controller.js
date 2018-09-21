@@ -120,7 +120,10 @@ app.controller("dashCtr", ($scope) => {
             icon: "success",
             button: "Okay",
           });
-        console.log($scope.todaysOrders);
+          //reseting order custom form
+          $scope.orderName = "";
+          $scope.removeItem('deleteAll') 
+        //console.log($scope.todaysOrders);
     }
 
 })
