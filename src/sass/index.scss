@@ -326,6 +326,16 @@ nav {
     }
 }
 
+div.huberts-table-div{
+    min-height:50px;
+    max-height:500px;
+    overflow-y: auto;
+    .no-data{
+        height:100%;
+        text-align: center;
+        line-height:50px;
+    }
+}
 table.huberts-tables {
     input {
         border: none!important;
@@ -346,6 +356,10 @@ table.huberts-tables {
     thead {
         border-bottom: 2px solid #000;
         th {
+            &.small{
+                width:3%;
+            }
+                width: 16.66%;
             cursor: default;
             &:focus {
                 background: #ddd;
@@ -359,6 +373,10 @@ table.huberts-tables {
                 background: #f1f1f1;
             }
             td {
+                &.small{
+                    width:3%;
+                }
+                width: 16.66%;
                 padding: 9px 5px!important;
             }
         }

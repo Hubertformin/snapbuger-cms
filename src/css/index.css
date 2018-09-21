@@ -273,6 +273,15 @@ nav {
   width: 40% !important;
   float: right !important; }
 
+div.huberts-table-div {
+  min-height: 50px;
+  max-height: 500px;
+  overflow-y: auto; }
+  div.huberts-table-div .no-data {
+    height: 100%;
+    text-align: center;
+    line-height: 50px; }
+
 table.huberts-tables input {
   border: none !important;
   margin: 0px !important;
@@ -289,7 +298,10 @@ table.huberts-tables select {
 table.huberts-tables thead {
   border-bottom: 2px solid #000; }
   table.huberts-tables thead th {
+    width: 16.66%;
     cursor: default; }
+    table.huberts-tables thead th.small {
+      width: 3%; }
     table.huberts-tables thead th:focus {
       background: #ddd; }
 
@@ -298,7 +310,10 @@ table.huberts-tables tbody tr {
   table.huberts-tables tbody tr:hover {
     background: #f1f1f1; }
   table.huberts-tables tbody tr td {
+    width: 16.66%;
     padding: 9px 5px !important; }
+    table.huberts-tables tbody tr td.small {
+      width: 3%; }
 
 table.huberts-tables tfoot {
   border-top: 2px solid #000; }

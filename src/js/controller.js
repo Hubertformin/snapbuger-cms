@@ -303,6 +303,5 @@ app.controller("mainCtr", ($scope) => {
         totalPrice:0,
         totalQuantity:0
     }
-
 })
 
