@@ -31,7 +31,7 @@
                                 <label class="active" for="orderDate">Order Date</label>
                             </div>
                             <div class="input-field col s4">
-                               <i class="material-icons prefix">airline_seat_legroom_extra</i>
+                                <i class="material-icons prefix">airline_seat_legroom_extra</i>
                                 <select class="browser-default prefixed">
                                     <option ng-repeat="n in [].constructor(products.tableNumber) track by $index" value="{{$index+1}}">Table {{$index+1}}</option>
                                 </select>
@@ -44,6 +44,10 @@
                             <div class="col s12">
                                 <div class="col s8 selected-items">
                                     <button data-target="viewSelectedORders" ng-disabled="currentOrder.items.length == 0" class="btn waves-effect waves-default orange modal-trigger">Selected items({{currentOrder.items.length}})</button>
+                                    <div class="orderPriceDetails">
+                                        <strong>Total Qty: <span>{{currentOrder.totalQuantity}}</span></strong>,
+                                        <strong>Total Price: <span>{{currentOrder.totalPrice | currency : "XAF ":2}}</span></strong>
+                                    </div>
                                 </div>
                                 <div class="searchBox input-field col s4">
                                     <i class="material-icons">search</i>
@@ -62,21 +66,22 @@
                                     </div>
                                     <div class="body">
                                         <div class="inputDiv">
-                                            <button ng-disabled="!x.action" class="browser-default btns" ng-click="addOrderNumber($event,-1)"><i class="material-icons">remove</i></button>
-                                            <input ng-disabled="!x.action" min="1" value="1" class="browser-default" type="number">
-                                            <button ng-disabled="!x.action" class="btns" ng-click="addOrderNumber($event,1)"><i class="material-icons">add</i></button>
+                                            <button ng-disabled="x.added || !x.action" class="browser-default btns" ng-click="addOrderNumber($event,-1)"><i class="material-icons">remove</i></button>
+                                            <input ng-disabled="x.added || !x.action" min="1" value="1" class="browser-default" type="number">
+                                            <button ng-disabled="x.added || !x.action" class="btns" ng-click="addOrderNumber($event,1)"><i class="material-icons">add</i></button>
                                         </div>
-                                        <button data-clicked="false" ng-click="addOrder($event,$index)" ng-disabled="!x.action" class="btn waves-effect waves-light" type="submit">
-                                            Add
+                                        <button ng-hide="x.added" data-clicked="false" ng-click="addItem($event,$index)" ng-disabled="!x.action" class="footer-btn btn waves-effect waves-light green darken-2">Add</button>
+                                        <button ng-show="x.added" data-clicked="true" ng-click="addItem($event,$index)" ng-disabled="!x.action" class=" btn waves-effect waves-light grey darken-1">
+                                            remove
                                       </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col s12">
-                           <div class="col s4 offset-s8">
-                               <button class="btn waves-effect waves-light">Complete</button>
-                           </div>
+                            <div class="col s4 offset-s8">
+                                <button class="btn waves-effect waves-light">Complete</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -84,18 +89,17 @@
         </li>
     </ul>
     <!--End of main page-->
-</div>
-<!--Modals-->
-<div id="viewSelectedORders" class="modal modal-fixed-footer">
-    <div class="modal-content">
-        <div class="box">
-            <div class="header orange darken-2">
-                <h2 class="white-text">
-                    Selected Items ({{currentOrder.items.length}})
-                </h2>
-            </div>
-            <div class="body">
-                <!--
+    <!--Modals-->
+    <div id="viewSelectedORders" class="modal modal-fixed-footer">
+        <div class="modal-content">
+            <div class="box">
+                <div class="header orange darken-2">
+                    <h2 class="white-text">
+                        Selected Items ({{currentOrder.items.length}})
+                    </h2>
+                </div>
+                <div class="body">
+                    <!--
                 <table class="striped highlight centered">
                     <thead>
                         <th>#</th>
@@ -107,42 +111,41 @@
                     </thead>
                 </table>
                 -->
-                 <div class="table-view">
-                   <table class="centered">
-                       <thead>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Quantity</th>
-                        <th>Category</th>
-                        <th>Price</th>
-                        <th><i class="material-icons">build</i></th>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="x in currentOrder.items">
-                            <td>{{$index+1}}</td>
-                            <td>{{x.name}}</td>
-                            <td>{{x.quantity}}</td>
-                            <td>{{x.category}}</td>
-                            <td>{{x.rate}}</td>
-                            <td><i ng-click="deleteSelectedItem($index)" class="material-icons">delete</i></td>
-                        </tr>
-                    </tbody>
+                    <div class="table-view">
+                        <table class="centered">
+                            <thead>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Quantity</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="x in currentOrder.items">
+                                    <td>{{$index+1}}</td>
+                                    <td>{{x.name}}</td>
+                                    <td>{{x.quantity}}</td>
+                                    <td>{{x.category}}</td>
+                                    <td>{{x.price}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <table class="centered">
+                        <tfoot>
+                            <th>Total:</th>
+                            <th></th>
+                            <th>Qty: {{currentOrder.totalQuantity}}</th>
+                            <th></th>
+                            <th>Price: {{currentOrder.totalPrice | currency : "XAF ":0}}</th>
+                        </tfoot>
                     </table>
-                 </div>
-                   <table class="centered">
-                    <tfoot>
-                        <th>Total:</th>
-                        <th></th>
-                        <th>{{currentOrder.totalQuantity}}</th>
-                        <th></th>
-                        <th>{{currentOrder.totalPrice | currency : "XAF ":0}}</th>
-                        <th></th>
-                    </tfoot>
-                </table>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="modal-footer">
-        <a class="modal-close waves-effect waves-orange btn-flat">close</a>
+        <div class="modal-footer">
+            <a ng-click="removeItem('deleteAll')" class="left waves-effect waves-red btn-flat white-text red">clear all</a>
+            <a class="modal-close waves-effect waves-orange btn-flat">close</a>
+        </div>
     </div>
 </div>

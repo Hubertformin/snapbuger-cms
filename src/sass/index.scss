@@ -431,6 +431,17 @@ table.huberts-tables {
         }
     }
 }
+//
+.orderPriceDetails{
+    margin-left:20px;
+    display: inline-block;
+    border: 1px solid #ddd;
+    border-radius:25px;
+    padding:10px 25px;
+    span{
+        font-weight: 900;
+    }
+}
 
 .searchBox {
     margin-top: 0;
@@ -503,6 +514,9 @@ table.huberts-tables {
             button {
                 &[type="submit"] {
                     background-color: #2e7d32;
+                    &.remove{
+                        background:#757575;
+                    }
                 }
                 display: block;
                 width: 80%;

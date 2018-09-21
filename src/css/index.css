@@ -343,6 +343,15 @@ table.huberts-tables tfoot {
   .collapsible-body .row .col {
     margin-bottom: 0px !important; }
 
+.orderPriceDetails {
+  margin-left: 20px;
+  display: inline-block;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  padding: 10px 25px; }
+  .orderPriceDetails span {
+    font-weight: 900; }
+
 .searchBox {
   margin-top: 0;
   margin-bottom: 10px; }
@@ -409,3 +418,5 @@ table.huberts-tables tfoot {
       margin: auto; }
       .scrollContainer .item .body button[type="submit"] {
         background-color: #2e7d32; }
+        .scrollContainer .item .body button[type="submit"].remove {
+          background: #757575; }
