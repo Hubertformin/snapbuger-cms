@@ -48,6 +48,10 @@ app.controller("dashCtr", ($scope) => {
             $scope.currentOrder.items = [];
             $scope.currentOrder.totalPrice = 0;
             $scope.currentOrder.totalQuantity = 0;
+            //activate all buttons
+            $scope.products.items.forEach(el=>{
+                el.added = false;
+            })
             viewSelectedModal.close();
             return true;
         }

@@ -42,8 +42,10 @@
                         <hr>
                         <div class="row">
                             <div class="col s12">
-                                <div class="col s8 selected-items">
+                                <div class="col s3 selected-items">
                                     <button data-target="viewSelectedORders" ng-disabled="currentOrder.items.length == 0" class="btn waves-effect waves-default orange modal-trigger">Selected items({{currentOrder.items.length}})</button>
+                                </div>
+                                <div class="col s5">
                                     <div class="orderPriceDetails">
                                         <strong>Total Qty: <span>{{currentOrder.totalQuantity}}</span></strong>,
                                         <strong>Total Price: <span>{{currentOrder.totalPrice | currency : "XAF ":2}}</span></strong>
@@ -51,7 +53,7 @@
                                 </div>
                                 <div class="searchBox input-field col s4">
                                     <i class="material-icons">search</i>
-                                    <input onkeyup="searchOrderItems(event)" placeholder="Search.." class="browser-default" id="search" type="search">
+                                    <input onkeyup="searchOrderItems(event)" placeholder="Search.." class="browser-default" id="search" type="search" results=5 autosave=some_unique_value>
                                 </div>
                             </div>
                             <div id="orderItems" class="col s12 scrollContainer">
@@ -70,17 +72,18 @@
                                             <input ng-disabled="x.added || !x.action" min="1" value="1" class="browser-default" type="number">
                                             <button ng-disabled="x.added || !x.action" class="btns" ng-click="addOrderNumber($event,1)"><i class="material-icons">add</i></button>
                                         </div>
-                                        <button ng-hide="x.added" data-clicked="false" ng-click="addItem($event,$index)" ng-disabled="!x.action" class="footer-btn btn waves-effect waves-light green darken-2">Add</button>
-                                        <button ng-show="x.added" data-clicked="true" ng-click="addItem($event,$index)" ng-disabled="!x.action" class=" btn waves-effect waves-light grey darken-1">
+                                        <button ng-hide="x.added" data-clicked="false" ng-click="addItem($event,$index)" ng-disabled="!x.action" class="footer-btn btn waves-effect waves-light teal"><i class="material-icons left">add</i>Add</button>
+                                        <button ng-show="x.added" data-clicked="true" ng-click="addItem($event,$index)" ng-disabled="!x.action" class=" btn waves-effect waves-light grey darken-1"><i class="material-icons left">remove</i>
                                             remove
                                       </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col s12">
-                            <div class="col s4 offset-s8">
-                                <button class="btn waves-effect waves-light">Complete</button>
+                        <div class="col s12 footer">
+                            <div class="col s5 offset-s7">
+                                <button class="btn waves-effect waves-light"><i class="material-icons left">print</i>Print</button>
+                                <button class="btn waves-effect waves-light green darken-1"><i class="material-icons left">done</i>Complete</button>
                             </div>
                         </div>
                     </form>

@@ -1,5 +1,14 @@
 /* width */
-
+//input number
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    cursor:pointer;
+    display:block;
+    width:8px;
+    color: #333;
+    text-align:center;
+    position:relative;
+}
 ::-webkit-scrollbar {
     width: 6px;
 }
@@ -389,7 +398,7 @@ table.huberts-tables {
             height: 100%;
             padding: 0;
             div.table-view {
-                height: 312.1px;
+                height: 309px;
                 overflow-y: scroll;
             }
             table {
@@ -430,14 +439,17 @@ table.huberts-tables {
             margin-bottom: 0px!important;
         }
     }
+    .footer{
+        padding:10px;
+    }
 }
 //
 .orderPriceDetails{
-    margin-left:20px;
     display: inline-block;
     border: 1px solid #ddd;
     border-radius:25px;
     padding:10px 25px;
+    background:#ddd;
     span{
         font-weight: 900;
     }
@@ -446,18 +458,22 @@ table.huberts-tables {
 .searchBox {
     margin-top: 0;
     margin-bottom: 10px;
+    position: relative;
     i {
-        transform: translateY(20px);
+        transform: translate(10px,10px);
         color: #999;
+        //position: absolute;
     }
     input {
-        transform: translateY(-20px);
-        border: none;
+        transform: translateY(-30px);
+        border:1.5px solid #ddd;
         background: none;
-        border-bottom: 1px solid #999;
         padding: 10px;
-        padding-left: 26px;
-        width: 100%;
+        border-radius: 25px;
+        padding-left: 35px;
+        width:100%;
+        cursor: pointer;
+        transition: all 0.6s linear;
         &:focus {
             border-color: #2196f3;
         }
