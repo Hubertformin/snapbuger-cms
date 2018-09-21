@@ -162,7 +162,7 @@
                         <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" type="text" ng-model="x.name"></td>
                         <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" type="number" ng-model="x.rate"></td>
                         <td>
-                            <select ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" class="browser-default" ng-model="x.category" name="" id="">
+                            <select ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" class="browser-default" ng-model="x.category">
                                 <option ng-disabled="!o.action" ng-repeat="o in products.categories" value="{{o.name}}">{{o.name}}</option>
                             </select>
                         </td>

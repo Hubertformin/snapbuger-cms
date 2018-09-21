@@ -22,7 +22,7 @@
                         <div class="row">
                             <div class="input-field col s4">
                                 <i class="material-icons prefix">person</i>
-                                <input id="orderName" type="text" class="validate">
+                                <input ng-model="orderName" id="orderName" type="text" class="validate">
                                 <label for="orderName">Name</label>
                             </div>
                             <div class="input-field col s4">
@@ -32,7 +32,7 @@
                             </div>
                             <div class="input-field col s4">
                                 <i class="material-icons prefix">airline_seat_legroom_extra</i>
-                                <select class="browser-default prefixed">
+                                <select ng-model="orderTableNumber" class="browser-default prefixed">
                                     <option ng-repeat="n in [].constructor(products.tableNumber) track by $index" value="{{$index+1}}">Table {{$index+1}}</option>
                                 </select>
                                 <label class="active" for="orderDate">Select Table</label>
@@ -82,8 +82,8 @@
                         </div>
                         <div class="col s12 footer">
                             <div class="col s5 offset-s7">
-                                <button class="btn waves-effect waves-light"><i class="material-icons left">print</i>Print</button>
-                                <button class="btn waves-effect waves-light green darken-1"><i class="material-icons left">done</i>Complete</button>
+                                <button ng-show="orderPrint" class="btn waves-effect waves-light brown darken-4"><i class="material-icons left">print</i>Print</button>
+                                <button ng-click="createOrder()" ng-disabled="!orderName || currentOrder.items.length == 0" class="btn waves-effect waves-light green darken-1 right"><i class="material-icons left">done</i>Complete</button>
                             </div>
                         </div>
                     </form>

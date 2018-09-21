@@ -108,4 +108,5 @@ function searchOrderItems(e){
     })
 }
 
-//cheat
+//DB index db
+var db = idb.open()

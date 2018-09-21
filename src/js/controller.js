@@ -58,7 +58,7 @@ app.controller("mainCtr", ($scope) => {
         {
             name: "Wine",
             status: "available",
-            action: false
+            action: true
         }
         ],    
         items:[
@@ -294,6 +294,7 @@ app.controller("mainCtr", ($scope) => {
     //=======================================================================================================================
 
     //Orders
+    $scope.todaysOrders = []
     $scope.currentOrder = {
         name:'',
         date:'',
