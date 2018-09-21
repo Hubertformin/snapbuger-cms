@@ -107,14 +107,19 @@ app.controller("dashCtr", ($scope) => {
         var current = $scope.currentOrder;
         //and now pushing to main --
         //checking if order already exist
-        $scope.todaysOrders.forEach(el=>{
+        /*$scope.todaysOrders.forEach(el=>{
             if(JSON.stringify(el) === JSON.stringify($scope.currentOrder)){
                 notifications.notify({type:"error",msg:"Order already exist!"})
                 return false;
             }
-        })
+        })*/
         $scope.todaysOrders.push(current);
-
+        swal({
+            title: "Done!",
+            text: "Added to list of orders!",
+            icon: "success",
+            button: "Okay",
+          });
         console.log($scope.todaysOrders);
     }
 

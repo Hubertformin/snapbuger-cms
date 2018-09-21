@@ -107,6 +107,3 @@ function searchOrderItems(e){
         }
     })
 }
-
-//DB index db
-var db = idb.open()
