@@ -75,17 +75,19 @@ $scope.db.users.put({
 })
 $scope.db.users.delete(2);*/
     //fetching
-    $scope.news = $scope.db.users
+    $scope.news = []
+    $scope.db.users
     .toArray()
     .then((data)=>{
-        return data;
+        $scope.news.push(data);
+        console.log($scope.news)
     })
     .catch((err)=>{
         console.log(err)
     })
     console.log($scope.news)
     //console.log($scope.products);
-   /* $scope.products = {
+   $scope.products = {
         tableNumber:10,
         categories:[
         {
@@ -188,7 +190,7 @@ $scope.db.users.delete(2);*/
             action: true
         }
 ]
-    } */   
+    }  
 //users,staff
     $scope.staffs = [];
     $scope.managers = [];

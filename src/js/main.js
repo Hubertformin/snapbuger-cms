@@ -18,8 +18,10 @@ M.AutoInit();
 })*/
 //to cosesidenav when links are clicked
 jQuery('#slide-out').on('click','a',()=>{
-    var sideNav = M.Sidenav.getInstance(jQuery('#slide-out'));
-    sideNav.close();
+    if(jQuery(window).width()<992){
+        var sideNav = M.Sidenav.getInstance(jQuery('#slide-out'));
+        sideNav.close();
+    }
 })
 //
 function showSearchBar(type){
