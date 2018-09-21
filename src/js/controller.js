@@ -35,9 +35,57 @@ app.config(($routeProvider) => {
 })*/
 
 app.controller("mainCtr", ($scope) => {
-
-    //All data
-    $scope.products = {
+    /*
+    ============ DATABASES ===============
+    */ 
+   var Dexie = require('dexie');
+   $scope.db = new Dexie('snapBurgerDatabase');
+   $scope.db.version(1).stores({
+    users: "++id, &name,password,position,startDate,salary,status,is_mgr",
+    products: "++id,tableNumber,*categories,*items",
+    orders:"++id,name,date,table,*items,totalPrice,totalQuantity"
+});
+//create new
+/*$scope.db.users.add({
+    name: "Brian",
+    password: "1234",
+    position: "Manager",
+    startDate: "21/02/2018",
+    salary: "N/A",
+    status: "active",
+    is_mgr: true
+})
+//fetch
+$scope.db.users
+    .toArray()
+    .then((dt)=>{
+        console.log(dt)
+    })
+    //update 
+$scope.db.users.put({
+    id:2,
+    name: "Hubert",
+    password: "1234",
+    position: "Manager",
+    startDate: "21/02/2018",
+    salary: "N/A",
+    status: "active",
+    is_mgr: true
+    //delete
+})
+$scope.db.users.delete(2);*/
+    //fetching
+    $scope.news = $scope.db.users
+    .toArray()
+    .then((data)=>{
+        return data;
+    })
+    .catch((err)=>{
+        console.log(err)
+    })
+    console.log($scope.news)
+    //console.log($scope.products);
+   /* $scope.products = {
         tableNumber:10,
         categories:[
         {
@@ -140,7 +188,7 @@ app.controller("mainCtr", ($scope) => {
             action: true
         }
 ]
-    }    
+    } */   
 //users,staff
     $scope.staffs = [];
     $scope.managers = [];

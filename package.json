@@ -10,6 +10,7 @@
   "author": "Hubert Formin",
   "license": "ISC",
   "dependencies": {
+    "dexie": "^2.0.4",
     "electron": "^2.0.9",
     "jquery": "^3.3.1",
     "sqlite3": "^4.0.2",
