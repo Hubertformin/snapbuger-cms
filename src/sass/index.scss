@@ -1,14 +1,16 @@
 /* width */
+
 //input number
 input[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none;
-    cursor:pointer;
-    display:block;
-    width:8px;
+    cursor: pointer;
+    display: block;
+    width: 8px;
     color: #333;
-    text-align:center;
-    position:relative;
+    text-align: center;
+    position: relative;
 }
+
 ::-webkit-scrollbar {
     width: 6px;
 }
@@ -37,8 +39,9 @@ hr {
     margin-top: 5px;
     margin-bottom: 9px;
 }
-select{
-    &.prefixed{
+
+select {
+    &.prefixed {
         margin-left: 3rem;
         width: 92%;
         width: calc(100% - 3rem)
@@ -46,10 +49,29 @@ select{
 }
 
 #login {
-    display: none;
+    display: block;
     img {
         width: 150px;
         height: auto;
+    }
+    .row {
+        position: relative;
+    }
+    #loader {
+        padding: 100px 55px;
+        position: absolute;
+        top: 0;
+        bottom: -3px;
+        left: 0;
+        right: 0;
+        background: #fff;
+        z-index: 29991;
+        .determinate {
+            width: 0%;
+            animation-name: loadPage;
+            animation-duration: 4.3s;
+            animation-timing-function: ease-in-out;
+        }
     }
     position: fixed;
     background:#fff;
@@ -61,6 +83,21 @@ select{
     form {
         width: 400px;
         padding: 40px 20px;
+        input {
+            width: 100%;
+            border: 1px solid #999;
+            padding: 14px;
+            color: #999;
+            border-radius: 25px;
+        }
+    }
+    p.copyright {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: #999;
     }
 }
 
@@ -77,27 +114,65 @@ select{
 body {
     position: relative; //background-image: url('../img/back6.jpg');
     overflow-y: scroll;
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
+    background: #f1f1f1;
 }
 
 //nav and search
-main,
-header {
+main {
     position: relative;
     width: calc(100%-250px);
     margin-left: 250px;
 }
 
+//sidenav
+#slide-out {
+    margin-top: 64px;
+    height: calc(100% - 64px);
+    .row .col {
+        padding: 0!important;
+    }
+    .img-div {
+        width: 79px;
+    }
+    .text-div {
+        a.name-link {
+            &::after {
+                content: '';
+                clear: both;
+                display: table;
+            }
+            i {
+                transform: translateY(9px);
+            }
+        }
+        a.email-link span{
+            //transform: translateY(-22px)
+        }
+    }
+    .dropdown-content {
+        border-radius: 10px;
+    }
+}
+
 nav {
     position: fixed;
     top: 0;
-    z-index: 2;
+    z-index: 1999;
     padding-left: 15px;
     .logo-link {
-        color: #999!important;
+        color: #f44336!important;
+        font-family: kaushan_script;
+        font-size: 19px;
+        span {
+            display: inline-block;
+            transform: translateY(-8px);
+        }
+        img {
+            display: inline-block;
+            height: 45px;
+            width: 45px;
+            transform: translateY(8px);
+        }
     }
     form {
         display: none;
@@ -108,11 +183,12 @@ nav {
         right: 0;
         bottom: 0;
         right: 0;
-        background-color: #f1f1f1;
+        background-color: #fff;
         box-shadow: 0px 5px 26px rgba(0, 0, 0, 0.12);
         input {
             position: absolute;
             bottom: 5px;
+            color: #f44336!important;
             padding-left: 30px!important;
             font-family: "Raleway";
             border: none!important;
@@ -131,13 +207,14 @@ nav {
                 top: 0;
             }
             display: inline-block!important;
-            color: #999!important;
+            color:#f44336!important;
             opacity: 1;
             transition: 0.5s;
         }
         .close-search {
             display: inline-block;
             position: absolute;
+            color: #f44336!important;
             top: 0;
             cursor: pointer;
             left: 75%;
@@ -149,11 +226,11 @@ nav {
     ul {
         &.nav-list-right {
             a {
-                color: #999!important;
+                color: #f44336!important;
             }
             position: absolute;
             top: 0;
-            left: 69%;
+            left:84%;
             color: #999 !important;
         }
     }
@@ -199,11 +276,13 @@ nav {
 .box {
     background: #fff;
     min-height: 50px;
+     border-radius: 29px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     position: relative;
     margin-bottom: 30px;
-    border-radius: 2px;
     .header {
+        border-top-left-radius: 29px;
+        border-top-right-radius: 29px;
         color: #555;
         padding: 20px;
         position: relative;
@@ -304,7 +383,7 @@ nav {
     bottom: 0;
     right: 0;
     left: 0;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.6);
     z-index: 0;
 }
 
@@ -326,21 +405,26 @@ nav {
     }
 }
 
-div.huberts-table-div{
-    min-height:50px;
-    max-height:500px;
+div.huberts-table-div {
+    min-height: 50px;
+    max-height: 500px;
     overflow-y: auto;
-    .no-data{
-        height:100%;
+    .no-data {
+        height: 100%;
         text-align: center;
-        line-height:50px;
+        line-height: 50px;
     }
 }
+
 table.huberts-tables {
     input {
         border: none!important;
         margin: 0px!important;
+        height: 35px!important;
         padding-left: 5px!important;
+        &:disabled {
+            color: #000!important;
+        }
         &:not(.date) {
             //width: 60%!important;
         }
@@ -354,12 +438,13 @@ table.huberts-tables {
         height: 35px!important;
     }
     thead {
-        border-bottom: 2px solid #000;
+        border-bottom: 2px solid #ddd;
         th {
-            &.small{
-                width:3%;
+            &.small {
+                width: 3%;
             }
-                width: 16.66%;
+            padding: 9px!important;
+            width: 16.66%;
             cursor: default;
             &:focus {
                 background: #ddd;
@@ -373,16 +458,17 @@ table.huberts-tables {
                 background: #f1f1f1;
             }
             td {
-                &.small{
-                    width:3%;
+                &.small {
+                    width: 3%;
                 }
+                border-right: 1px solid #ddd;
                 width: 16.66%;
-                padding: 9px 5px!important;
+                padding: 9px!important;
             }
         }
     }
     tfoot {
-        border-top: 2px solid #000;
+        border-top: 2px solid #ddd;
     }
 }
 
@@ -457,18 +543,19 @@ table.huberts-tables {
             margin-bottom: 0px!important;
         }
     }
-    .footer{
-        padding:10px;
+    .footer {
+        padding: 10px;
     }
 }
+
 //
-.orderPriceDetails{
+.orderPriceDetails {
     display: inline-block;
     border: 1px solid #ddd;
-    border-radius:25px;
-    padding:10px 25px;
-    background:#ddd;
-    span{
+    border-radius: 25px;
+    padding: 10px 25px;
+    background: #ddd;
+    span {
         font-weight: 900;
     }
 }
@@ -478,18 +565,17 @@ table.huberts-tables {
     margin-bottom: 10px;
     position: relative;
     i {
-        transform: translate(10px,10px);
-        color: #999;
-        //position: absolute;
+        transform: translate(10px, 10px);
+        color: #999; //position: absolute;
     }
     input {
         transform: translateY(-30px);
-        border:1.5px solid #ddd;
+        border: 1.5px solid #ddd;
         background: none;
         padding: 10px;
         border-radius: 25px;
         padding-left: 35px;
-        width:100%;
+        width: 100%;
         cursor: pointer;
         transition: all 0.6s linear;
         &:focus {
@@ -505,13 +591,16 @@ table.huberts-tables {
     margin: 10px;
     overflow-x: hidden;
     white-space: nowrap;
-    .no-results{
+    .no-results {
         display: none;
         position: absolute;
         text-align: center;
-        top: 0;left: 0;right: 0;bottom:0;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         line-height: 250px;
-        p{
+        p {
             margin: 0;
             font-size: xx-large;
             color: #999;
@@ -525,8 +614,19 @@ table.huberts-tables {
         border: 1px solid #ddd;
         height: 250px;
         .header {
-            padding: 5px 10px;
+            position: relative;
+            background-image: url(../img/item-bg.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
             color: #fff;
+            .dark{
+                padding: 5px 10px;
+                height: 100%;
+                width:100%;
+                background: rgba(0,0,0,0.65)
+            }
+            dl{z-index: 2;}
             dt {
                 font-size: 1.6rem;
             }
@@ -560,10 +660,10 @@ table.huberts-tables {
                 }
             }
             button {
-               &[type="submit"] {
+                &[type="submit"] {
                     background-color: #2e7d32;
-                    &.remove{
-                        background:#757575;
+                    &.remove {
+                        background: #757575;
                     }
                 }
                 display: block;
@@ -573,27 +673,39 @@ table.huberts-tables {
         }
     }
 }
+
 //
-@media only screen and (max-width:992px){
+@media only screen and (max-width:992px) {
     main,
-header {
-    position: relative;
-    width:100%;
-    margin-left:0px!important;
-}
+    header {
+        position: relative;
+        width: 100%;
+        margin-left: 0px!important;
+    }
     nav ul.nav-list-right {
-    position: absolute;
-    top: 0;
-    left: 81%;
-    color: #999 !important;
+        position: absolute;
+        top: 0;
+        left: 81%;
+        color: #999 !important;
+    }
 }
-}
+
 //
-@media only screen and (max-width:858px){
-nav ul.nav-list-right {
-    position: absolute;
-    top: 0;
-    left: 76%;
-    color: #999 !important;
+@media only screen and (max-width:858px) {
+    nav ul.nav-list-right {
+        position: absolute;
+        top: 0;
+        left: 76%;
+        color: #999 !important;
+    }
 }
+
+//animations
+@keyframes loadPage {
+    from {
+        width: 0%;
+    }
+    to {
+        width: 100%
+    }
 }

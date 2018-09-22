@@ -12,7 +12,7 @@ const {app, BrowserWindow} = require('electron')
     win.loadFile('src/index.html')
 
     // Open the DevTools.
-    win.webContents.openDevTools()
+    //win.webContents.openDevTools()
 //SQL lite
     // Emitted when the window is closed.
     win.on('closed', () => {

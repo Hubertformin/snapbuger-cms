@@ -1,21 +1,11 @@
 M.AutoInit();
-/*jQuery('#loginForm').on('submit',(e)=>{
-    e.preventDefault();
-    jQuery('#loginForm').waitMe({
-        effect : 'win8',
-        text : '',
-        bg : 'rgba(255,255,255,0.7)',
-        color : '#b71c1c',
-        maxSize : '',
-        waitTime :3000,
-        textPos : 'vertical',
-        fontSize : '',
-        source : '',
-        onClose : ()=> {
-            jQuery('#login').fadeOut()
-        }
-        });
-})*/
+jQuery(document).ready(()=>{
+   
+    setTimeout(()=>{
+        jQuery('#loader').remove();
+    },4000)
+})
+
 //to cosesidenav when links are clicked
 jQuery('#slide-out').on('click','a',()=>{
     if(jQuery(window).width()<992){
@@ -101,7 +91,7 @@ function searchOrderItems(e){
     var val = jQuery(e.target).val(),items = jQuery('#orderItems .item'),
     no_result = jQuery('#no-resultsOrder');
     no_result.hide();
-    //variable to chanege if result is fount
+    //variable to change if result is found
     var found = false;
     val = val.toLowerCase();
     items.each((i,el)=>{
@@ -124,7 +114,10 @@ function searchOrderItems(e){
             found = true;
         }
     })
-    if(!found){
+    if(found == false){
         no_result.show();
     }
 }
+//$AV_ASW
+var elems = document.querySelectorAll('.dropdown-trigger');
+var dropdown = M.Dropdown.init(elems, {coverTrigger:false});

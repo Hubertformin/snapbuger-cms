@@ -35,7 +35,7 @@ app.controller("staffCtr", ($scope) => {
             })
             return false;
         }
-        $scope.staffs.push({
+        $scope.db.users.add({
             name: $scope.staff_name,
             password: $scope.staff_password,
             position: $scope.staff_position,
@@ -44,26 +44,73 @@ app.controller("staffCtr", ($scope) => {
             status: "active",
             is_mgr: false
         })
-        notifications.notify({
-            type: 1,
-            msg: "Acount Created!"
+        .then(()=>{
+            notifications.notify({type: 1, msg: "Acount Created!"})
+            $scope.db.users.toArray()
+            .then((data)=>{
+                $scope.managers = [],$scope.staffs = []
+                $scope.users = data;
+                $scope.users.forEach(element => {
+                 if (element.is_mgr) {
+                     $scope.managers.push(element);
+                 } else {
+                     $scope.staffs.push(element)
+                 }
+             });
+             $scope.$apply();
+            })
+            .catch(()=>{
+                notifications.notify({msg:"An error occured: Unable to refetch!",type:"error"})
+            })
+            
         })
-        //re initializing users
-        $scope.users = $scope.staffs.concat($scope.managers)
-        $scope.$apply();
-        //console.log($scope.users)
     })
     //update staffs
     $scope.updateStaffs = (i) => {
-        console.log($scope.staffs)
+        $scope.db.users.put($scope.staffs[i])
+        .then(()=>{
+            $scope.db.users.toArray()
+            .then((data)=>{
+                $scope.managers = [],$scope.staffs = []
+                $scope.users = data;
+                $scope.users.forEach(element => {
+                 if (element.is_mgr) {
+                     $scope.managers.push(element);
+                 } else {
+                     $scope.staffs.push(element)
+                 }
+             });
+             $scope.$apply();
+            })
+            .catch(()=>{
+                notifications.notify({msg:"An error occured: Unable to refetch!",type:"error"})
+            })
+            
+        })
     }
     //delete staffs
     $scope.deleteStaffs = (i) => {
-        if(confirm(`Are you sure you want to delete '${$scope.staffs[i].name}'?`)){
-            $scope.staffs.splice(i, 1);
-            //re initializing users
-            $scope.users = $scope.staffs.concat($scope.managers)
-            //$scope.$apply()
+        if(confirm(`Are you sure you want to delete ${$scope.staffs[i].name}'s Account?`)){
+            $scope.db.users.delete($scope.staffs[i].id)
+            .then(()=>{
+                $scope.db.users.toArray()
+                .then((data)=>{
+                    $scope.managers = [],$scope.staffs = []
+                    $scope.users = data;
+                    $scope.users.forEach(element => {
+                     if (element.is_mgr) {
+                         $scope.managers.push(element);
+                     } else {
+                         $scope.staffs.push(element)
+                     }
+                 });
+                 $scope.$apply();
+                })
+                .catch(()=>{
+                    notifications.notify({msg:"An error occured: Unable to refetch!",type:"error"})
+                })
+                
+            })
         }
     }
 })

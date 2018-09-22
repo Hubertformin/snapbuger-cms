@@ -23,35 +23,56 @@
 <body>
     <section ng-app="mainApp" ng-controller="mainCtr">
         <!-- login page-->
-        <section id="login" class="red lighten-1">
+        <section id="login" class="white">
             <div class="center">
-                <form action="action" id="loginForm" class="z-depth-2 white">
+                <form action="action" id="loginForm" class="">
                     <img src="img/logo-round.png" alt="">
                     <div class="row">
-                        <div class="input-field col s12">
-                            <input id="username" type="text" ng-model="usernameInput" class="validate">
-                            <label for="username">Username</label>
+                        <div id="loader">
+                            <div class="progress">
+                                <div class="determinate"></div>
+                            </div>
                         </div>
                         <div class="input-field col s12">
-                            <input id="password" type="password" ng-model="passwordInput" class="validate">
-                            <label for="password">Password</label>
+                            <input class="browser-default" placeholder="User name" id="username" type="text" ng-model="usernameInput" class="validate">
                         </div>
-                        <button class="btn waves-effect waves-light" type="submit" name="action">Login
-                    <i class="material-icons right">person</i>
+                        <div class="input-field col s12">
+                            <input class="browser-default" id="password" placeholder="Password" type="password" ng-model="passwordInput" class="validate">
+                        </div>
+                        <button ng-disabled="users.length == 0" class="btn waves-effect waves-light" type="submit" name="action">Login
+                    <i class="material-icons left">person</i>
                   </button>
                     </div>
                 </form>
             </div>
+            <p class="copyright">&copy;
+                <script>
+                    document.write(new Date().getFullYear())
+
+                </script> A production of Silverslopescm. All rights reserved</p>
         </section>
         <ul id="slide-out" class="sidenav sidenav-fixed">
             <li>
                 <div class="user-view">
                     <div class="background">
-                        <img src="img/office.jpg">
+
                     </div>
-                    <a href="#user"><img class="circle" src="img/logo-round.png"></a>
-                    <a href="#name"><span class="white-text name">{{currentUser.name}}</span></a>
-                    <a href="#email"><span class="white-text email">@SnapBurger</span></a>
+                    <div class="row dropdown-trigger" data-target="user_dropdown">
+                        <div class="img-div col s6">
+                            <a href="#user"><img class="circle" src="img/user-grey.png"></a>
+                        </div>
+                        <div class="col s6 text-div" style="transform: translateY(-14px)">
+                            <a href="javascript:void(0)" class="name-link"><span class="grey-text name">{{currentUser.name}} <i class="material-icons grey-text">keyboard_arrow_down</i></span></a>
+                            <!--More options -->
+                            <ul id="user_dropdown" class='dropdown-content'>
+                                <li><a href="javascript:void(0)"><i class="material-icons">person</i>Profile</a></li>
+                                <li><a href="javascript:void(0)"><i class="material-icons">settings</i>settings</a></li>
+                                <li class="divider" tabindex="-1"></li>
+                                <li><a ng-click="logOut()" href="javascript:void(0)"><i class="material-icons">power_settings_new</i>Log out</a></li>
+                            </ul>
+                            <a href="javascript:void(0)" class="email-link"><span class="grey-text email">@SnapBurger</span></a>
+                        </div>
+                    </div>
                 </div>
             </li>
             <li><a id="dashboardLink" href="#/!"><i class="material-icons">dvr</i>Dashboard</a></li>
@@ -71,7 +92,7 @@
         <header>
             <nav class="navbar z-depth-2 white">
                 <a href="javascript:void(0)" data-target="slide-out" class=".show-on-medium-and-down sidenav-trigger"><i class="material-icons">menu</i></a>
-                <a href="#" class="logo-link">Nudle</a>
+                <a href="javascript:void(0)" class="logo-link"><img src="img/logo-round.png" alt="logo"> <span>Snaburger</span></a>
                 <form action="#" id="nav-form">
                     <i class="material-icons search">search</i>
                     <input type="search" autofocus name="search" id="" placeholder="Search..">
@@ -110,6 +131,7 @@
         </div>
     </section>
     <!--<script src="dist/dataTables/datatables.min.js"></script>-->
+    <script src="js/waitMe.min.js"></script>
     <script src="js/sweetalert.js"></script>
     <script src="js/main.js"></script>
     <script src="js/controller.js"></script>

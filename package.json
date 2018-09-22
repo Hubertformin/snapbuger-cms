@@ -10,6 +10,8 @@
   "author": "Hubert Formin",
   "license": "ISC",
   "dependencies": {
+    "@trodi/electron-splashscreen": "^0.3.1",
+    "dexie": "^2.0.4",
     "electron": "^2.0.9",
     "jquery": "^3.3.1",
     "sqlite3": "^4.0.2",
