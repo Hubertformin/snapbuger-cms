@@ -619,8 +619,13 @@ table.huberts-tables {
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
-            padding: 5px 10px;
             color: #fff;
+            .dark{
+                padding: 5px 10px;
+                height: 100%;
+                width:100%;
+                background: rgba(0,0,0,0.65)
+            }
             dl{z-index: 2;}
             dt {
                 font-size: 1.6rem;

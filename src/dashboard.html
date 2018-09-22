@@ -60,13 +60,14 @@
                                 <div id="no-resultsOrder" class="no-results"><p>No results</p></div>
                                 <div ng-repeat="x in products.items track by $index" class="item z-depth-2">
                                     <div class="header">
-                                       <div class="dark-wrapper"></div>
-                                        <dl>
+                                       <div class="dark">
+                                           <dl>
                                             <dt class="item-name">{{x.name}}</dt>
                                             <dd class="item-category">{{x.category}}</dd>
                                             <dd class="item-status">{{x.status}}</dd>
                                             <dd class="item-price">{{x.rate | currency : "XAF ":0}}</dd>
                                         </dl>
+                                       </div>
                                     </div>
                                     <div class="body">
                                         <div class="inputDiv">

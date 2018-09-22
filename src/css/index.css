@@ -507,8 +507,12 @@ table.huberts-tables tfoot {
       background-repeat: no-repeat;
       background-size: cover;
       background-position: center;
-      padding: 5px 10px;
       color: #fff; }
+      .scrollContainer .item .header .dark {
+        padding: 5px 10px;
+        height: 100%;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.65); }
       .scrollContainer .item .header dl {
         z-index: 2; }
       .scrollContainer .item .header dt {
