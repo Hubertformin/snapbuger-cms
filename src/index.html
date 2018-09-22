@@ -75,17 +75,17 @@
                     </div>
                 </div>
             </li>
-            <li><a id="dashboardLink" href="#/!"><i class="material-icons">dvr</i>Dashboard</a></li>
-            <li><a href="#!items"><i class="material-icons">dns</i>Products</a></li>
-            <li><a href="#!settings"><i class="material-icons">settings</i>Settings</a></li>
+            <li><a class="sideNavLink" id="dashboardLink" href="#/!"><i class="material-icons">dvr</i>Dashboard</a></li>
+            <li><a href="#!items" class="sideNavLink"><i class="material-icons">dns</i>Products</a></li>
+            <li><a href="#!settings" class="sideNavLink"><i class="material-icons">settings</i>Settings</a></li>
             <!--HIDE THIS SECTION TO REGULAR USERS -->
             <div ng-show="currentUser.is_mgr">
                 <li>
                     <div class="divider"></div>
                 </li>
-                <li><a class="subheader">Admin</a></li>
-                <li><a href="#!reports"><i class="material-icons">insert_chart</i>Reports</a></li>
-                <li><a href="#!emp"><i class="material-icons">people</i>Staff</a></li>
+                <li><a class="sideNavLink" class="subheader">Admin</a></li>
+                <li><a class="sideNavLink" href="#!reports"><i class="material-icons">insert_chart</i>Reports</a></li>
+                <li><a class="sideNavLink" href="#!emp"><i class="material-icons">people</i>Staff</a></li>
             </div>
         </ul>
         <!-- main section -->

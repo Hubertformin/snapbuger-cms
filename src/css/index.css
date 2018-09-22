@@ -282,7 +282,7 @@ nav {
   display: block;
   width: 100%; }
 
-.list {
+.lists {
   border: 1px solid #ddd;
   background-image: attr(data-url url);
   background-size: cover;
@@ -290,14 +290,14 @@ nav {
   height: 200px;
   width: 180px;
   position: relative; }
-  .list .card-title {
+  .lists .card-title {
     position: absolute;
     font-size: 20px;
     color: #fff;
     left: 6px;
     top: 5px;
     z-index: 13; }
-  .list input[type="number"] {
+  .lists input[type="number"] {
     width: 120px !important;
     text-align: center !important;
     background: #fff !important;
@@ -307,11 +307,11 @@ nav {
     left: 20px;
     bottom: 30px;
     border: none !important; }
-    .list input[type="number"]:focus {
+    .lists input[type="number"]:focus {
       border: none !important;
       -webkit-box-shadow: 0px 0px 0px transparent !important;
       box-shadow: 0px 0px 0px transparent !important; }
-  .list p.btn {
+  .lists p.btn {
     position: absolute;
     bottom: 0;
     margin: 0; }

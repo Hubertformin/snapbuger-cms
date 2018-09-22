@@ -7,7 +7,7 @@ jQuery(document).ready(()=>{
 })
 
 //to cosesidenav when links are clicked
-jQuery('#slide-out').on('click','a',()=>{
+jQuery('#slide-out').on('click','.sideNavLink',()=>{
     if(jQuery(window).width()<992){
         var sideNav = M.Sidenav.getInstance(jQuery('#slide-out'));
         sideNav.close();
