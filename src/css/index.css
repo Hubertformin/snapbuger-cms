@@ -73,6 +73,9 @@ select.prefixed {
       padding: 14px;
       color: #999;
       border-radius: 25px; }
+      #login form input:focus {
+        border-color: #f44336;
+        color: #f44336; }
   #login p.copyright {
     position: absolute;
     bottom: 0;
