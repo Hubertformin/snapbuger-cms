@@ -48,6 +48,19 @@ select.prefixed {
   #login form {
     width: 400px;
     padding: 40px 20px; }
+    #login form input {
+      width: 100%;
+      border: 1px solid #999;
+      padding: 14px;
+      color: #999;
+      border-radius: 25px; }
+  #login p.copyright {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #999; }
 
 .notingtoshow {
   position: absolute;

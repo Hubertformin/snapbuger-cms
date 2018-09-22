@@ -23,25 +23,24 @@
 <body>
     <section ng-app="mainApp" ng-controller="mainCtr">
         <!-- login page-->
-        <section id="login" class="red lighten-1">
+        <section id="login" class="white">
             <div class="center">
-                <form action="action" id="loginForm" class="z-depth-2 white">
+                <form action="action" id="loginForm" class="">
                     <img src="img/logo-round.png" alt="">
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="username" type="text" ng-model="usernameInput" class="validate">
-                            <label for="username">Username</label>
+                            <input class="browser-default" placeholder="User name" id="username" type="text" ng-model="usernameInput" class="validate">
                         </div>
                         <div class="input-field col s12">
-                            <input id="password" type="password" ng-model="passwordInput" class="validate">
-                            <label for="password">Password</label>
+                            <input class="browser-default" id="password" placeholder="Password" type="password" ng-model="passwordInput" class="validate">
                         </div>
                         <button class="btn waves-effect waves-light" type="submit" name="action">Login
-                    <i class="material-icons right">person</i>
+                    <i class="material-icons left">person</i>
                   </button>
                     </div>
                 </form>
             </div>
+                        <p class="copyright">&copy;<script>document.write(new Date().getFullYear())</script> A production of Silverslopescm. All rights reserved</p>
         </section>
         <ul id="slide-out" class="sidenav sidenav-fixed">
             <li>
