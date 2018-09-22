@@ -1,21 +1,11 @@
 M.AutoInit();
-/*jQuery('#loginForm').on('submit',(e)=>{
-    e.preventDefault();
-    jQuery('#loginForm').waitMe({
-        effect : 'win8',
-        text : '',
-        bg : 'rgba(255,255,255,0.7)',
-        color : '#b71c1c',
-        maxSize : '',
-        waitTime :3000,
-        textPos : 'vertical',
-        fontSize : '',
-        source : '',
-        onClose : ()=> {
-            jQuery('#login').fadeOut()
-        }
-        });
-})*/
+jQuery(document).ready(()=>{
+   
+    setTimeout(()=>{
+        jQuery('#loader').remove();
+    },4000)
+})
+
 //to cosesidenav when links are clicked
 jQuery('#slide-out').on('click','a',()=>{
     if(jQuery(window).width()<992){

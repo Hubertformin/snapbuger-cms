@@ -58,7 +58,7 @@ app.controller("mainCtr", ($scope) => {
        users:"++id,name,password,position,startDate,salary,status,is_mgr",
        categories:"++id,name,status,action",
        items:"++id,name,rate,category,status,action",
-       table:"number",
+       tableNumber:"number",
        orders:"name,date,*items,totalPrice,totalQuantity"
    })
    //$scope.db.items.bulkPut([])
@@ -67,7 +67,7 @@ app.controller("mainCtr", ($scope) => {
    .then((data)=>{
        $scope.users = data;
        $scope.users.forEach(element => {
-        if (element.is_mgr) {
+        if (element.is_mgr == true) {
             $scope.managers.push(element);
         } else {
             $scope.staffs.push(element)
@@ -95,6 +95,7 @@ app.controller("mainCtr", ($scope) => {
     ]*/
     $scope.currentUser = '';
     if (sessionStorage.getItem('user') != null) {
+        jQuery('#login').hide()
         $scope.currentUser = JSON.parse(sessionStorage.getItem('user'))
     } else {
         jQuery('#login').show();
@@ -154,6 +155,7 @@ app.controller("mainCtr", ($scope) => {
                     jQuery('#login').show();
                     $scope.currentUser = '';
                     document.querySelector('#dashboardLink').click();
+                    sessionStorage.clear('user');
                 } else {
                     return false;
                 }

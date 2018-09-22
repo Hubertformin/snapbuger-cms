@@ -12,9 +12,9 @@ app.controller("itemsCtr", ($scope) => {
             return false;
         }
         //{number:$scope.products.tableNumber}
-        $scope.db.table.add({number:$scope.products.tableNumber})
-        .then((data)=>{
-            console.log(data);
+        $scope.db.tableNumber.add({number:$scope.products.tableNumber})
+        .then(()=>{
+            console.log("Done!");
         })
         .catch((err)=>{
             notifications.notify({msg:`Erorr! ${err}`,type:"error"})

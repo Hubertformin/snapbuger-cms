@@ -28,13 +28,18 @@
                 <form action="action" id="loginForm" class="">
                     <img src="img/logo-round.png" alt="">
                     <div class="row">
+                       <div id="loader">
+                            <div class="progress">
+                                <div class="determinate"></div>
+                            </div>
+                       </div>
                         <div class="input-field col s12">
                             <input class="browser-default" placeholder="User name" id="username" type="text" ng-model="usernameInput" class="validate">
                         </div>
                         <div class="input-field col s12">
                             <input class="browser-default" id="password" placeholder="Password" type="password" ng-model="passwordInput" class="validate">
                         </div>
-                        <button ng-disabled="$scope.users.length == 0" class="btn waves-effect waves-light" type="submit" name="action">Login
+                        <button ng-disabled="users.length == 0" class="btn waves-effect waves-light" type="submit" name="action">Login
                     <i class="material-icons left">person</i>
                   </button>
                     </div>
@@ -109,6 +114,7 @@
         </div>
     </section>
     <!--<script src="dist/dataTables/datatables.min.js"></script>-->
+    <script src="js/waitMe.min.js"></script>
     <script src="js/sweetalert.js"></script>
     <script src="js/main.js"></script>
     <script src="js/controller.js"></script>

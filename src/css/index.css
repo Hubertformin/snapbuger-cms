@@ -34,7 +34,7 @@ select.prefixed {
   width: calc(100% - 3rem); }
 
 #login {
-  display: none;
+  display: block;
   position: fixed;
   background: #fff;
   top: 0;
@@ -45,6 +45,25 @@ select.prefixed {
   #login img {
     width: 150px;
     height: auto; }
+  #login .row {
+    position: relative; }
+  #login #loader {
+    padding: 100px 55px;
+    position: absolute;
+    top: 0;
+    bottom: -3px;
+    left: 0;
+    right: 0;
+    background: #fff;
+    z-index: 29991; }
+    #login #loader .determinate {
+      width: 0%;
+      -webkit-animation-name: loadPage;
+      animation-name: loadPage;
+      -webkit-animation-duration: 4.3s;
+      animation-duration: 4.3s;
+      -webkit-animation-timing-function: ease-in-out;
+      animation-timing-function: ease-in-out; }
   #login form {
     width: 400px;
     padding: 40px 20px; }
@@ -313,6 +332,8 @@ table.huberts-tables input {
   margin: 0px !important;
   height: 35px !important;
   padding-left: 5px !important; }
+  table.huberts-tables input:disabled {
+    color: #000 !important; }
   table.huberts-tables input:focus {
     background: #fff !important;
     -webkit-box-shadow: 0px 0px 0px white !important;
@@ -516,3 +537,15 @@ table.huberts-tables tfoot {
     top: 0;
     left: 76%;
     color: #999 !important; } }
+
+@-webkit-keyframes loadPage {
+  from {
+    width: 0%; }
+  to {
+    width: 100%; } }
+
+@keyframes loadPage {
+  from {
+    width: 0%; }
+  to {
+    width: 100%; } }
