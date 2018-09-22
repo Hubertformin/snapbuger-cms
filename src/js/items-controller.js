@@ -4,7 +4,24 @@ app.controller("itemsCtr", ($scope) => {
     //initializing collapse
     var elems = document.querySelectorAll('.collapsible');
     var instances = M.Collapsible.init(elems);
+    //=============== Table Number =========================
+    $scope.updateTableNumber = ()=>{
+        if(typeof $scope.products.tableNumber !== 'number'){
+            notifications.notify({type:"error",msg:"Invalid Table Number!"})
+            $scope.products.tableNumber = 1;
+            return false;
+        }
+        //{number:$scope.products.tableNumber}
+        $scope.db.table.add({number:$scope.products.tableNumber})
+        .then((data)=>{
+            console.log(data);
+        })
+        .catch((err)=>{
+            notifications.notify({msg:`Erorr! ${err}`,type:"error"})
+        })
+    }
     //categories table
+    //=========================== Categories ======================
     //1. Create Categories
     jQuery('#createCategoryForm').on('submit', (e) => {
         e.preventDefault();
@@ -18,22 +35,23 @@ app.controller("itemsCtr", ($scope) => {
         //data
         var data = {name: $scope.category_name,status: $scope.category_status,action: action}
         $scope.db.categories.add(data)
-        //$scope.products.categories.push(data);
-        //$scope.$apply();
-        $scope.db.categories.toArray()
-        .then((data)=>{
-            $scope.products.categories = data;
-            $scope.$apply();
-            console.log($scope.products.categories)
-            notifications.notify({
-                msg: "Added!",
-                type: "done"
+        .then(()=>{
+            $scope.db.categories.toArray()
+             .then((data)=>{
+                $scope.products.categories = data;
+                $scope.category_name = "";
+                $scope.$apply();
+                console.log($scope.products.categories)
+                notifications.notify({
+                    msg: "Added!",
+                    type: "done"
+                })
             })
-            $scope.category_name = ""
+            .catch(err=>{
+                notifications.notify({msg:`An error occured: Unable to refetch!`,type:"error"})
+            })
         })
-        .catch(err=>{
-            notifications.notify({msg:`An error occured:${err}`,type:"error"})
-        })
+        
         //console.log( $scope.products.categories);
     })
     //update categories
@@ -60,19 +78,25 @@ app.controller("itemsCtr", ($scope) => {
     $scope.deleteCategories = (i) => {
         if(confirm(`Are you sure you want to delete '${$scope.products.categories[i].name}'?`)){
             $scope.db.categories.delete($scope.products.categories[i].id)
-            $scope.db.categories.toArray()
-            .then((data)=>{
-                $scope.products.categories = data;
-                $scope.$apply();
-                console.log($scope.products.categories)
-                notifications.notify({
-                    msg: "Removed!",
-                    type: "done"
+            .then(()=>{
+                $scope.db.categories.toArray()
+                .then((data)=>{
+                    $scope.products.categories = data;
+                    $scope.$apply();
+                    console.log($scope.products.categories)
+                    notifications.notify({
+                         msg: "Removed!",
+                         type: "done"
+                    })
+                 })
+                .catch(err=>{
+                    notifications.notify({msg:`An error occured: Unable to refetch!`,type:"error"})
                 })
             })
-            .catch(err=>{
-                notifications.notify({msg:`An error occured:${err}`,type:"error"})
+            .catch(()=>{
+                notifications.notify({msg:`An error occured: Unable to delete!`,type:"error"}) 
             })
+            
         }
         
     }
@@ -87,6 +111,9 @@ app.controller("itemsCtr", ($scope) => {
             });
             return false;
         }
+        //converting first character to upper case
+        $scope.item_name = $scope.item_name[0].toUpperCase()+$scope.item_name.slice(1);
+        //date
         let data = {name: $scope.item_name,rate: $scope.item_rate,category: $scope.item_category,status: $scope.item_status}
         //$scope.products.items.push()
         //Add to database
@@ -105,6 +132,9 @@ app.controller("itemsCtr", ($scope) => {
                     msg: "Added!",
                     type: "done"
                 })
+            })
+            .catch(()=>{
+                notifications.notify({msg:'An error occured: Unable to refetch!',type:"error"})
             })
         })
     })
@@ -132,6 +162,12 @@ app.controller("itemsCtr", ($scope) => {
                     type: "done"
                 })
             })
+            .catch(()=>{
+                notifications.notify({msg:'An error occured: Unable to refetch!',type:"error"})
+            })
+        })
+        .catch(()=>{
+            notifications.notify({msg:'An error occured: Unable to Update!',type:"error"})
         })
         //console.log($scope.products.items[i]);
     }
@@ -153,7 +189,15 @@ app.controller("itemsCtr", ($scope) => {
                          type: "done"
                     })
                 })
+                .catch(()=>{
+                    notifications.notify({msg:'An error occured: Unable to refetch!',type:"error"})
+                })
+                //
             })
+            .catch(()=>{
+                notifications.notify({msg:'An error occured: Unable to Delete!',type:"error"})
+            })
+            //
         }
         
     }

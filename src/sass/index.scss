@@ -91,10 +91,7 @@ select{
 body {
     position: relative; //background-image: url('../img/back6.jpg');
     overflow-y: scroll;
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
+    background:#f1f1f1;
 }
 
 //nav and search

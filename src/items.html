@@ -13,7 +13,7 @@
                 Number of tables<br><small>Enter number of tables</small>
             </h2>
             <div class="input-field inline" style="margin:0;margin-left:10px;">
-                <input style="transform:translateY(-16px);margin: 0;" id="tableNumber" min="1" ng-model="products.tableNumber" type="number" class="validate">
+                <input ng-change="updateTableNumber()" style="transform:translateY(-16px);margin: 0;" id="tableNumber" min="1" ng-model="products.tableNumber" type="number" class="validate">
             </div>
         </div>
     </div>
@@ -33,8 +33,7 @@
                             <form action="#" id="createCategoryForm" class="col s12" name="categoriesForm">
                                 <div class="row">
                                     <div class="input-field col s6">
-                                        <input data-error="Invalid Name" id="category_name" type="text" ng-model="category_name" name="category_name" class="validate">
-                                        <label for="category_name">Category Name</label>
+                                        <input data-error="Invalid Name" id="category_name" type="text" ng-model="category_name" name="category_name" class="validate" placeholder="Name">
                                     </div>
                                     <div class="input-field col s6">
                                         <label style="transform: translateY(-21px);" for="category_status">Status</label>
