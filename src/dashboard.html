@@ -58,7 +58,7 @@
                             </div>
                             <div id="orderItems" class="col s12 scrollContainer">
                                 <div id="no-resultsOrder" class="no-results"><p>No results</p></div>
-                                <div ng-repeat="x in products.items" class="item z-depth-2">
+                                <div ng-repeat="x in products.items track by $index" class="item z-depth-2">
                                     <div class="header">
                                         <dl>
                                             <dt class="item-name">{{x.name}}</dt>

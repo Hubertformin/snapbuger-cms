@@ -71,15 +71,10 @@
                 </div>
                 <table class="huberts-tables mdl-data-table" style="width:100%">
                     <tbody>
-                        <tr ng-repeat="x in products.categories">
+                        <tr ng-repeat="x in products.categories track by $index">
                             <td class="small">{{$index+1}}</td>
-                            <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateCategories($index)" type="text" ng-model="x.name"></td>
-                            <td>
-                                <select ng-disabled="!currentUser.is_mgr" ng-change="updateCategories($index)" ng-model="x.status" class="browser-default">
-                            <option value="available">Available</option>
-                            <option value="unavailable">Unavailable</option>
-                        </select>
-                            </td>
+                            <td>{{x.name}}</td>
+                            <td>{{x.status}}</td>
                             <td class="small" ng-show="currentUser.is_mgr"><i ng-click="deleteCategories($index)" class="material-icons">delete</i></td>
                         </tr>
                     </tbody>
@@ -113,8 +108,7 @@
                             <form action="#" id="createItemForm" class="col s12" name="itemForm">
                                 <div class="row">
                                     <div class="input-field col s6">
-                                        <input data-error="Invalid Name" id="item_name" type="text" name="item_name" ng-model="item_name" class="validate">
-                                        <label for="item_name">Name</label>
+                                        <input data-error="Invalid Name" id="item_name" type="text" placeholder="Name" name="item_name" ng-model="item_name" class="validate">
                                     </div>
                                     <div class="input-field col s6">
                                         <label style="transform: translateY(-21px);" for="item_status">Status</label>
@@ -130,8 +124,7 @@
                                             <div class="col s2 teal darken-1" style="transform: translateY(10px);text-align: center;color:#fff;padding:6px 10px;">XAF</div>
                                             <div class="col s10">
                                                 <div class="input-field" style="transform: translateY(-15px);">
-                                                    <input data-error="Invalid Rate" id="item_rate" type="number" name="item_rate" ng-model="item_rate" class="validate">
-                                                    <label for="item_rate">Rate</label>
+                                                    <input data-error="Invalid Rate" id="item_rate" type="number" name="item_rate" ng-model="item_rate" class="validate" placeholder="Rate">
                                                 </div>
                                             </div>
                                         </div>
@@ -139,7 +132,7 @@
                                     <div class="col s6">
                                         <select name="item_category" ng-model="item_category" id="#" class="browser-default">
                                                 <option value="" selected disabled>Select category</option>
-                                                <option ng-disabled="!x.action" ng-repeat="x in products.categories" value="{{x.name}}">{{x.name}}</option>
+                                                <option ng-disabled="!x.action" ng-repeat="x in products.categories track by $index" value="{{x.name}}">{{x.name}}</option>
                                             </select>
                                     </div>
                                 </div>
@@ -172,13 +165,13 @@
                 </div>
                 <table id="itemsTable" class="huberts-tables mdl-data-table" style="width:100%">
                     <tbody>
-                        <tr ng-repeat="x in products.items">
+                        <tr ng-repeat="x in products.items track by $index">
                             <td class="small">{{$index+1}}</td>
                             <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" type="text" ng-model="x.name"></td>
                             <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" type="number" ng-model="x.rate"></td>
                             <td>
                                 <select ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" class="browser-default" ng-model="x.category">
-                                <option ng-disabled="!o.action" ng-repeat="o in products.categories" value="{{o.name}}">{{o.name}}</option>
+                                <option ng-disabled="!o.action" ng-repeat="o in products.categories track by $index" value="{{o.name}}">{{o.name}}</option>
                             </select>
                             </td>
                             <td>

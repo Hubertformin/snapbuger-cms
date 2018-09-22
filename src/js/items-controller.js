@@ -13,81 +13,99 @@ app.controller("itemsCtr", ($scope) => {
         if ($scope.category_status != "available") {
             action = false;
         }
-        $scope.products.categories.push({
-            name: $scope.category_name,
-            status: $scope.category_status,
-            action: action
+        //converting first character to upper case
+        $scope.category_name = $scope.category_name[0].toUpperCase()+$scope.category_name.slice(1);
+        //data
+        var data = {name: $scope.category_name,status: $scope.category_status,action: action}
+        $scope.db.categories.add(data)
+        //$scope.products.categories.push(data);
+        //$scope.$apply();
+        $scope.db.categories.toArray()
+        .then((data)=>{
+            $scope.products.categories = data;
+            $scope.$apply();
+            console.log($scope.products.categories)
+            notifications.notify({
+                msg: "Added!",
+                type: "done"
+            })
+            $scope.category_name = ""
         })
-        $scope.$apply();
-        notifications.notify({
-            msg: "Added!",
-            type: "done"
+        .catch(err=>{
+            notifications.notify({msg:`An error occured:${err}`,type:"error"})
         })
         //console.log( $scope.products.categories);
     })
     //update categories
-    $scope.updateCategories = (i) => {
+    /*$scope.updateCategories = (i) => {
         if ($scope.products.categories[i].status == "available") {
             $scope.products.categories[i].action = true;
         } else {
             $scope.products.categories[i].action = false;
-            $scope.products.items.forEach(elems=>{
-                if(elems.category == $scope.products.categories[i].name){
-                    elems.action = false;
-                    elems.status = 'unavailable';
-                }else{
-                    elems.action = true;
-                    elems.status = 'available';
-                }
-            })
         }
-        //console.log($scope.products.categories);
-    }
+        //updating in db
+        $scope.db.categories.put($scope.products.categories[i])
+        $scope.db.categories.toArray()
+        .then((data)=>{
+            $scope.products.categories = data;
+            $scope.$apply();
+            console.log($scope.products.categories)
+            notifications.notify({
+                msg: "Added!",
+                type: "done"
+            })
+        })
+    }*/
     //deleting categories
     $scope.deleteCategories = (i) => {
-        //confirm(`Are you sure `);
-        swal({
-                title: "Are you sure?",
-                text: "Once deleted, you will not be able to revert this!",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
+        if(confirm(`Are you sure you want to delete '${$scope.products.categories[i].name}'?`)){
+            $scope.db.categories.delete($scope.products.categories[i].id)
+            $scope.db.categories.toArray()
+            .then((data)=>{
+                $scope.products.categories = data;
+                $scope.$apply();
+                console.log($scope.products.categories)
+                notifications.notify({
+                    msg: "Removed!",
+                    type: "done"
+                })
             })
-            .then((willDelete) => {
-                if (willDelete) {
-                    $scope.products.categories.splice(i, 1);
-                    $scope.$apply();
-                    swal("Deleted!", {
-                        icon: "success",
-                    });
-                } else {
-                    swal("Your imaginary file is safe!");
-                }
-            });
+            .catch(err=>{
+                notifications.notify({msg:`An error occured:${err}`,type:"error"})
+            })
+        }
+        
     }
+    //===========================ITEMS ==========================================================================
     //Create Items
     jQuery('#createItemForm').on('submit', (e) => {
         e.preventDefault();
-        if ($scope.item_name == '' || $scope.item_rate == '' || $scope.item_category == '') {
+        if (typeof $scope.item_name !== 'string' || typeof $scope.item_rate !== 'number' || typeof $scope.item_category !== 'string') {
             notifications.notify({
-                msg: "Please fill all fields!",
+                msg: "Invalid values!",
                 type: "error"
             });
             return false;
         }
-        $scope.products.items.push({
-            name: $scope.item_name,
-            rate: $scope.item_rate,
-            category: $scope.item_category,
-            status: $scope.item_status
-        })
-        $scope.$apply();
-        //reseting variables
-        $scope.item_name = '';
-        //nitifications
-        notifications.notify({
-            msg: "Added!",
-            type: "done"
+        let data = {name: $scope.item_name,rate: $scope.item_rate,category: $scope.item_category,status: $scope.item_status}
+        //$scope.products.items.push()
+        //Add to database
+        $scope.db.items.add(data)
+        .then(()=>{
+            $scope.db.items.toArray()
+            .then(data=>{
+                $scope.products.items = data;
+                $scope.item_name = '';
+                $scope.item_rate = '';
+                $scope.$apply();
+                //console.log($scope.products.items)
+                //reseting variables
+                //nitifications
+                notifications.notify({
+                    msg: "Added!",
+                    type: "done"
+                })
+            })
         })
     })
     //update Itemms
@@ -97,29 +115,47 @@ app.controller("itemsCtr", ($scope) => {
 
             $scope.products.items[i].action = false;
         }
+        //updating database
+        $scope.db.items.put($scope.products.items[i])
+        .then(()=>{
+            $scope.db.items.toArray()
+            .then(data=>{
+                $scope.products.items = data;
+                $scope.item_name = '';
+                $scope.item_rate = '';
+                $scope.$apply();
+                console.log($scope.products.items)
+                //reseting variables
+                //nitifications
+                notifications.notify({
+                    msg: "Added!",
+                    type: "done"
+                })
+            })
+        })
         //console.log($scope.products.items[i]);
     }
     //delete Items
     $scope.deleteItems = (i) => {
-        //confirm(`Are you sure `);
-        swal({
-                title: "Are you sure?",
-                text: "Once deleted, you will not be able to revert this!",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    $scope.products.items.splice(i, 1);
+        if(confirm(`Are you sure you want to delete '${$scope.products.items[i].name}'?`)){
+            //updating database
+            $scope.db.items.delete($scope.products.items[i].id)
+            .then(()=>{
+                $scope.db.items.toArray()
+                .then(data=>{
+                    $scope.products.items = data;
                     $scope.$apply();
-                    swal("Deleted!", {
-                        icon: "success",
-                    });
-                } else {
-                    swal("Your imaginary file is safe!");
-                }
-            });
+                    console.log($scope.products.items)
+                    //reseting variables
+                     //nitifications
+                    notifications.notify({
+                        msg: 'Deleted!',
+                         type: "done"
+                    })
+                })
+            })
+        }
+        
     }
 
 })

@@ -124,7 +124,7 @@ function searchOrderItems(e){
             found = true;
         }
     })
-    if(!found){
+    if(found == false){
         no_result.show();
     }
 }
