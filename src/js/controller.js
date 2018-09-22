@@ -37,196 +37,62 @@ app.config(($routeProvider) => {
 app.controller("mainCtr", ($scope) => {
     /*
     ============ DATABASES ===============
-    */ 
-   
-   $scope.products = {
-        tableNumber:10,
-        categories:[
-        {
-            name: "Food",
-            status: "available",
-            action: true
-        },
-        {
-            name: "Cocktails",
-            status: "available",
-            action: true
-        },
-        {
-            name: "Lemonade",
-            status: "available",
-            action: true
-        },
-        {
-            name: "Wine",
-            status: "available",
-            action: true
-        }
-        ],    
-        items:[
-        {
-            name: "Burger",
-            rate: 2000,
-            category: "Food",
-            status: "available",
-            action: true
-        },
-        {
-            name: "King Burger",
-            rate: 2500,
-            category: "Food",
-            status: "available",
-            action: true
-        },
-        {
-            name: "Baileys",
-            rate: 12000,
-            category: "Wine",
-            status: "available",
-            action: true
-        },
-        {
-            name: "Red verlet",
-            rate: 1000,
-            category: "Food",
-            status: "available",
-            action: true
-        },
-        {
-            name: "Djuino",
-            rate: 700,
-            category: "Cocktails",
-            status: "available",
-            action: true
-        },
-        {
-            name: "Lisade",
-            rate: 1200,
-            category: "Lemonade",
-            status: "available",
-            action: true
-        },
-        {
-            name: "Fries",
-            rate: 600,
-            category: "Food",
-            status: "available",
-            action: true
-        },
-        {
-            name: "Milky burger",
-            rate: 2000,
-            category: "Food",
-            status: "available",
-            action: true
-        },
-        {
-            name: "Red Label",
-            rate: 8000,
-            category: "Wine",
-            status: "available",
-            action: true
-        },
-        {
-            name: "Pineaps",
-            rate: 900,
-            category: "Cocktails",
-            status: "available",
-            action: true
-        },
-        {
-            name: "Blured",
-            rate: 1500,
-            category: "Lemonade",
-            status: "available",
-            action: true
-        }
-]
-    }  
-//users,staff
-    $scope.staffs = [];
+    using Dexie JS
+    */
+   //initializing data's
+   $scope.orders = [];
+   $scope.staffs = [];
     $scope.managers = [];
-    $scope.users = [
-        {
-            name: "Mathew",
-            password: "1234",
-            position: "Waiter",
-            startDate: "21/07/2018",
-            salary: "30,000",
-            status: "active",
-            is_mgr: false
-        },
-        {
-            name: "Kelly",
-            password: "1234",
-            position: "Cook",
-            startDate: "30/06/2018",
-            salary: "60,000",
-            status: "active",
-            is_mgr: false
-        },
-        {
-            name: "Boris",
-            password: "1234",
-            position: "Bartender",
-            startDate: "01/09/2018",
-            salary: "30,000",
-            status: "suspend",
-            is_mgr: false
-        },
-        {
-            name: "Mimi",
-            password: "1234",
-            position: "Waitress",
-            startDate: "27/08/2018",
-            salary: "30,000",
-            status: "active",
-            is_mgr: false
-        },
-        {
-            name: "Mary",
-            password: "1234",
-            position: "Cook",
-            startDate: "31/07/2018",
-            salary: "70,000",
-            status: "suspend",
-            is_mgr: false
-        },
-        {
-            name: "Fabrice",
-            password: "1234",
-            position: "Cleaner",
-            startDate: "01/09/2018",
-            salary: "20,000",
-            status: "active",
-            is_mgr: false
-        },
-        {
-            name: "Randalls",
-            password: "1234",
-            position: "Manager",
-            startDate: "21/02/2018",
-            salary: "N/A",
-            status: "active",
-            is_mgr: true
-        },
-        {
-            name: "Brian",
-            password: "1234",
-            position: "Manager",
-            startDate: "21/02/2018",
-            salary: "N/A",
-            status: "active",
-            is_mgr: true
-        },
-]
-    $scope.users.forEach(element => {
+    $scope.users = [];
+    $scope.products = {
+        tableNumber:10,
+        categories:[],
+        items:[]
+    }
+    //
+   var Dexie = require('dexie');
+   var async = Dexie.async,
+    spawn = Dexie.spawn;
+   $scope.db = new Dexie("snapBurgerDb")
+   $scope.db.version(1).stores({
+       users:"++id,name,password,position,startDate,salary,status,is_mgr",
+       categories:"++id,name,status,action",
+       items:"++id,name,rate,category,status,action",
+       table:"number",
+       orders:"name,date,*items,totalPrice,totalQuantity"
+   })
+   //$scope.db.items.bulkPut([])
+   //fetching Data
+   $scope.db.users.toArray()
+   .then((data)=>{
+       $scope.users = data;
+       $scope.users.forEach(element => {
         if (element.is_mgr) {
             $scope.managers.push(element);
         } else {
             $scope.staffs.push(element)
         }
     });
+    $scope.db.categories.toArray()
+    .then((data)=>{
+        $scope.products.categories = data;
+    })
+    $scope.db.items.toArray()
+    .then((data)=>{
+        $scope.products.items = data;
+    })
+    //fetching data
+    $scope.$apply();
+   })
+   $scope.db.orders.toArray()
+   .then((data)=>{
+        $scope.orders = data;
+   })
+   //
+//users,staff
+    /*[
+
+    ]*/
     $scope.currentUser = '';
     if (sessionStorage.getItem('user') != null) {
         $scope.currentUser = JSON.parse(sessionStorage.getItem('user'))

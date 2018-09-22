@@ -101,7 +101,7 @@ function searchOrderItems(e){
     var val = jQuery(e.target).val(),items = jQuery('#orderItems .item'),
     no_result = jQuery('#no-resultsOrder');
     no_result.hide();
-    //variable to chanege if result is fount
+    //variable to change if result is found
     var found = false;
     val = val.toLowerCase();
     items.each((i,el)=>{

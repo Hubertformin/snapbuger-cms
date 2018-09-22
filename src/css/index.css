@@ -91,7 +91,21 @@ nav {
   z-index: 2;
   padding-left: 15px; }
   nav .logo-link {
-    color: #999 !important; }
+    color: #f44336 !important;
+    font-family: kaushan_script;
+    font-size: 19px; }
+    nav .logo-link span {
+      display: inline-block;
+      -webkit-transform: translateY(-8px);
+      -ms-transform: translateY(-8px);
+      transform: translateY(-8px); }
+    nav .logo-link img {
+      display: inline-block;
+      height: 45px;
+      width: 45px;
+      -webkit-transform: translateY(8px);
+      -ms-transform: translateY(8px);
+      transform: translateY(8px); }
   nav form {
     display: none;
     z-index: 22;
@@ -101,12 +115,13 @@ nav {
     right: 0;
     bottom: 0;
     right: 0;
-    background-color: #f1f1f1;
+    background-color: #fff;
     -webkit-box-shadow: 0px 5px 26px rgba(0, 0, 0, 0.12);
     box-shadow: 0px 5px 26px rgba(0, 0, 0, 0.12); }
     nav form input {
       position: absolute;
       bottom: 5px;
+      color: #f44336 !important;
       padding-left: 30px !important;
       font-family: "Raleway";
       border: none !important;
@@ -120,7 +135,7 @@ nav {
         box-shadow: 0 1px 0 0 transparent !important; }
     nav form i.material-icons {
       display: inline-block !important;
-      color: #999 !important;
+      color: #f44336 !important;
       opacity: 1;
       -webkit-transition: 0.5s;
       -o-transition: 0.5s;
@@ -131,6 +146,7 @@ nav {
     nav form .close-search {
       display: inline-block;
       position: absolute;
+      color: #f44336 !important;
       top: 0;
       cursor: pointer;
       left: 75%; }
@@ -142,7 +158,7 @@ nav {
     left: 69%;
     color: #999 !important; }
     nav ul.nav-list-right a {
-      color: #999 !important; }
+      color: #f44336 !important; }
 
 .create-btn-default {
   display: -webkit-box;
@@ -309,8 +325,9 @@ table.huberts-tables select {
   height: 35px !important; }
 
 table.huberts-tables thead {
-  border-bottom: 2px solid #000; }
+  border-bottom: 2px solid #ddd; }
   table.huberts-tables thead th {
+    padding: 9px !important;
     width: 16.66%;
     cursor: default; }
     table.huberts-tables thead th.small {
@@ -323,13 +340,14 @@ table.huberts-tables tbody tr {
   table.huberts-tables tbody tr:hover {
     background: #f1f1f1; }
   table.huberts-tables tbody tr td {
+    border-right: 1px solid #ddd;
     width: 16.66%;
-    padding: 9px 5px !important; }
+    padding: 9px !important; }
     table.huberts-tables tbody tr td.small {
       width: 3%; }
 
 table.huberts-tables tfoot {
-  border-top: 2px solid #000; }
+  border-top: 2px solid #ddd; }
 
 #promptPasword {
   width: 420px;
@@ -446,6 +464,7 @@ table.huberts-tables tfoot {
     border: 1px solid #ddd;
     height: 250px; }
     .scrollContainer .item .header {
+      background: #999;
       padding: 5px 10px;
       color: #fff; }
       .scrollContainer .item .header dt {

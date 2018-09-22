@@ -34,7 +34,7 @@
                         <div class="input-field col s12">
                             <input class="browser-default" id="password" placeholder="Password" type="password" ng-model="passwordInput" class="validate">
                         </div>
-                        <button class="btn waves-effect waves-light" type="submit" name="action">Login
+                        <button ng-disabled="$scope.users.length == 0" class="btn waves-effect waves-light" type="submit" name="action">Login
                     <i class="material-icons left">person</i>
                   </button>
                     </div>
@@ -70,7 +70,7 @@
         <header>
             <nav class="navbar z-depth-2 white">
                 <a href="javascript:void(0)" data-target="slide-out" class=".show-on-medium-and-down sidenav-trigger"><i class="material-icons">menu</i></a>
-                <a href="#" class="logo-link">Nudle</a>
+                <a href="javascript:void(0)" class="logo-link"><img src="img/logo-round.png" alt="logo"> <span>Snaburger</span></a>
                 <form action="#" id="nav-form">
                     <i class="material-icons search">search</i>
                     <input type="search" autofocus name="search" id="" placeholder="Search..">

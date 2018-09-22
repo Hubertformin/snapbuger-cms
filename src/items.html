@@ -58,7 +58,7 @@
             <table id="categoriesTable" class="huberts-tables mdl-data-table" style="width:100%">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th class="small">#</th>
                         <th>Category name</th>
                         <th>status</th>
                         <th class="small" ng-show="currentUser.is_mgr"><i class="material-icons">build</i></th>
@@ -69,7 +69,7 @@
                 <div ng-show="products.categories.length == 0" class="no-data">
                     <p>No data, Create categories to view</p>
                 </div>
-                <table class="huberts-tables">
+                <table class="huberts-tables mdl-data-table" style="width:100%">
                     <tbody>
                         <tr ng-repeat="x in products.categories">
                             <td class="small">{{$index+1}}</td>
