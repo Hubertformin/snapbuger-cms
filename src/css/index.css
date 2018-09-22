@@ -95,16 +95,33 @@ body {
   overflow-y: scroll;
   background: #f1f1f1; }
 
-main,
-header {
+main {
   position: relative;
   width: calc(100%-250px);
   margin-left: 250px; }
 
+#slide-out {
+  margin-top: 64px;
+  height: calc(100% - 64px); }
+  #slide-out .row .col {
+    padding: 0 !important; }
+  #slide-out .img-div {
+    width: 79px; }
+  #slide-out .text-div a.name-link::after {
+    content: '';
+    clear: both;
+    display: table; }
+  #slide-out .text-div a.name-link i {
+    -webkit-transform: translateY(9px);
+    -ms-transform: translateY(9px);
+    transform: translateY(9px); }
+  #slide-out .dropdown-content {
+    border-radius: 10px; }
+
 nav {
   position: fixed;
   top: 0;
-  z-index: 2;
+  z-index: 1999;
   padding-left: 15px; }
   nav .logo-link {
     color: #f44336 !important;
@@ -171,7 +188,7 @@ nav {
   nav ul.nav-list-right {
     position: absolute;
     top: 0;
-    left: 69%;
+    left: 84%;
     color: #999 !important; }
     nav ul.nav-list-right a {
       color: #f44336 !important; }
@@ -213,12 +230,14 @@ nav {
 .box {
   background: #fff;
   min-height: 50px;
+  border-radius: 29px;
   -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   position: relative;
-  margin-bottom: 30px;
-  border-radius: 2px; }
+  margin-bottom: 30px; }
   .box .header {
+    border-top-left-radius: 29px;
+    border-top-right-radius: 29px;
     color: #555;
     padding: 20px;
     position: relative;
@@ -303,7 +322,7 @@ nav {
   bottom: 0;
   right: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.6);
   z-index: 0; }
 
 /*data Tables */
@@ -483,9 +502,15 @@ table.huberts-tables tfoot {
     border: 1px solid #ddd;
     height: 250px; }
     .scrollContainer .item .header {
-      background: #999;
+      position: relative;
+      background-image: url(../img/item-bg.jpg);
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
       padding: 5px 10px;
       color: #fff; }
+      .scrollContainer .item .header dl {
+        z-index: 2; }
       .scrollContainer .item .header dt {
         font-size: 1.6rem; }
     .scrollContainer .item .body .inputDiv {

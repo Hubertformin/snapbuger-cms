@@ -60,6 +60,7 @@
                                 <div id="no-resultsOrder" class="no-results"><p>No results</p></div>
                                 <div ng-repeat="x in products.items track by $index" class="item z-depth-2">
                                     <div class="header">
+                                       <div class="dark-wrapper"></div>
                                         <dl>
                                             <dt class="item-name">{{x.name}}</dt>
                                             <dd class="item-category">{{x.category}}</dd>
@@ -73,7 +74,7 @@
                                             <input ng-disabled="x.added || !x.action" min="1" value="1" class="browser-default" type="number">
                                             <button ng-disabled="x.added || !x.action" class="btns" ng-click="addOrderNumber($event,1)"><i class="material-icons">add</i></button>
                                         </div>
-                                        <button ng-hide="x.added" data-clicked="false" ng-click="addItem($event,$index)" ng-disabled="!x.action" class="footer-btn btn waves-effect waves-light grey darken-3"><i class="material-icons left">add</i>Add</button>
+                                        <button ng-hide="x.added" data-clicked="false" ng-click="addItem($event,$index)" ng-disabled="!x.action" class="footer-btn btn waves-effect waves-light red darken-3"><i class="material-icons left">add</i>Add</button>
                                         <button ng-show="x.added" data-clicked="true" ng-click="addItem($event,$index)" ng-disabled="!x.action" class=" btn waves-effect waves-light grey darken-1"><i class="material-icons left">remove</i>
                                             remove
                                       </button>

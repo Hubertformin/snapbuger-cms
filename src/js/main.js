@@ -118,3 +118,6 @@ function searchOrderItems(e){
         no_result.show();
     }
 }
+//$AV_ASW
+var elems = document.querySelectorAll('.dropdown-trigger');
+var dropdown = M.Dropdown.init(elems, {coverTrigger:false});

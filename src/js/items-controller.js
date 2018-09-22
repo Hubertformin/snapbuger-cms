@@ -6,7 +6,7 @@ app.controller("itemsCtr", ($scope) => {
     var instances = M.Collapsible.init(elems);
     //=============== Table Number =========================
     $scope.updateTableNumber = ()=>{
-        if(typeof $scope.products.tableNumber !== 'number'){
+        /*if(typeof $scope.products.tableNumber !== 'number'){
             notifications.notify({type:"error",msg:"Invalid Table Number!"})
             $scope.products.tableNumber = 1;
             return false;
@@ -18,7 +18,7 @@ app.controller("itemsCtr", ($scope) => {
         })
         .catch((err)=>{
             notifications.notify({msg:`Erorr! ${err}`,type:"error"})
-        })
+        })*/
     }
     //categories table
     //=========================== Categories ======================

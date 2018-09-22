@@ -90,7 +90,7 @@ app.controller("staffCtr", ($scope) => {
     }
     //delete staffs
     $scope.deleteStaffs = (i) => {
-        if(confirm(`Are you sure you want to delete '${$scope.staffs[i].name}'?`)){
+        if(confirm(`Are you sure you want to delete ${$scope.staffs[i].name}'s Account?`)){
             $scope.db.users.delete($scope.staffs[i].id)
             .then(()=>{
                 $scope.db.users.toArray()
