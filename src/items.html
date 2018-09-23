@@ -13,19 +13,19 @@
                 Number of tables<br><small>Enter number of tables</small>
             </h2>
             <div class="input-field inline" style="margin:0;margin-left:10px;">
-                <input ng-change="updateTableNumber()" style="transform:translateY(-16px);margin: 0;" id="tableNumber" min="1" ng-model="products.tableNumber" type="number" class="validate">
+                <input ng-change="updateTableNumber()" style="transform:translateY(-16px);margin: 0;" id="tableNumber" min="1" ng-model="products.tableNumber[0].number" type="number" class="validate">
             </div>
         </div>
     </div>
     <!--Categories box -->
     <div class="box">
-        <div class="header green darken-2">
+        <div class="header bg-theme">
             <h2 class="white-text">
                 Categories<br><small>Manage categories (Click to edit)</small>
             </h2>
         </div>
         <div class="body">
-            <ul ng-show="currentUser.is_mgr">
+            <ul ng-show="currentUser.is_mgr" class="collapsible">
                 <li>
                     <div class="collapsible-header"><i class="material-icons">add</i>Create Category</div>
                     <div class="collapsible-body">
@@ -66,7 +66,7 @@
             </table>
             <div class="huberts-table-div">
                 <div ng-show="products.categories.length == 0" class="no-data">
-                    <p>No data, Create categories to view</p>
+                    <p>No categories, Create categories to view</p>
                 </div>
                 <table class="huberts-tables mdl-data-table" style="width:100%">
                     <tbody>
@@ -93,7 +93,7 @@
     </div>
     <!--Item box -->
     <div class="box">
-        <div class="header teal darken-2">
+        <div class="header bg-theme">
             <h2 class="white-text">
                 Items <br><small>Manage products (Click to edit)</small>
             </h2>
@@ -160,7 +160,7 @@
             </table>
             <div class="huberts-table-div">
                 <div ng-show="products.items.length == 0" class="no-data">
-                    <p>No data in this table, Create Items to view</p>
+                    <p>No items in this table, Create Items to view</p>
                 </div>
                 <table id="itemsTable" class="huberts-tables mdl-data-table" style="width:100%">
                     <tbody>

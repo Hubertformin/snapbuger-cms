@@ -45,7 +45,7 @@ app.controller("mainCtr", ($scope) => {
     $scope.managers = [];
     $scope.users = [];
     $scope.products = {
-        tableNumber:10,
+        tableNumber:0,
         categories:[],
         items:[]
     }
@@ -58,10 +58,9 @@ app.controller("mainCtr", ($scope) => {
        users:"++id,name,password,position,startDate,salary,status,is_mgr",
        categories:"++id,name,status,action",
        items:"++id,name,rate,category,status,action",
-       tableNumber:"number",
-       orders:"name,date,*items,totalPrice,totalQuantity"
+       tableNumber:"++id,number",
+       orders:"++id,name,date,*items,totalPrice,totalQuantity"
    })
-   //$scope.db.items.bulkPut([])
    //fetching Data
    $scope.db.users.toArray()
    .then((data)=>{
@@ -80,6 +79,10 @@ app.controller("mainCtr", ($scope) => {
     $scope.db.items.toArray()
     .then((data)=>{
         $scope.products.items = data;
+    })
+    $scope.db.tableNumber.toArray()
+    .then(data=>{
+        $scope.products.tableNumber = data;
     })
     //fetching data
     $scope.$apply();

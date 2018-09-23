@@ -66,27 +66,29 @@ app.controller("dashCtr", ($scope) => {
     }
     $scope.addItem = (e,i) =>{
         var btn = jQuery(e.target), selectedItem = $scope.products.items[i];
-        selectedItem.quantity = btn.siblings('.inputDiv').children('input').val();
+        selectedItem.quantity = btn.siblings('.inputDiv').children('input.qty').val();
         selectedItem.price =  selectedItem.quantity * selectedItem.rate;
-        
         //
         if(btn.data("clicked") == false){
             if($scope.currentOrder.items.push(selectedItem)){
                 //computing prices and qunatity
-                $scope.currentOrder.totalPrice += selectedItem.price;
-                $scope.currentOrder.totalQuantity += Number(selectedItem.quantity);
+                $scope.currentOrder.totalPrice = $scope.currentOrder.totalPrice + Number(selectedItem.price);
+                $scope.currentOrder.totalQuantity = $scope.currentOrder.totalQuantity + Number(selectedItem.quantity);
                 //misc
                 $scope.products.items[i].added = true;
                 btn.siblings().children('.btns').css({cursor:"default"})
+                //cant use this because i usign two buttons and I toggle view
+                //btn.data("clicked") == true;
             }
         }else{
             $scope.removeItem(selectedItem.name);
             //re-computing prices and qunatity
-            $scope.currentOrder.totalPrice -= selectedItem.price;
-            $scope.currentOrder.totalQuantity -= Number(selectedItem.quantity);
+            $scope.currentOrder.totalPrice = $scope.currentOrder.totalPrice - Number(selectedItem.price);
+            $scope.currentOrder.totalQuantity = $scope.currentOrder.totalQuantity - Number(selectedItem.quantity);
             //misc
             $scope.products.items[i].added = false;
             btn.siblings().children('.btns').css({cursor:"pointer"})
+            //btn.data("clicked") == false;
         }
     }
     ///Finally creating order, first by setting the default table number to 1
@@ -113,16 +115,29 @@ app.controller("dashCtr", ($scope) => {
                 return false;
             }
         })*/
-        $scope.todaysOrders.push(current);
-        swal({
-            title: "Done!",
-            text: "Added to list of orders!",
-            icon: "success",
-            button: "Okay",
-          });
+        //$scope.todaysOrders.push(current);
+        $scope.db.orders.add(current)
+        .then(()=>{
+            $scope.db.orders.toArray()
+            .then((data)=>{
+                $scope.orders = data;
+                $scope.orderName = "";
+                $scope.$apply();
+                console.log($scope.orders)
+                //
+                swal({
+                    title: "Done!",
+                    text: "Added to list of orders!",
+                    icon: "success",
+                    button: "Okay",
+                  });
+                  //
+                  $scope.removeItem('deleteAll') 
+            })
+        })
           //reseting order custom form
-          $scope.orderName = "";
-          $scope.removeItem('deleteAll') 
+          //$scope.orderName = "";
+          //$scope.removeItem('deleteAll') 
         //console.log($scope.todaysOrders);
     }
 

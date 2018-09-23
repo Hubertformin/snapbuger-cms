@@ -10,8 +10,8 @@
     <ul style="border-radius: 29px;" id="OrderCollapse" class="collapsible">
         <li>
             <div style="border-top-right-radius: 29px;border-top-left-radius: 29px" class="collapsible-header">
-                <div class="header">
-                    <h2 class="red-text">
+                <div class="header bg-theme">
+                    <h2 class="white-text">
                         Create new order <br><small>click to create.</small>
                     </h2>
                 </div>
@@ -33,7 +33,7 @@
                             <div class="input-field col s4">
                                 <i class="material-icons prefix">airline_seat_legroom_extra</i>
                                 <select ng-model="orderTableNumber" class="browser-default prefixed">
-                                    <option ng-repeat="n in [].constructor(products.tableNumber) track by $index" value="{{$index+1}}">Table {{$index+1}}</option>
+                                    <option ng-repeat="n in [].constructor(products.tableNumber[0].number) track by $index" value="{{$index+1}}">Table {{$index+1}}</option>
                                 </select>
                                 <label class="active" for="orderDate">Select Table</label>
                             </div>
@@ -48,7 +48,7 @@
                                 <div class="col s5">
                                     <div class="orderPriceDetails red white-text">
                                         <strong>Total Qty: <span>{{currentOrder.totalQuantity}}</span></strong>,
-                                        <strong>Total Price: <span>{{currentOrder.totalPrice | currency : "XAF ":2}}</span></strong>
+                                        <strong>Total Price: <span>{{currentOrder.totalPrice | currency : "XAF ":0}}</span></strong>
                                     </div>
                                 </div>
                                 <div class="searchBox input-field col s4">
@@ -72,11 +72,11 @@
                                     <div class="body">
                                         <div class="inputDiv">
                                             <button ng-disabled="x.added || !x.action" class="browser-default btns" ng-click="addOrderNumber($event,-1)"><i class="material-icons">remove</i></button>
-                                            <input ng-disabled="x.added || !x.action" min="1" value="1" class="browser-default" type="number">
+                                            <input ng-disabled="x.added || !x.action" min="1" value="1" class="qty browser-default" type="number">
                                             <button ng-disabled="x.added || !x.action" class="btns" ng-click="addOrderNumber($event,1)"><i class="material-icons">add</i></button>
                                         </div>
-                                        <button ng-hide="x.added" data-clicked="false" ng-click="addItem($event,$index)" ng-disabled="!x.action" class="footer-btn btn waves-effect waves-light red darken-3"><i class="material-icons left">add</i>Add</button>
-                                        <button ng-show="x.added" data-clicked="true" ng-click="addItem($event,$index)" ng-disabled="!x.action" class=" btn waves-effect waves-light grey darken-1"><i class="material-icons left">remove</i>
+                                        <button ng-hide="x.added" data-clicked="false" ng-click="addItem($event,$index)" ng-disabled="!x.action" class="footer-btn btn waves-effect waves-light bg-theme">Add</button>
+                                        <button ng-show="x.added" data-clicked="true" ng-click="addItem($event,$index)" ng-disabled="!x.action" class=" btn waves-effect waves-light grey darken-1">
                                             remove
                                       </button>
                                     </div>
@@ -96,13 +96,14 @@
     </ul>
     <!--End of main page-->
     <!--Modals-->
-    <div id="viewSelectedORders" class="modal modal-fixed-footer">
+    <div id="viewSelectedORders" class="modal bottom-sheet">
         <div class="modal-content">
             <div class="box">
-                <div class="header">
-                    <h2 class="grey-text">
+                <div class="header bg-theme-rev">
+                    <h2 class="white-text">
                         Selected Items ({{currentOrder.items.length}})
                     </h2>
+                    <a class="white-text right modal-close waves-effect waves-orange btn-flat"><i class="material-icons">close</i></a>
                 </div>
                 <div class="body">
                     <!--
@@ -132,7 +133,7 @@
                                     <td>{{x.name}}</td>
                                     <td>{{x.quantity}}</td>
                                     <td>{{x.category}}</td>
-                                    <td>{{x.price}}</td>
+                                    <td class="green-text">{{x.price}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -143,15 +144,14 @@
                             <th></th>
                             <th>Qty: {{currentOrder.totalQuantity}}</th>
                             <th></th>
-                            <th>Price: {{currentOrder.totalPrice | currency : "XAF ":0}}</th>
+                            <th class="green-text">Price: {{currentOrder.totalPrice | currency : "XAF ":0}}</th>
                         </tfoot>
                     </table>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <a ng-click="removeItem('deleteAll')" class="left waves-effect waves-red btn-flat white-text red">clear all</a>
-            <a class="modal-close waves-effect waves-orange btn-flat">close</a>
+            <a ng-click="removeItem('deleteAll')" class="waves-effect waves-red btn-flat white-text red">clear all</a>
         </div>
     </div>
 </div>

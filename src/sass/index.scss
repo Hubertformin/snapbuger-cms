@@ -309,7 +309,17 @@ nav {
         padding: 20px;
     }
 }
-
+.bg-theme{
+ background: linear-gradient(to right, #f44336, #ff9800)!important;
+}
+.bg-theme-rev{
+ background: linear-gradient(to left, #f44336, #ff9800)!important;
+}
+.bg-theme-round{
+ background: radial-gradient(#ff9800,#f44336)!important;
+}.bg-theme-round-rev{
+ background: radial-gradient(#f44336, #ff9800)!important;
+}
 //collapseible
 #dashboard .collapsible-header {
     background: #fff;
@@ -323,6 +333,8 @@ nav {
         padding: 20px;
         position: relative;
         border-bottom: 1px solid rgba(204, 204, 204, 0.35);
+        border-top-left-radius:29px;
+        border-top-right-radius:29px;
         h2 {
             margin: 0;
             font-size: 18px;
@@ -495,18 +507,28 @@ table.huberts-tables {
 }
 
 #viewSelectedORders {
-    width: 65%;
+    max-height:69%!important;
+    border-radius: 0;
     .modal-content {
         background-color: #fff;
         .box {
             margin: 0;
+            border-radius: 0px;
+            box-shadow:1px 1px transparent;
+            .header{
+                border-radius: 0px;
+                i{
+                    font-size: xx-large;
+                    transform: translateY(-10px);
+                }
+            }
         }
         padding:0;
         .body {
             height: 100%;
             padding: 0;
             div.table-view {
-                height: 309px;
+                height: 209px;
                 overflow-y: scroll;
             }
             table {
