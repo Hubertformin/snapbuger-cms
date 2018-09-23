@@ -510,7 +510,7 @@ table.huberts-tables tfoot {
     -o-transition: all 0.6s linear;
     transition: all 0.6s linear; }
     .searchBox input:focus {
-      border-color: #2196f3; }
+      border-color: #ff9800; }
 
 .scrollContainer {
   border: 1px solid #ddd;

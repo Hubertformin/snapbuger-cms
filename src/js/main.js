@@ -121,3 +121,20 @@ function searchOrderItems(e){
 //$AV_ASW
 var elems = document.querySelectorAll('.dropdown-trigger');
 var dropdown = M.Dropdown.init(elems, {coverTrigger:false});
+//=========== Date function===
+class DateFunction{
+    constructor(){
+        this.today = new Date();
+        this.today_getTime = Date.now();
+    }
+    isToday(dt) {
+        var old_date = new Date(dt).getTime(),
+        diff = (this.today_getTime - old_date)/3600000;
+        if(diff<24){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+var time = new DateFunction();

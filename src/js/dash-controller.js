@@ -104,7 +104,7 @@ app.controller("dashCtr", ($scope) => {
         }
         //creating current order
         $scope.currentOrder.name = $scope.orderName;
-        $scope.currentOrder.date = jQuery('#orderDate').val();
+        $scope.currentOrder.date = new Date();
         $scope.currentOrder.table = $scope.orderTableNumber;
         var current = $scope.currentOrder;
         //and now pushing to main --
@@ -122,17 +122,25 @@ app.controller("dashCtr", ($scope) => {
             .then((data)=>{
                 $scope.orders = data;
                 $scope.orderName = "";
+                $scope.removeItem('deleteAll') 
                 $scope.$apply();
                 console.log($scope.orders)
                 //
                 swal({
-                    title: "Done!",
-                    text: "Added to list of orders!",
+                    title: "Order completed!",
+                    text: "Click okay to print!",
                     icon: "success",
-                    button: "Okay",
-                  });
-                  //
-                  $scope.removeItem('deleteAll') 
+                    buttons: true,
+                    dangerMode: false,
+                })
+                .then((click) => {
+                    if (click) {
+                        //print here!!
+                        console.log(current)
+                    } else {
+                        return false;
+                    }
+                });
             })
         })
           //reseting order custom form
