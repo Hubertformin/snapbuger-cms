@@ -71,6 +71,7 @@ select {
         position: relative;
     }
     #managerial{
+        display: none;
         position: absolute;
         top: 0;bottom: 0;left: 0;right: 0;
         background: #fff;
@@ -135,17 +136,7 @@ select {
     form:not(#createManagerialForm) {
         width: 400px;
         padding: 40px 20px;
-        input {
-            width: 100%;
-            border: 1px solid #999;
-            padding: 14px;
-            color:#999;
-            border-radius: 25px;
-            &:focus{
-                border-color: #f44336;
-                color:#f44336;
-            }
-        }
+
     }
     p.copyright {
         position: absolute;
@@ -316,6 +307,7 @@ nav {
     z-index: 3999;
     width: 300px;
     cursor: pointer;
+    border-radius: 26px;
     i {
         font-style: normal;
         float: right;
@@ -777,6 +769,25 @@ table.huberts-tables {
         left: 81%;
         color: #999 !important;
     }
+}
+//settings
+.settings_tittle{
+    color:#212121;
+}
+hr{
+    border-color: #ddd;
+    border-width: 0.5px;
+}
+p.title{
+    &:first-child{
+        margin-top: 0;
+    }
+    color:#ff9800;
+    border-bottom: 1px solid #ddd;
+    font-size: 25px;
+}
+ul.versions{
+    list-style-type:circle;
 }
 
 //

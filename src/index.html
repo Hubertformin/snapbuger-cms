@@ -79,13 +79,15 @@
                             </div>
                         </div>
                         <div class="input-field col s12">
-                            <input class="browser-default" placeholder="User name" id="username" type="text" ng-model="usernameInput" class="validate">
+                            <i class="material-icons prefix">account_circle</i>
+                            <input placeholder="User name" id="username" type="text" ng-model="usernameInput" class="validate">
                         </div>
                         <div class="input-field col s12">
-                            <input class="browser-default" id="password" placeholder="Password" type="password" ng-model="passwordInput" class="validate">
+                           <i class="material-icons prefix">lock</i>
+                            <input id="password" placeholder="Password" type="password" ng-model="passwordInput" class="validate">
                         </div>
                         <button ng-disabled="users.length == 0" class="btn waves-effect waves-light" type="submit" name="action">Login
-                    <i class="material-icons left">person</i>
+                    <i class="material-icons right">arrow_forward</i>
                   </button>
                     </div>
                 </form>
@@ -156,8 +158,8 @@
             <section id="body" ng-view></section>
         </main>
         <!--  notifications-->
-        <div class="notify green accent-4 waves-light" id="success"><span class="msg"></span><i class="yellow-text font-raleway">close</i></div>
-        <div class="notify red accent-4 waves-light" id="error"><span class="msg"></span><i class="yellow-text font-raleway">close</i></div>
+        <div class="notify grey darken-4 waves-light" id="success"><span class="msg"></span><i class="yellow-text font-raleway">close</i></div>
+        <div class="notify red darken-2 waves-light" id="error"><span class="msg"></span><i class="yellow-text font-raleway">close</i></div>
 
         <!-- Context menu-->
         <ul class="collection" id="context-menu">

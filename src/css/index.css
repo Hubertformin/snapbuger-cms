@@ -68,6 +68,7 @@ select.prefixed {
   #login .row {
     position: relative; }
   #login #managerial {
+    display: none;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -125,15 +126,6 @@ select.prefixed {
   #login form:not(#createManagerialForm) {
     width: 400px;
     padding: 40px 20px; }
-    #login form:not(#createManagerialForm) input {
-      width: 100%;
-      border: 1px solid #999;
-      padding: 14px;
-      color: #999;
-      border-radius: 25px; }
-      #login form:not(#createManagerialForm) input:focus {
-        border-color: #f44336;
-        color: #f44336; }
   #login p.copyright {
     position: absolute;
     bottom: 0;
@@ -278,7 +270,8 @@ nav {
   left: 40%;
   z-index: 3999;
   width: 300px;
-  cursor: pointer; }
+  cursor: pointer;
+  border-radius: 26px; }
   .notify i {
     font-style: normal;
     float: right; }
@@ -671,6 +664,23 @@ table.huberts-tables tfoot {
     top: 0;
     left: 81%;
     color: #999 !important; } }
+
+.settings_tittle {
+  color: #212121; }
+
+hr {
+  border-color: #ddd;
+  border-width: 0.5px; }
+
+p.title {
+  color: #ff9800;
+  border-bottom: 1px solid #ddd;
+  font-size: 25px; }
+  p.title:first-child {
+    margin-top: 0; }
+
+ul.versions {
+  list-style-type: circle; }
 
 @media only screen and (max-width: 858px) {
   nav ul.nav-list-right {

@@ -207,13 +207,3 @@ document.querySelector('#managerialImgInput').onchange = (e)=>{
     var url = URL.createObjectURL(file);
     img.src = url;
 }
-
-jQuery('#createManagerialForm').submit((e)=>{
-    e.preventDefault();
-    var name = jQuery('#createManagerialFormInputName').val(),
-    password = jQuery('#createManagerialFormPassword').val();
-    if(name == "" || password == ""){
-        notifications.notify({msg:"Please fill all fields!",type:"error"})
-        return false;
-    }
-})

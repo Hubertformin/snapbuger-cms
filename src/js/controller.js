@@ -88,11 +88,18 @@ app.controller("mainCtr", ($scope) => {
    .then((data)=>{
         $scope.orders = data;
    })
-   //
+   //=========== MANAGERIAL ACCOUNT! ========
+   jQuery('#createManagerialForm').submit((e)=>{
+    e.preventDefault();
+    var name = jQuery('#createManagerialFormInputName').val(),
+    password = jQuery('#createManagerialFormPassword').val();
+    if(typeof name == "string" || password == ""){
+        notifications.notify({msg:"Please fill all fields!",type:"error"})
+        return false;
+    }
+    $
+})
 //users,staff
-    /*[
-
-    ]*/
     $scope.currentUser = '';
     if (sessionStorage.getItem('user') != null) {
         jQuery('#login').hide()
