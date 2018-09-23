@@ -160,3 +160,34 @@ class DateFunction{
     }
 }
 var time = new DateFunction();
+
+//context-menu
+/*document.addEventListener('contextmenu',(e)=>{
+    e.preventDefault();
+    jQuery('#context-menu').fadeIn();
+    var menu = document.querySelector('#context-menu')
+    menu.style.top = mouseY(event)+'px';
+    menu.style.left = mouseX(event)+'px';
+    window.event.returnValue = false;
+},false)
+document.addEventListener('click',()=>{
+    jQuery('#context-menu').fadeOut();
+})
+function mouseX(e){
+    if(e.pageX){
+        return e.pageX;
+    }else if(e.clientX){
+        return e.clientX + (document.documentElement.scrollLeft)?document.documentElement.scrollLeft:document.body.scrollLeft;
+    }else{
+        return null;
+    }
+}
+function mouseY(e){
+    if(e.pageY){
+        return e.pageY;
+    }else if(e.clientY){
+        return e.clientY + (document.documentElement.scrollTop)?document.documentElement.scrollTop:document.body.scrollTop;
+    }else{
+        return null;
+    }
+}*/
