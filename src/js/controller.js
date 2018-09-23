@@ -1,5 +1,4 @@
-//the notification class
-const notifications = new Alerts();
+
 //angular module
 var app = angular.module('mainApp', ["ngRoute"]);
 app.config(($routeProvider) => {
@@ -51,8 +50,6 @@ app.controller("mainCtr", ($scope) => {
     }
     //
    var Dexie = require('dexie');
-   var async = Dexie.async,
-    spawn = Dexie.spawn;
    $scope.db = new Dexie("snapBurgerDb")
    $scope.db.version(1).stores({
        users:"++id,name,password,position,startDate,salary,status,is_mgr",

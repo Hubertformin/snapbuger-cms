@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="css/materialize.css">
     <link rel="stylesheet" href="css/materialicons/icone91f.css">
     <link rel="stylesheet" href="css/animate.min.css">
-    <link rel="stylesheet" href="css/dataTable.material.css">
     <link rel="stylesheet" href="css/index.css">
     <script>
         var jQuery = require('jquery'),
@@ -24,6 +23,52 @@
     <section ng-app="mainApp" ng-controller="mainCtr">
         <!-- login page-->
         <section id="login" class="white">
+            <!-- Incase there is no manager/user -->
+            <section id="managerial">
+                <div class="head align-center">
+                    <img src="img/logo-round.png" alt="logo">
+                    <h6 class="red-text font-kaushan">Snapburger</h6>
+                </div>
+                <div class="center">
+                    <h4 class="font-fira orange-text align-center">Set up a Managerial Account</h4>
+                    <div class="row">
+                        <div class="col s4 img-upload">
+                            <div class="hover" onclick="document.querySelector('#managerialImgInput').click()">
+                                <div class="dark-wrapper">
+                                    <div class="center"><i class="material-icons medium white-text">add</i></div>
+                                </div>
+                                <input type="file" style="display:none;" id="managerialImgInput" accept="image/*">
+                                <img src="img/manager.png" id="managerialImg" alt="">
+                            </div>
+                            <spall class="font-amar grey-text">Click Image to add photo</spall>
+                        </div>
+                        <div class="col s8">
+                            <div class="row">
+                                <form action="#" id="createManagerialForm">
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">account_circle</i>
+                                        <input placeholder="Name(s)" id="createManagerialFormInputName" type="text" class="validate">
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">lock</i>
+                                        <input placeholder="Password" type="password" id="createManagerialFormPassword" class="validate">
+                                    </div>
+                                    <p>
+                                        <label>
+                                        <input type="checkbox" class="filled-in" checked="checked" disabled />
+                                            <span>I own/manage this organization.</span>
+                                        </label>
+                                    </p>
+                                    <button type="submit" class="btn bg-theme-rev waves-effect waves light"><i class="material-icons right">arrow_forward</i>Proceed</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+            <!-- Login Form -->
             <div class="center">
                 <form action="action" id="loginForm" class="">
                     <img src="img/logo-round.png" alt="">
@@ -121,7 +166,10 @@
             <li class="collection-item">Alvin</li>
             <li class="collection-item">Alvin</li>
         </ul>
-        <!-- Modals -->
+        <!-- Create a managerial account-->
+        <section id="managerial">
+
+        </section>
         <!--   password modal-->
         <div id="promptPasword" class="modal">
             <form action="#">

@@ -18,7 +18,7 @@ function isOffline(){
 jQuery(document).ready(()=>{
     setTimeout(()=>{
         jQuery('#loader').remove();
-    },4000)
+    },3800)
     if(navigator.onLine){
         isOnline();
     }else{
@@ -75,6 +75,8 @@ class Alerts{
         }
     }
 }
+
+//search table
 function searchTable(e,tb){
     var i,j,td,input,
     value = e.target.value.toLowerCase(),
@@ -159,7 +161,10 @@ class DateFunction{
         }
     }
 }
-var time = new DateFunction();
+//the notification class
+const notifications = new Alerts();
+//time class
+const time = new DateFunction();
 
 //context-menu
 /*document.addEventListener('contextmenu',(e)=>{
@@ -191,3 +196,24 @@ function mouseY(e){
         return null;
     }
 }*/
+document.querySelector('#managerialImgInput').onchange = (e)=>{
+    var img = document.querySelector('#managerialImg'),
+    file = e.target.files[0];
+    if(file.size > 400000){
+        notifications.notify({type:"error",msg:"File size to large, please upload a picture below 4MB"})
+        return false;
+    }
+    console.log(file);
+    var url = URL.createObjectURL(file);
+    img.src = url;
+}
+
+jQuery('#createManagerialForm').submit((e)=>{
+    e.preventDefault();
+    var name = jQuery('#createManagerialFormInputName').val(),
+    password = jQuery('#createManagerialFormPassword').val();
+    if(name == "" || password == ""){
+        notifications.notify({msg:"Please fill all fields!",type:"error"})
+        return false;
+    }
+})

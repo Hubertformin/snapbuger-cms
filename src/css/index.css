@@ -67,6 +67,44 @@ select.prefixed {
     height: auto; }
   #login .row {
     position: relative; }
+  #login #managerial {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    z-index: 29992; }
+    #login #managerial h4 {
+      -webkit-transform: translateY(-140%);
+      -ms-transform: translateY(-140%);
+      transform: translateY(-140%); }
+    #login #managerial .head {
+      text-align: center; }
+      #login #managerial .head img {
+        height: 75px;
+        width: 75px; }
+      #login #managerial .head h6 {
+        margin: 0; }
+    #login #managerial .img-upload {
+      cursor: pointer;
+      position: relative; }
+      #login #managerial .img-upload .hover {
+        position: relative;
+        border: 1px solid #999;
+        border-radius: 50%;
+        height: 150px;
+        width: 150px; }
+        #login #managerial .img-upload .hover img {
+          height: 100%;
+          width: 100%;
+          border-radius: 50%; }
+        #login #managerial .img-upload .hover:hover .dark-wrapper {
+          display: block; }
+        #login #managerial .img-upload .hover .dark-wrapper {
+          display: none;
+          border-radius: 50%;
+          background: rgba(0, 0, 0, 0.6); }
   #login #loader {
     padding: 100px 55px;
     position: absolute;
@@ -84,16 +122,16 @@ select.prefixed {
       animation-duration: 4.3s;
       -webkit-animation-timing-function: ease-in-out;
       animation-timing-function: ease-in-out; }
-  #login form {
+  #login form:not(#createManagerialForm) {
     width: 400px;
     padding: 40px 20px; }
-    #login form input {
+    #login form:not(#createManagerialForm) input {
       width: 100%;
       border: 1px solid #999;
       padding: 14px;
       color: #999;
       border-radius: 25px; }
-      #login form input:focus {
+      #login form:not(#createManagerialForm) input:focus {
         border-color: #f44336;
         color: #f44336; }
   #login p.copyright {

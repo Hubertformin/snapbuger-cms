@@ -70,6 +70,45 @@ select {
     .row {
         position: relative;
     }
+    #managerial{
+        position: absolute;
+        top: 0;bottom: 0;left: 0;right: 0;
+        background: #fff;
+        z-index: 29992;
+        h4{
+            transform: translateY(-140%);
+        }
+        .head{
+            text-align: center;
+            img{
+                height: 75px;width: 75px;
+            }
+            h6{margin: 0}
+        }
+        .img-upload{
+            cursor: pointer;
+            position: relative;
+            .hover{
+                position: relative;
+                border: 1px solid #999;
+                border-radius: 50%;
+                height: 150px;
+                width: 150px;
+                img{
+                    height: 100%;width: 100%;
+                    border-radius: 50%;
+                }
+                &:hover .dark-wrapper{
+                    display: block;
+                }
+                .dark-wrapper{
+                    display: none;
+                    border-radius: 50%;
+                    background: rgba(0,0,0,0.6);
+                }
+            }
+        }
+    }
     #loader {
         padding: 100px 55px;
         position: absolute;
@@ -93,7 +132,7 @@ select {
     right: 0;
     bottom: 0;
     z-index: 2999;
-    form {
+    form:not(#createManagerialForm) {
         width: 400px;
         padding: 40px 20px;
         input {
