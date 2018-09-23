@@ -1,10 +1,32 @@
 M.AutoInit();
+//offline and online function
+function isOnline(){
+    var syncBtn = $('#syncBtn');
+    syncBtn.children('i').html('sync')
+    syncBtn.addClass("spin")
+    console.log("Online!");
+}
+//fu
+function isOffline(){
+    var syncBtn = $('#syncBtn');
+    //syncBtn.css({color:"#999"})
+    syncBtn.children('i').html('sync_disabled')
+    syncBtn.removeClass("spin")
+    console.log("offline!");
+}
+//on ready
 jQuery(document).ready(()=>{
-   
     setTimeout(()=>{
         jQuery('#loader').remove();
     },4000)
+    if(navigator.onLine){
+        isOnline();
+    }else{
+        isOffline();
+    }
 })
+window.addEventListener('online',isOnline,false)
+window.addEventListener('offline',isOffline,false)
 
 //to cosesidenav when links are clicked
 jQuery('#slide-out').on('click','.sideNavLink',()=>{

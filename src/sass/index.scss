@@ -1,3 +1,9 @@
+//all styles
+*::selection{
+    background: #f1f1f1;
+    user-drag:none;
+    user-select: none;
+}
 /* width */
 
 //input number
@@ -609,6 +615,12 @@ table.huberts-tables {
         }
     }
 }
+.spin{
+    animation-name: spin;
+    animation-duration:2s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
 
 .scrollContainer {
     border: 1px solid #ddd;
@@ -699,7 +711,12 @@ table.huberts-tables {
         }
     }
 }
-
+.swal-button--confirm{
+    background:#ff9800!important;
+    &:focus{
+        box-shadow:1px 1px transparent!important;
+    }
+}
 //
 @media only screen and (max-width:992px) {
     main,
@@ -733,5 +750,13 @@ table.huberts-tables {
     }
     to {
         width: 100%
+    }
+}
+@keyframes spin {
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
     }
 }

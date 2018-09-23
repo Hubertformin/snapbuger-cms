@@ -106,7 +106,7 @@ app.controller("dashCtr", ($scope) => {
         $scope.currentOrder.name = $scope.orderName;
         $scope.currentOrder.date = new Date();
         $scope.currentOrder.table = $scope.orderTableNumber;
-        var current = $scope.currentOrder;
+        const current = $scope.currentOrder;
         //and now pushing to main --
         //checking if order already exist
         /*$scope.todaysOrders.forEach(el=>{

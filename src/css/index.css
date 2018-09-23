@@ -1,3 +1,17 @@
+*::-moz-selection {
+  background: #f1f1f1;
+  user-drag: none;
+  -moz-user-select: none;
+  user-select: none; }
+
+*::selection {
+  background: #f1f1f1;
+  user-drag: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+
 /* width */
 input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -512,6 +526,16 @@ table.huberts-tables tfoot {
     .searchBox input:focus {
       border-color: #ff9800; }
 
+.spin {
+  -webkit-animation-name: spin;
+  animation-name: spin;
+  -webkit-animation-duration: 2s;
+  animation-duration: 2s;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite; }
+
 .scrollContainer {
   border: 1px solid #ddd;
   height: 280px;
@@ -586,6 +610,12 @@ table.huberts-tables tfoot {
         .scrollContainer .item .body button[type="submit"].remove {
           background: #757575; }
 
+.swal-button--confirm {
+  background: #ff9800 !important; }
+  .swal-button--confirm:focus {
+    -webkit-box-shadow: 1px 1px transparent !important;
+    box-shadow: 1px 1px transparent !important; }
+
 @media only screen and (max-width: 992px) {
   main,
   header {
@@ -616,3 +646,19 @@ table.huberts-tables tfoot {
     width: 0%; }
   to {
     width: 100%; } }
+
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg); } }
+
+@keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg); } }
