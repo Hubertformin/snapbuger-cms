@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="css/materialize.css">
     <link rel="stylesheet" href="css/materialicons/icone91f.css">
     <link rel="stylesheet" href="css/animate.min.css">
-    <link rel="stylesheet" href="css/dataTable.material.css">
     <link rel="stylesheet" href="css/index.css">
     <script>
         var jQuery = require('jquery'),
@@ -24,23 +23,71 @@
     <section ng-app="mainApp" ng-controller="mainCtr">
         <!-- login page-->
         <section id="login" class="white">
+            <!-- Incase there is no manager/user -->
+            <section id="managerial">
+                <div class="head align-center">
+                    <img src="img/logo-round.png" alt="logo">
+                    <h6 class="red-text font-kaushan">Snapburger</h6>
+                </div>
+                <div class="center">
+                    <h4 class="font-fira orange-text align-center">Set up a Managerial Account</h4>
+                    <div class="row">
+                        <div class="col s4 img-upload">
+                            <div class="hover" onclick="document.querySelector('#managerialImgInput').click()">
+                                <div class="dark-wrapper">
+                                    <div class="center"><i class="material-icons medium white-text">add</i></div>
+                                </div>
+                                <input type="file" style="display:none;" id="managerialImgInput" accept="image/*">
+                                <img src="img/manager.png" id="managerialImg" alt="">
+                            </div>
+                            <spall class="font-amar grey-text">Click Image to add photo</spall>
+                        </div>
+                        <div class="col s8">
+                            <div class="row">
+                                <form action="#" id="createManagerialForm">
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">account_circle</i>
+                                        <input placeholder="Name(s)" id="createManagerialFormInputName" type="text" class="validate">
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">lock</i>
+                                        <input placeholder="Password" type="password" id="createManagerialFormPassword" class="validate">
+                                    </div>
+                                    <p>
+                                        <label>
+                                        <input type="checkbox" class="filled-in" checked="checked" disabled />
+                                            <span>I own/manage this organization.</span>
+                                        </label>
+                                    </p>
+                                    <button type="submit" class="btn bg-theme-rev waves-effect waves light"><i class="material-icons right">arrow_forward</i>Proceed</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+            <!-- Login Form -->
             <div class="center">
                 <form action="action" id="loginForm" class="">
                     <img src="img/logo-round.png" alt="">
                     <div class="row">
                         <div id="loader">
                             <div class="progress">
-                                <div class="determinate"></div>
+                                <div class="determinate bg-theme"></div>
                             </div>
                         </div>
                         <div class="input-field col s12">
-                            <input class="browser-default" placeholder="User name" id="username" type="text" ng-model="usernameInput" class="validate">
+                            <i class="material-icons prefix">account_circle</i>
+                            <input placeholder="User name" id="username" type="text" ng-model="usernameInput" class="validate">
                         </div>
                         <div class="input-field col s12">
-                            <input class="browser-default" id="password" placeholder="Password" type="password" ng-model="passwordInput" class="validate">
+                           <i class="material-icons prefix">lock</i>
+                            <input id="password" placeholder="Password" type="password" ng-model="passwordInput" class="validate">
                         </div>
                         <button ng-disabled="users.length == 0" class="btn waves-effect waves-light" type="submit" name="action">Login
-                    <i class="material-icons left">person</i>
+                    <i class="material-icons right">arrow_forward</i>
                   </button>
                     </div>
                 </form>
@@ -75,17 +122,17 @@
                     </div>
                 </div>
             </li>
-            <li><a id="dashboardLink" href="#/!"><i class="material-icons">dvr</i>Dashboard</a></li>
-            <li><a href="#!items"><i class="material-icons">dns</i>Products</a></li>
-            <li><a href="#!settings"><i class="material-icons">settings</i>Settings</a></li>
+            <li><a class="sideNavLink" id="dashboardLink" href="#/!"><i class="material-icons">dvr</i>Dashboard</a></li>
+            <li><a href="#!items" class="sideNavLink"><i class="material-icons">dns</i>Products</a></li>
+            <li><a href="#!settings" class="sideNavLink"><i class="material-icons">settings</i>Settings</a></li>
             <!--HIDE THIS SECTION TO REGULAR USERS -->
             <div ng-show="currentUser.is_mgr">
                 <li>
                     <div class="divider"></div>
                 </li>
-                <li><a class="subheader">Admin</a></li>
-                <li><a href="#!reports"><i class="material-icons">insert_chart</i>Reports</a></li>
-                <li><a href="#!emp"><i class="material-icons">people</i>Staff</a></li>
+                <li><a class="sideNavLink" class="subheader">Admin</a></li>
+                <li><a class="sideNavLink" href="#!reports"><i class="material-icons">insert_chart</i>Reports</a></li>
+                <li><a class="sideNavLink" href="#!emp"><i class="material-icons">people</i>Staff</a></li>
             </div>
         </ul>
         <!-- main section -->
@@ -103,7 +150,7 @@
                 <ul class="nav-list-right">
                     <li onclick="showSearchBar(true)"><a href="javascript:void(0)"><i class="material-icons">search</i> </a></li>
                     <li><a href="javascript:void(0)" ng-click="logOut()"><i class="material-icons">power_settings_new</i></a></li>
-                    <li><a href="#"><i class="material-icons">settings</i></a></li>
+                    <li><a disabled id="syncBtn" href="javascript:void(0)" title="Sync"><i class="material-icons">sync</i></a></li>
                 </ul>
             </nav>
         </header>
@@ -111,10 +158,20 @@
             <section id="body" ng-view></section>
         </main>
         <!--  notifications-->
-        <div class="notify green accent-4 waves-light" id="success"><span class="msg"></span><i class="yellow-text font-raleway">close</i></div>
-        <div class="notify red accent-4 waves-light" id="error"><span class="msg"></span><i class="yellow-text font-raleway">close</i></div>
+        <div class="notify grey darken-4 waves-light" id="success"><span class="msg"></span><i class="yellow-text font-raleway">close</i></div>
+        <div class="notify red darken-2 waves-light" id="error"><span class="msg"></span><i class="yellow-text font-raleway">close</i></div>
 
-        <!-- Modals -->
+        <!-- Context menu-->
+        <ul class="collection" id="context-menu">
+            <li class="collection-item">Alvin</li>
+            <li class="collection-item">Alvin</li>
+            <li class="collection-item">Alvin</li>
+            <li class="collection-item">Alvin</li>
+        </ul>
+        <!-- Create a managerial account-->
+        <section id="managerial">
+
+        </section>
         <!--   password modal-->
         <div id="promptPasword" class="modal">
             <form action="#">
@@ -131,13 +188,14 @@
         </div>
     </section>
     <!--<script src="dist/dataTables/datatables.min.js"></script>-->
-    <script src="js/waitMe.min.js"></script>
     <script src="js/sweetalert.js"></script>
+    <script src="js/chart.js"></script>
     <script src="js/main.js"></script>
     <script src="js/controller.js"></script>
     <script src="js/dash-controller.js"></script>
     <script src="js/items-controller.js"></script>
     <script src="js/staff-controller.js"></script>
+    <script src="js/reports-controller.js"></script>
 </body>
 
 </html>

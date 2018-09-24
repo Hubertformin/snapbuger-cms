@@ -6,19 +6,20 @@ app.controller("itemsCtr", ($scope) => {
     var instances = M.Collapsible.init(elems);
     //=============== Table Number =========================
     $scope.updateTableNumber = ()=>{
-        /*if(typeof $scope.products.tableNumber !== 'number'){
+        if(typeof $scope.products.tableNumber[0].number !== 'number'){
             notifications.notify({type:"error",msg:"Invalid Table Number!"})
-            $scope.products.tableNumber = 1;
+            //console.log($scope.products.tableNumber[0].number)
+            //$scope.products.tableNumber = 1;
             return false;
         }
         //{number:$scope.products.tableNumber}
-        $scope.db.tableNumber.add({number:$scope.products.tableNumber})
+        $scope.db.tableNumber.put($scope.products.tableNumber[0])
         .then(()=>{
-            console.log("Done!");
+            //console.log("Done!");
         })
         .catch((err)=>{
             notifications.notify({msg:`Erorr! ${err}`,type:"error"})
-        })*/
+        })
     }
     //categories table
     //=========================== Categories ======================
@@ -41,7 +42,7 @@ app.controller("itemsCtr", ($scope) => {
                 $scope.products.categories = data;
                 $scope.category_name = "";
                 $scope.$apply();
-                console.log($scope.products.categories)
+                //console.log($scope.products.categories)
                 notifications.notify({
                     msg: "Added!",
                     type: "done"
@@ -83,7 +84,7 @@ app.controller("itemsCtr", ($scope) => {
                 .then((data)=>{
                     $scope.products.categories = data;
                     $scope.$apply();
-                    console.log($scope.products.categories)
+                    //console.log($scope.products.categories)
                     notifications.notify({
                          msg: "Removed!",
                          type: "done"
@@ -114,7 +115,7 @@ app.controller("itemsCtr", ($scope) => {
         //converting first character to upper case
         $scope.item_name = $scope.item_name[0].toUpperCase()+$scope.item_name.slice(1);
         //date
-        let data = {name: $scope.item_name,rate: $scope.item_rate,category: $scope.item_category,status: $scope.item_status}
+        let data = {name: $scope.item_name,rate: $scope.item_rate,category: $scope.item_category,status: $scope.item_status,action:true}
         //$scope.products.items.push()
         //Add to database
         $scope.db.items.add(data)
@@ -154,13 +155,9 @@ app.controller("itemsCtr", ($scope) => {
                 $scope.item_name = '';
                 $scope.item_rate = '';
                 $scope.$apply();
-                console.log($scope.products.items)
+                //console.log($scope.products.items)
                 //reseting variables
                 //nitifications
-                notifications.notify({
-                    msg: "Added!",
-                    type: "done"
-                })
             })
             .catch(()=>{
                 notifications.notify({msg:'An error occured: Unable to refetch!',type:"error"})
@@ -181,7 +178,7 @@ app.controller("itemsCtr", ($scope) => {
                 .then(data=>{
                     $scope.products.items = data;
                     $scope.$apply();
-                    console.log($scope.products.items)
+                    //console.log($scope.products.items)
                     //reseting variables
                      //nitifications
                     notifications.notify({

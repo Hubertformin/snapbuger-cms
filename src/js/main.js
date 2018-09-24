@@ -1,13 +1,35 @@
 M.AutoInit();
+//offline and online function
+function isOnline(){
+    var syncBtn = $('#syncBtn');
+    syncBtn.children('i').html('sync')
+    syncBtn.addClass("spin")
+    console.log("Online!");
+}
+//fu
+function isOffline(){
+    var syncBtn = $('#syncBtn');
+    //syncBtn.css({color:"#999"})
+    syncBtn.children('i').html('sync_disabled')
+    syncBtn.removeClass("spin")
+    console.log("offline!");
+}
+//on ready
 jQuery(document).ready(()=>{
-   
     setTimeout(()=>{
         jQuery('#loader').remove();
-    },4000)
+    },3800)
+    if(navigator.onLine){
+        isOnline();
+    }else{
+        isOffline();
+    }
 })
+window.addEventListener('online',isOnline,false)
+window.addEventListener('offline',isOffline,false)
 
 //to cosesidenav when links are clicked
-jQuery('#slide-out').on('click','a',()=>{
+jQuery('#slide-out').on('click','.sideNavLink',()=>{
     if(jQuery(window).width()<992){
         var sideNav = M.Sidenav.getInstance(jQuery('#slide-out'));
         sideNav.close();
@@ -53,6 +75,8 @@ class Alerts{
         }
     }
 }
+
+//search table
 function searchTable(e,tb){
     var i,j,td,input,
     value = e.target.value.toLowerCase(),
@@ -121,3 +145,65 @@ function searchOrderItems(e){
 //$AV_ASW
 var elems = document.querySelectorAll('.dropdown-trigger');
 var dropdown = M.Dropdown.init(elems, {coverTrigger:false});
+//=========== Date function===
+class DateFunction{
+    constructor(){
+        this.today = new Date();
+        this.today_getTime = Date.now();
+    }
+    isToday(dt) {
+        var old_date = new Date(dt).getTime(),
+        diff = (this.today_getTime - old_date)/3600000;
+        if(diff<24){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+//the notification class
+const notifications = new Alerts();
+//time class
+const time = new DateFunction();
+
+//context-menu
+/*document.addEventListener('contextmenu',(e)=>{
+    e.preventDefault();
+    jQuery('#context-menu').fadeIn();
+    var menu = document.querySelector('#context-menu')
+    menu.style.top = mouseY(event)+'px';
+    menu.style.left = mouseX(event)+'px';
+    window.event.returnValue = false;
+},false)
+document.addEventListener('click',()=>{
+    jQuery('#context-menu').fadeOut();
+})
+function mouseX(e){
+    if(e.pageX){
+        return e.pageX;
+    }else if(e.clientX){
+        return e.clientX + (document.documentElement.scrollLeft)?document.documentElement.scrollLeft:document.body.scrollLeft;
+    }else{
+        return null;
+    }
+}
+function mouseY(e){
+    if(e.pageY){
+        return e.pageY;
+    }else if(e.clientY){
+        return e.clientY + (document.documentElement.scrollTop)?document.documentElement.scrollTop:document.body.scrollTop;
+    }else{
+        return null;
+    }
+}*/
+document.querySelector('#managerialImgInput').onchange = (e)=>{
+    var img = document.querySelector('#managerialImg'),
+    file = e.target.files[0];
+    if(file.size > 400000){
+        notifications.notify({type:"error",msg:"File size to large, please upload a picture below 4MB"})
+        return false;
+    }
+    console.log(file);
+    var url = URL.createObjectURL(file);
+    img.src = url;
+}

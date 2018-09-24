@@ -13,19 +13,19 @@
                 Number of tables<br><small>Enter number of tables</small>
             </h2>
             <div class="input-field inline" style="margin:0;margin-left:10px;">
-                <input ng-change="updateTableNumber()" style="transform:translateY(-16px);margin: 0;" id="tableNumber" min="1" ng-model="products.tableNumber" type="number" class="validate">
+                <input ng-change="updateTableNumber()" style="transform:translateY(-16px);margin: 0;" id="tableNumber" min="1" ng-model="products.tableNumber[0].number" type="number" class="validate">
             </div>
         </div>
     </div>
     <!--Categories box -->
     <div class="box">
-        <div class="header green darken-2">
+        <div class="header bg-theme">
             <h2 class="white-text">
                 Categories<br><small>Manage categories (Click to edit)</small>
             </h2>
         </div>
         <div class="body">
-            <ul ng-show="currentUser.is_mgr">
+            <ul ng-show="currentUser.is_mgr" class="collapsible">
                 <li>
                     <div class="collapsible-header"><i class="material-icons">add</i>Create Category</div>
                     <div class="collapsible-body">
@@ -44,7 +44,7 @@
                                     </div>
                                 </div>
                                 <span class="categories_error red-text"></span>
-                                <button type="submit" style="float:right" class="waves-effect waves-light btn green darken-3">Add</button>
+                                <button type="submit" style="float:right" class="waves-effect waves-light btn bg-theme-rev">Add</button>
                             </form>
                         </div>
                     </div>
@@ -66,7 +66,7 @@
             </table>
             <div class="huberts-table-div">
                 <div ng-show="products.categories.length == 0" class="no-data">
-                    <p>No data, Create categories to view</p>
+                    <p>No categories, Create categories to view</p>
                 </div>
                 <table class="huberts-tables mdl-data-table" style="width:100%">
                     <tbody>
@@ -93,7 +93,7 @@
     </div>
     <!--Item box -->
     <div class="box">
-        <div class="header teal darken-2">
+        <div class="header bg-theme">
             <h2 class="white-text">
                 Items <br><small>Manage products (Click to edit)</small>
             </h2>
@@ -120,7 +120,7 @@
                                 <div class="row">
                                     <div class="col s6">
                                         <div class="row">
-                                            <div class="col s2 teal darken-1" style="transform: translateY(10px);text-align: center;color:#fff;padding:6px 10px;">XAF</div>
+                                            <div class="col s2 orange" style="transform: translateY(10px);text-align: center;color:#fff;padding:6px 10px;">XAF</div>
                                             <div class="col s10">
                                                 <div class="input-field" style="transform: translateY(-15px);">
                                                     <input data-error="Invalid Rate" id="item_rate" type="number" name="item_rate" ng-model="item_rate" class="validate" placeholder="Rate">
@@ -136,7 +136,7 @@
                                     </div>
                                 </div>
                                 <span class="item_error red-text"></span>
-                                <button type="submit" style="float:right" class="waves-effect waves-light btn teal darken-2">Add</button>
+                                <button type="submit" style="float:right" class="waves-effect waves-light btn bg-theme-rev">Add</button>
                             </form>
                         </div>
                     </div>
@@ -160,7 +160,7 @@
             </table>
             <div class="huberts-table-div">
                 <div ng-show="products.items.length == 0" class="no-data">
-                    <p>No data in this table, Create Items to view</p>
+                    <p>No items in this table, Create Items to view</p>
                 </div>
                 <table id="itemsTable" class="huberts-tables mdl-data-table" style="width:100%">
                     <tbody>

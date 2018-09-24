@@ -1,5 +1,4 @@
-//the notification class
-const notifications = new Alerts();
+
 //angular module
 var app = angular.module('mainApp', ["ngRoute"]);
 app.config(($routeProvider) => {
@@ -45,23 +44,20 @@ app.controller("mainCtr", ($scope) => {
     $scope.managers = [];
     $scope.users = [];
     $scope.products = {
-        tableNumber:10,
+        tableNumber:0,
         categories:[],
         items:[]
     }
     //
    var Dexie = require('dexie');
-   var async = Dexie.async,
-    spawn = Dexie.spawn;
    $scope.db = new Dexie("snapBurgerDb")
    $scope.db.version(1).stores({
        users:"++id,name,password,position,startDate,salary,status,is_mgr",
        categories:"++id,name,status,action",
        items:"++id,name,rate,category,status,action",
-       tableNumber:"number",
-       orders:"name,date,*items,totalPrice,totalQuantity"
+       tableNumber:"++id,number",
+       orders:"++id,name,date,*items,totalPrice,totalQuantity"
    })
-   //$scope.db.items.bulkPut([])
    //fetching Data
    $scope.db.users.toArray()
    .then((data)=>{
@@ -81,6 +77,10 @@ app.controller("mainCtr", ($scope) => {
     .then((data)=>{
         $scope.products.items = data;
     })
+    $scope.db.tableNumber.toArray()
+    .then(data=>{
+        $scope.products.tableNumber = data;
+    })
     //fetching data
     $scope.$apply();
    })
@@ -88,11 +88,18 @@ app.controller("mainCtr", ($scope) => {
    .then((data)=>{
         $scope.orders = data;
    })
-   //
+   //=========== MANAGERIAL ACCOUNT! ========
+   jQuery('#createManagerialForm').submit((e)=>{
+    e.preventDefault();
+    var name = jQuery('#createManagerialFormInputName').val(),
+    password = jQuery('#createManagerialFormPassword').val();
+    if(typeof name == "string" || password == ""){
+        notifications.notify({msg:"Please fill all fields!",type:"error"})
+        return false;
+    }
+    $
+})
 //users,staff
-    /*[
-
-    ]*/
     $scope.currentUser = '';
     if (sessionStorage.getItem('user') != null) {
         jQuery('#login').hide()

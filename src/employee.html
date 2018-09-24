@@ -1,6 +1,6 @@
 <div class="routePage" ng-controller="staffCtr">
     <div class="box">
-        <div class="header grey darken-2">
+        <div class="header bg-theme">
             <h2 class="white-text">
                 Staff<br><small>List of all staffs.</small>
             </h2>
@@ -32,7 +32,7 @@
                                     <label for="salary">Salary</label>
                                 </div>
                                 <div class="col s12">
-                                    <button type="submit" class="align-right waves-effect waves-green btn teal">Add</button>
+                                    <button type="submit" class="btn right waves-effect waves-light bg-theme-rev">Add</button>
                                 </div>
                             </div>
                         </form>
@@ -46,14 +46,15 @@
                         <th>Position</th>
                         <th>Start Date</th>
                         <th>Salary(XAF)</th>
+                        <th>Password</th>
                         <th>Status</th>
-                        <th><i class="material-icons">build</i></th>
+                        <th class="small"><i class="material-icons">build</i></th>
                     </tr>
                 </thead>
             </table>
             <div class="huberts-table-div">
                 <div ng-show="staffs.length == 0" class="no-data">
-                    <p>No data, Create to view</p>
+                    <p>No Staffs, Create to view</p>
                 </div>
                 <table class="huberts-tables">
                     <tbody>
@@ -62,6 +63,7 @@
                             <td><input ng-change="updateStaffs($index)" type="text" ng-model="x.position"></td>
                             <td><input ng-change="updateStaffs($index)" type="text" ng-model="x.startDate" class="datepicker"></td>
                             <td><input ng-change="updateStaffs($index)" type="text" ng-model="x.salary"></td>
+                            <td><input ng-change="updateStaffs($index)" type="password" ng-model="x.password"></td>
                             <td>
                             <select ng-change="updateStaffs($index)" ng-change="updateStaffs($index)" class="browser-default" ng-model="x.status">
                                 <option value="active">Active</option>
@@ -78,17 +80,19 @@
                     <tr>
                         <th>Name</th>
                         <th>Position</th>
-                        <th>Start date</th>
-                        <th>Salary</th>
+                        <th>Start Date</th>
+                        <th>Salary(XAF)</th>
+                        <th>Password</th>
+                        <th>Status</th>
                         <th></th>
-                        <th class="small"></th>
+                        <th class="small"><i class="material-icons">build</i></th>
                     </tr>
                 </tfoot>
             </table>
         </div>
     </div>
     <div class="box">
-        <div class="header red darken-4">
+        <div class="header bg-theme">
             <h2 class="white-text">
                 Managers<br><small>All managers.</small>
             </h2>
@@ -128,7 +132,7 @@
                         <th>Position</th>
                         <th>Start date</th>
                         <th>Salary</th>
-                        <th class="small"></th>
+                        <th class="small"><i class="material-icons">build</i></th>
                     </tr>
                 </tfoot>
             </table>

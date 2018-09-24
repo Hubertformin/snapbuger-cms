@@ -66,27 +66,29 @@ app.controller("dashCtr", ($scope) => {
     }
     $scope.addItem = (e,i) =>{
         var btn = jQuery(e.target), selectedItem = $scope.products.items[i];
-        selectedItem.quantity = btn.siblings('.inputDiv').children('input').val();
+        selectedItem.quantity = btn.siblings('.inputDiv').children('input.qty').val();
         selectedItem.price =  selectedItem.quantity * selectedItem.rate;
-        
         //
         if(btn.data("clicked") == false){
             if($scope.currentOrder.items.push(selectedItem)){
                 //computing prices and qunatity
-                $scope.currentOrder.totalPrice += selectedItem.price;
-                $scope.currentOrder.totalQuantity += Number(selectedItem.quantity);
+                $scope.currentOrder.totalPrice = $scope.currentOrder.totalPrice + Number(selectedItem.price);
+                $scope.currentOrder.totalQuantity = $scope.currentOrder.totalQuantity + Number(selectedItem.quantity);
                 //misc
                 $scope.products.items[i].added = true;
                 btn.siblings().children('.btns').css({cursor:"default"})
+                //cant use this because i usign two buttons and I toggle view
+                //btn.data("clicked") == true;
             }
         }else{
             $scope.removeItem(selectedItem.name);
             //re-computing prices and qunatity
-            $scope.currentOrder.totalPrice -= selectedItem.price;
-            $scope.currentOrder.totalQuantity -= Number(selectedItem.quantity);
+            $scope.currentOrder.totalPrice = $scope.currentOrder.totalPrice - Number(selectedItem.price);
+            $scope.currentOrder.totalQuantity = $scope.currentOrder.totalQuantity - Number(selectedItem.quantity);
             //misc
             $scope.products.items[i].added = false;
             btn.siblings().children('.btns').css({cursor:"pointer"})
+            //btn.data("clicked") == false;
         }
     }
     ///Finally creating order, first by setting the default table number to 1
@@ -102,9 +104,9 @@ app.controller("dashCtr", ($scope) => {
         }
         //creating current order
         $scope.currentOrder.name = $scope.orderName;
-        $scope.currentOrder.date = jQuery('#orderDate').val();
+        $scope.currentOrder.date = new Date();
         $scope.currentOrder.table = $scope.orderTableNumber;
-        var current = $scope.currentOrder;
+        const current = $scope.currentOrder;
         //and now pushing to main --
         //checking if order already exist
         /*$scope.todaysOrders.forEach(el=>{
@@ -113,16 +115,37 @@ app.controller("dashCtr", ($scope) => {
                 return false;
             }
         })*/
-        $scope.todaysOrders.push(current);
-        swal({
-            title: "Done!",
-            text: "Added to list of orders!",
-            icon: "success",
-            button: "Okay",
-          });
+        //$scope.todaysOrders.push(current);
+        $scope.db.orders.add(current)
+        .then(()=>{
+            $scope.db.orders.toArray()
+            .then((data)=>{
+                $scope.orders = data;
+                $scope.orderName = "";
+                $scope.removeItem('deleteAll') 
+                $scope.$apply();
+                console.log($scope.orders)
+                //
+                swal({
+                    title: "Order completed!",
+                    text: "Click okay to print!",
+                    icon: "success",
+                    buttons: true,
+                    dangerMode: false,
+                })
+                .then((click) => {
+                    if (click) {
+                        //print here!!
+                        console.log(current)
+                    } else {
+                        return false;
+                    }
+                });
+            })
+        })
           //reseting order custom form
-          $scope.orderName = "";
-          $scope.removeItem('deleteAll') 
+          //$scope.orderName = "";
+          //$scope.removeItem('deleteAll') 
         //console.log($scope.todaysOrders);
     }
 
