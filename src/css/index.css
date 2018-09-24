@@ -68,7 +68,6 @@ select.prefixed {
   #login .row {
     position: relative; }
   #login #managerial {
-    display: none;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -235,13 +234,13 @@ nav {
       color: #f44336 !important;
       top: 0;
       cursor: pointer;
-      left: 75%; }
+      left: 94%; }
       nav form .close-search i {
         font-size: -webkit-xxx-large; }
   nav ul.nav-list-right {
     position: absolute;
     top: 0;
-    left: 84%;
+    left: 90%;
     color: #999 !important; }
     nav ul.nav-list-right a {
       color: #f44336 !important; }

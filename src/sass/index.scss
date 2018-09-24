@@ -71,7 +71,7 @@ select {
         position: relative;
     }
     #managerial{
-        display: none;
+        //display: none;
         position: absolute;
         top: 0;bottom: 0;left: 0;right: 0;
         background: #fff;
@@ -264,7 +264,7 @@ nav {
             color: #f44336!important;
             top: 0;
             cursor: pointer;
-            left: 75%;
+            left: 94%;
             i {
                 font-size: -webkit-xxx-large;
             }
@@ -277,7 +277,7 @@ nav {
             }
             position: absolute;
             top: 0;
-            left:84%;
+            left:90%;
             color: #999 !important;
         }
     }

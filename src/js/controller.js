@@ -91,13 +91,30 @@ app.controller("mainCtr", ($scope) => {
    //=========== MANAGERIAL ACCOUNT! ========
    jQuery('#createManagerialForm').submit((e)=>{
     e.preventDefault();
-    var name = jQuery('#createManagerialFormInputName').val(),
-    password = jQuery('#createManagerialFormPassword').val();
+    var name = jQuery('#createManagerialFormInputName').val(),blob,
+    password = jQuery('#createManagerialFormPassword').val(),
+    img = document.querySelector('#managerialImgInput').files[0];
+    if(typeof img == 'undefined'){
+        img = 'img/user-grey.png';
+    }else{
+        blob = new Blob([img],{type:img.type})
+        //var ublob = URL.createObjectURL(blob)
+    }
+    //default image url:img/user-grey.png
     if(typeof name == "string" || password == ""){
         notifications.notify({msg:"Please fill all fields!",type:"error"})
         return false;
     }
-    $
+    $scope.db.users.add({
+        name:name,
+        password:password,
+        position:"Manager",
+        is_mgr:true,
+        startDate: Date.now(),
+        status:"active",
+        salary:"N/A"
+    })
+    
 })
 //users,staff
     $scope.currentUser = '';

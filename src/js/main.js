@@ -203,7 +203,8 @@ document.querySelector('#managerialImgInput').onchange = (e)=>{
         notifications.notify({type:"error",msg:"File size to large, please upload a picture below 4MB"})
         return false;
     }
-    console.log(file);
+    //console.log(file);
     var url = URL.createObjectURL(file);
     img.src = url;
+    
 }
