@@ -16,9 +16,6 @@ function isOffline(){
 }
 //on ready
 jQuery(document).ready(()=>{
-    setTimeout(()=>{
-        jQuery('#loader').remove();
-    },3800)
     if(navigator.onLine){
         isOnline();
     }else{

@@ -1,8 +1,68 @@
-<div class="routePage" ng-controller="reportsCtr">
-    <div class="box">
-        <div class="header">Reports</div>
-        <div class="body">
-            <canvas id="myChart" height="30vh" width="60vh"></canvas>
+<div id="reports" class="routePage white" ng-controller="reportsCtr" style="margin-top:68px;padding:0px;">
+    <div class="row">
+        <div class="">
+            <ul class="tabs">
+                <li class="tab col s3"><a class="active" href="#ordersReports">Orders</a></li>
+                <li class="tab col s3"><a href="#productsReports">Products</a></li>
+                <li class="tab col s3"><a href="#staffReports">Staff</a></li>
+            </ul>
         </div>
+        <!-- Orders Reports! -->
+        <div id="ordersReports" class="white col s12">
+            <div class="chart">
+                <div id="orderChart" style="height: 280px;background:#fff;"></div>
+            </div>
+            <div class="body" style="margin-top:50px;border-top:1px solid #999">
+                <!--<button ng-click="update()" class="btn right waves-effect waves-light">Update</button>-->
+                <div class="row">
+                    <div class="col s3 pr-0 date-review">
+                        <div class="huberts-table-div">
+                            <input class="browser-default" type="search" placeholder="Search..">
+                           <div class="searchDate">
+                            </div>
+                            <div class="collection">
+                                <a ng-repeat="a in orders" href="javascript:void(0)" class="collection-item">{{toDate(a.date)}}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s9">
+                        <table>
+                            <thead>
+                                <th>Name</th>
+                                <th>Items</th>
+                                <th>Price</th>
+                                <th>Total Qty</th>
+                                <th>Staff</th>
+                            </thead>
+                        </table>
+                        <div class="huberts-table-div">
+                            <table class="huberts-table">
+                                <tbody>
+                                    <tr ng-repeat="x in orders | orderBy:'id'">
+                                        <td>{{x.name}}</td>
+                                        <td>
+                                            <ul class="browser-default">
+                                                <li ng-repeat="o in x.items track by $index">{{o.name}}</li>
+                                            </ul>
+                                        </td>
+                                        <td>{{x.totalPrice}}</td>
+                                        <td>{{x.totalQuantity}}</td>
+                                        <td>{{x.staff}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Products Reports! -->
+        <div id="productsReports" class="white col s12">Test 2</div>
+        <!-- Staff Reports! -->
+        <div id="staffReports" class="white col s12">Test 3</div>
     </div>
+
+
+
+    <!--    -->
 </div>
