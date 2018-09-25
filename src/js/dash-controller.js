@@ -102,13 +102,13 @@ app.controller("dashCtr", ($scope) => {
             notifications.notify({type:"error",msg:"Please select items"})
             return false;
         }
+        const staff = JSON.parse(sessionStorage.getItem('user'))
         //creating current order
         $scope.currentOrder.name = $scope.orderName;
         $scope.currentOrder.date = new Date();
         $scope.currentOrder.table = $scope.orderTableNumber;
-        //const staff = JSON.parse(sessionStorage.getItem('user'));
+        $scope.currentOrder.staff = staff.name;
         const current = $scope.currentOrder;
-        
         //and now pushing to main --
         //checking if order already exist
         /*$scope.todaysOrders.forEach(el=>{

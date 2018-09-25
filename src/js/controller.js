@@ -215,7 +215,6 @@ app.controller("mainCtr", ($scope) => {
             });
     }
     //=======================================================================================================================
-    const staff = JSON.parse(sessionStorage.getItem('user'))
     //Orders
     $scope.todaysOrders = []
     $scope.currentOrder = {
@@ -225,7 +224,7 @@ app.controller("mainCtr", ($scope) => {
         items:[],
         totalPrice:0,
         totalQuantity:0,
-        staff:staff.name
+        staff:''
     }
 })
 
