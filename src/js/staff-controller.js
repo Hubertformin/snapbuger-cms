@@ -42,7 +42,8 @@ app.controller("staffCtr", ($scope) => {
             startDate: inputDate,
             salary: $scope.staff_salary,
             status: "active",
-            is_mgr: false
+            is_mgr: false,
+            img_url:'img/user-grey.png'
         })
         .then(()=>{
             notifications.notify({type: 1, msg: "Acount Created!"})
