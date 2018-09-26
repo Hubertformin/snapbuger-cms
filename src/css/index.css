@@ -703,12 +703,26 @@ div#reports .date-review {
     border: 1px solid #999;
     padding: 5px 15px; }
 
+div#reports div.table-div {
+  height: 300px;
+  overflow-y: scroll;
+  border-bottom: 1px solid #ddd; }
+
 div#reports table th {
   width: 16.6%; }
+  div#reports table th.small {
+    width: 3%; }
 
 div#reports table tr td {
   width: 16.6%;
   padding: 0; }
+  div#reports table tr td.small {
+    width: 3%; }
+  div#reports table tr td ul {
+    margin: 10px;
+    -webkit-padding-start: 5px; }
+  div#reports table tr td i {
+    cursor: pointer; }
 
 @media only screen and (max-width: 992px) {
   main,
