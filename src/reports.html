@@ -1,12 +1,5 @@
 <div id="reports" class="routePage white" ng-controller="reportsCtr" style="margin-top:68px;padding:0px;">
     <div class="row">
-        <div class="">
-            <ul class="tabs">
-                <li class="tab col s3"><a class="active" href="#ordersReports">Orders</a></li>
-                <li class="tab col s3"><a href="#productsReports">Products</a></li>
-                <li class="tab col s3"><a href="#staffReports">Staff</a></li>
-            </ul>
-        </div>
         <!-- Orders Reports! -->
         <div id="ordersReports" class="white col s12">
             <div class="chart">
@@ -20,8 +13,8 @@
                             <input class="browser-default" type="search" placeholder="Search..">
                            <div class="searchDate">
                             </div>
-                            <div class="collection">
-                                <a ng-repeat="a in orders" href="javascript:void(0)" class="collection-item">{{toDate(a.date)}}</a>
+                            <div class="collection" id="collection">
+                                <a ng-repeat="a in uniqueDateOrders" href="javascript:void(0)" class="collection-item" ng-click="filterOrdersView(a.date)">{{a.date}}</a>
                             </div>
                         </div>
                     </div>
@@ -36,13 +29,13 @@
                             </thead>
                         </table>
                         <div class="huberts-table-div">
-                            <table class="huberts-table">
+                            <table id="allOrders" class="huberts-table">
                                 <tbody>
-                                    <tr ng-repeat="x in orders | orderBy:'id'">
+                                    <tr ng-repeat="x in orders" data-date="{{x.date}}">
                                         <td>{{x.name}}</td>
                                         <td>
                                             <ul class="browser-default">
-                                                <li ng-repeat="o in x.items track by $index">{{o.name}}</li>
+                                                <li ng-repeat="o in x.items">{{o.name}}</li>
                                             </ul>
                                         </td>
                                         <td>{{x.totalPrice}}</td>
@@ -57,9 +50,9 @@
             </div>
         </div>
         <!-- Products Reports! -->
-        <div id="productsReports" class="white col s12">Test 2</div>
+        <!--<div id="productsReports" class="white col s12">Test 2</div>-->
         <!-- Staff Reports! -->
-        <div id="staffReports" class="white col s12">Test 3</div>
+        <!--<div id="staffReports" class="white col s12">Test 3</div>-->
     </div>
 
 

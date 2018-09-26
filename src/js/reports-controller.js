@@ -1,6 +1,18 @@
 app.controller('reportsCtr',($scope)=>{
-    var instance = M.Tabs.init(jQuery('.tabs'));
-    //angular-route.js
+    //var instance = M.Tabs.init(jQuery('.tabs'));
+    //for date display array, first we reverse sort
+    function toDate(dt){
+        return new Date(dt).toDateString();
+    }
+    $scope.uniqueDateOrders = []
+    for(var i = 0;i<$scope.orders.length;i++){
+        $scope.orders[i].date = toDate($scope.orders[i].date)
+        if(i>0 && toDate($scope.orders[i-1].date) == toDate($scope.orders[i].date)){
+            continue;
+        }
+        $scope.uniqueDateOrders.push($scope.orders[i])
+    }
+    //area charts 
     var graph =  Morris.Area({
         element: 'orderChart',
         data: [
@@ -37,8 +49,12 @@ app.controller('reportsCtr',($scope)=>{
             {x: '2018-09-24',y:23},
         ])
     }
-    //date strinf
-    $scope.toDate = (dt)=>{
-        return new Date(dt).toDateString();
+    //functions
+    $scope.filterOrdersView = (dt)=>{
+        jQuery('#allOrders tr').hide();
+        jQuery(`#allOrders tr[data-date="${dt}"]`).show();
+
     }
+    //showing todays orders
+   
 })

@@ -126,7 +126,7 @@ app.controller("dashCtr", ($scope) => {
                 $scope.orderName = "";
                 $scope.removeItem('deleteAll') 
                 $scope.$apply();
-                console.log($scope.orders)
+                //console.log($scope.orders)
                 //
                 swal({
                     title: "Order completed!",

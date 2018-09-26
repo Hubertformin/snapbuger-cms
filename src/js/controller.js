@@ -88,6 +88,9 @@ app.controller("mainCtr", ($scope) => {
    $scope.db.orders.toArray()
    .then((data)=>{
         $scope.orders = data;
+        $scope.orders.sort(function(a,b){
+            return (a.id < b.id)?1:((b.id < a.id)? -1:0);
+        });
    })
    //basic checkings
    setTimeout(()=>{
@@ -225,6 +228,10 @@ app.controller("mainCtr", ($scope) => {
         totalPrice:0,
         totalQuantity:0,
         staff:''
+    }
+    //to date string angular function
+    $scope.toDate = (dt)=>{
+        return new Date(dt).toDateString();
     }
 })
 

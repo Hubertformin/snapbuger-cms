@@ -118,7 +118,7 @@
                         <tr ng-repeat="x in managers track by $index">
                             <td><input type="text" ng-model="x.name"></td>
                             <td><input readonly type="text" ng-model="x.position"></td>
-                            <td><input class="date" type="text" ng-model="x.startDate"></td>
+                            <td>{{toDate(x.startDate)}}</td>
                             <td><input type="text" ng-model="x.salary"></td>
                             <td class="small"><i ng-click="deleteManagers($index)" class="material-icons">delete</i></td>
                         </tr>
