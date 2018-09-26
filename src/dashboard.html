@@ -22,12 +22,12 @@
                         <div class="row">
                             <div class="input-field col s4">
                                 <i class="material-icons prefix">person</i>
-                                <input ng-model="orderName" id="orderName" type="text" class="validate">
-                                <label for="orderName">Name</label>
+                                <input ng-model="orderInv" id="orderInv" type="text" class="validate" disabled />
+                                <label for="orderName" class="active">Invoice Number</label>
                             </div>
                             <div class="input-field col s4">
                                 <i class="material-icons prefix">date_range</i>
-                                <input id="orderDate" type="text" readonly />
+                                <input id="orderDate" type="text" disabled/>
                                 <label class="active" for="orderDate">Order Date</label>
                             </div>
                             <div class="input-field col s4">
@@ -93,7 +93,7 @@
                         <div class="col s12 footer">
                             <div class="col s5 offset-s7">
                                 <button ng-show="orderPrint" class="btn waves-effect waves-light brown darken-4"><i class="material-icons left">print</i>Print</button>
-                                <button ng-click="createOrder()" ng-disabled="!orderName || currentOrder.items.length == 0" class="btn waves-effect waves-light green darken-1 right"><i class="material-icons left">done</i>Complete</button>
+                                <button ng-click="createOrder()" ng-disabled="currentOrder.items.length == 0" class="btn waves-effect waves-light green darken-1 right"><i class="material-icons left">done</i>Complete</button>
                             </div>
                         </div>
                     </form>

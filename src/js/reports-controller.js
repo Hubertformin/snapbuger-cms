@@ -23,6 +23,10 @@ app.controller('reportsCtr',($scope)=>{
     function toDate(dt){
         return new Date(dt).toDateString();
     }
+    function toGraphDate(dt){
+        var dte = new Date(dt);
+        return `${dte.getFullYear()}-${dte.getMonth()+1}-${dte.getDate()}`
+    }
     $scope.uniqueDateOrders = []
     for(var i = 0;i<$scope.orders.length;i++){
         //$scope.orders[i].date = toDate($scope.orders[i].date)
@@ -31,22 +35,7 @@ app.controller('reportsCtr',($scope)=>{
         }
         $scope.uniqueDateOrders.push($scope.orders[i].date)
     }
-    var v = [];
-    for(var i = 0;i<$scope.uniqueDateOrders.length;i++){
-        var el = {x:$scope.uniqueDateOrders[i],y:0}
-        for(var y = 0;y<$scope.orders.length;y++){
-            if($scope.orders[y].date.toDateString() == $scope.uniqueDateOrders[i].toDateString()){
-                el.y += 1;
-            }
-        }
-        v.unshift(el);
-    }
-    console.log(v);
-    //counting each date
-    //for(var y=0;y<$scope.uniqueDateOrders.length;y++){
-        
-    //}
-    //fucntion used to show proper time 
+    //cleaner function that formats date and show it in the left pane of the order table
     $scope.cleaner = (dt)=>{
         dt = dt.toDateString();
         var time = new Date(dt).getTime(),now = Date.now(),d;
@@ -59,7 +48,7 @@ app.controller('reportsCtr',($scope)=>{
             return dt;
         }
     }
-    //functions
+    //function, used to show the corresponding date orders to date clicked
     $scope.filterOrdersView = (dt)=>{
         dt = dt.toDateString();
         jQuery('#allOrders tr').hide();
@@ -126,41 +115,22 @@ app.controller('reportsCtr',($scope)=>{
     }
 
     //lastly charts
+    //creating graph data
+    var graphData = [];
+    for(var i = 0;i<$scope.uniqueDateOrders.length;i++){
+        if(i == 31){break;}
+        var el = {x:toGraphDate($scope.uniqueDateOrders[i]),y:0}
+        for(var y = 0;y<$scope.orders.length;y++){
+            if($scope.orders[y].date.toDateString() == $scope.uniqueDateOrders[i].toDateString()){
+                el.y += 1;
+            }
+        }
+        graphData.push(el);
+    }
     //area charts 
     var graph =  Morris.Area({
         element: 'orderChart',
-        data: [
-            {x: '2018-9-30',y:76},
-            {x: '2018-9-29',y:28},
-            {x: '2018-9-28',y:23},
-            {x: '2018-9-27',y:46},
-            {x: '2018-9-26',y:13},
-            {x: '2018-9-25',y:23},
-            {x: '2018-9-24',y:36},
-            {x: '2018-9-23',y:33},
-            {x: '2018-9-22',y:20},
-            {x: '2018-9-21',y:23},
-            {x: '2018-9-20',y:27},
-            {x: '2018-9-19',y:45},
-            {x: '2018-9-18',y:26},
-            {x: '2018-9-17',y:102},
-            {x: '2018-9-16',y:45},
-            {x: '2018-9-15',y:64},
-            {x: '2018-9-14',y:75},
-            {x: '2018-9-13',y:98},
-            {x: '2018-9-12',y:78},
-            {x: '2018-9-11',y:26},
-            {x: '2018-9-10',y:56},
-            {x: '2018-9-9',y:26},
-            {x: '2018-9-8',y:24},
-            {x: '2018-9-7',y:78},
-            {x: '2018-9-6',y:85},
-            {x: '2018-9-5',y:50},
-            {x: '2018-9-4',y:100},
-            {x: '2018-9-3',y:60},
-            {x: '2018-9-2',y:43},
-            {x: '2018-9-1',y:33},
-        ],
+        data:graphData,
         xkey: 'x',
         ykeys: ['y'],
         labels: ['Orders'],

@@ -93,18 +93,15 @@ app.controller("dashCtr", ($scope) => {
     }
     ///Finally creating order, first by setting the default table number to 1
     $scope.orderTableNumber = '1';
+    $scope.orderInv = `SB${Math.floor(Math.random() * 999) + 1000}`;
     $scope.createOrder = ()=>{
-        if(typeof $scope.orderName == 'undefined'){
-            notifications.notify({type:"error",msg:"Enter a name!"})
-            return false;
-        }
         if($scope.currentOrder.items.length == 0){
             notifications.notify({type:"error",msg:"Please select items"})
             return false;
         }
         const staff = JSON.parse(sessionStorage.getItem('user'))
         //creating current order
-        $scope.currentOrder.name = $scope.orderName;
+        $scope.currentOrder.name = $scope.orderInv;
         $scope.currentOrder.date = new Date();
         $scope.currentOrder.table = $scope.orderTableNumber;
         $scope.currentOrder.staff = staff.name;
@@ -123,7 +120,7 @@ app.controller("dashCtr", ($scope) => {
             $scope.db.orders.toArray()
             .then((data)=>{
                 $scope.orders = data;
-                $scope.orderName = "";
+                $scope.orderInv = `SB${Math.floor(Math.random() * 999) + 1000}`;
                 $scope.removeItem('deleteAll') 
                 $scope.$apply();
                 //console.log($scope.orders)
@@ -146,7 +143,7 @@ app.controller("dashCtr", ($scope) => {
             })
         })
           //reseting order custom form
-          //$scope.orderName = "";
+          //$scope.orderInv = "";
           //$scope.removeItem('deleteAll') 
         //console.log($scope.todaysOrders);
     }
