@@ -18,6 +18,9 @@ app.config(($routeProvider) => {
         .when('/reports', {
             templateUrl: "reports.html"
         })
+        .when('/profile',{
+            templateUrl:"profile.html"
+        })
 })
 
 /*app.directive('PascalCase',()=>{
@@ -98,12 +101,10 @@ app.controller("mainCtr", ($scope) => {
     if($scope.users.length == 0){
         jQuery('#managerial').show();
     }
-    },3800)
+    },3600)
    //=========== MANAGERIAL ACCOUNT! ========
    jQuery('#createManagerialForm').submit((e)=>{
     e.preventDefault();
-    var name = jQuery('#createManagerialFormInputName').val(),
-    password = jQuery('#createManagerialFormPassword').val(),
     img = document.querySelector('#managerialImgInput').files[0];
     if(typeof img == 'undefined'){
         blob = 'img/user-grey.png';
@@ -112,15 +113,15 @@ app.controller("mainCtr", ($scope) => {
         //var ublob = URL.createObjectURL(blob)
     }
     //default image url:img/user-grey.png
-    if(typeof name !== "string" || typeof password !== "string"){
+    if(typeof $scope.createManagerialFormInputName !== "string" || typeof $scope.createManagerialFormPassword !== "string"){
         notifications.notify({msg:"Please fill all fields!",type:"error"})
         return false;
     }
     //converting first character to upper case
-    name = name[0].toUpperCase()+name.slice(1);
+    $scope.createManagerialFormInputName = $scope.createManagerialFormInputName[0].toUpperCase()+$scope.createManagerialFormInputName.slice(1);
     const mgr = {
-        name:name,
-        password:password,
+        name:$scope.createManagerialFormInputName,
+        password:$scope.createManagerialFormPassword,
         position:"Manager",
         is_mgr:true,
         startDate: Date.now(),

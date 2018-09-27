@@ -116,7 +116,9 @@ app.controller('reportsCtr',($scope)=>{
 
     //lastly charts
     //creating graph data
-    var graphData = [];
+    $scope.plotGraph = ()=>{
+
+    $scope.graphData = [];
     for(var i = 0;i<$scope.uniqueDateOrders.length;i++){
         if(i == 31){break;}
         var el = {x:toGraphDate($scope.uniqueDateOrders[i]),y:0}
@@ -125,12 +127,12 @@ app.controller('reportsCtr',($scope)=>{
                 el.y += 1;
             }
         }
-        graphData.push(el);
+        $scope.graphData.push(el);
     }
     //area charts 
     var graph =  Morris.Area({
         element: 'orderChart',
-        data:graphData,
+        data:$scope.graphData,
         xkey: 'x',
         ykeys: ['y'],
         labels: ['Orders'],
@@ -153,5 +155,13 @@ app.controller('reportsCtr',($scope)=>{
             {x: '2018-09-24',y:23},
         ])
     }
-   
+
+ }  
+ $scope.plotGraph();
+ setInterval(()=>{
+     if($scope.order.length !== 0){
+        $scope.plotGraph();
+     }
+ },300000)
+
 })

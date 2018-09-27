@@ -6,7 +6,7 @@ const {app, BrowserWindow} = require('electron')
 
   function createWindow () {
     // Create the browser window.
-    win = new BrowserWindow({width: 900,title:'SnapBurger CMS', height: 700,minWidth:750,minHeight:600,icon: './src/img/logo-round.png'})
+    win = new BrowserWindow({width: 1000,title:'SnapBurger CMS', height: 700,minWidth:950,minHeight:600,icon: './src/img/logo-round.png'})
 
     // and load the index.html of the app.
     win.loadFile('src/index.html')

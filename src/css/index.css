@@ -143,8 +143,8 @@ select.prefixed {
     text-align: center;
     color: #999; }
 
-.notingtoshow {
-  position: absolute;
+.nothing-to-show {
+  position: fixed;
   top: 0;
   bottom: 0;
   right: 0;
@@ -155,7 +155,7 @@ select.prefixed {
 body {
   position: relative;
   overflow-y: scroll;
-  background: #f1f1f1; }
+  background: #fff; }
 
 main {
   position: relative;
@@ -330,6 +330,9 @@ nav:not(.nav-extended) {
   background: -webkit-linear-gradient(right, #f44336, #ff9800) !important;
   background: -o-linear-gradient(right, #f44336, #ff9800) !important;
   background: linear-gradient(to left, #f44336, #ff9800) !important; }
+
+button.bg-theme-rev:disabled, button.bg-theme:disabled {
+  background: #f1f1f1 !important; }
 
 .bg-theme-round {
   background: -webkit-radial-gradient(#ff9800, #f44336) !important;
@@ -752,6 +755,23 @@ p.title {
 
 ul.versions {
   list-style-type: circle; }
+
+#profilePage {
+  padding-top: 20px; }
+  #profilePage div.user-img {
+    position: relative;
+    background-image: url(../img/item-bg.jpg);
+    background-size: cover;
+    background-position: center;
+    height: 200px;
+    width: 100%; }
+    #profilePage div.user-img img {
+      height: 88px;
+      width: auto;
+      cursor: pointer;
+      border-radius: 50%; }
+  #profilePage form {
+    padding: 40px 20px; }
 
 @media only screen and (max-width: 858px) {
   nav ul.nav-list-right {
