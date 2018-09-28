@@ -1,21 +1,4 @@
 app.controller('reportsCtr',($scope)=>{
-<<<<<<< HEAD
-    //var ctx = document.getElementById("myChart").getContext('2d');
-    var graph =  Morris.Area({
-        element: 'orderChart',
-        data: [
-            {x: '2018-10-03',y:76},
-            {x: '2018-10-02',y:28},
-            {x: '2018-10-01',y:23},
-            {x: '2018-09-30',y:46},
-            {x: '2018-09-29',y:13},
-            {x: '2018-09-28',y:23},
-            {x: '2018-09-27',y:36},
-            {x: '2018-09-26',y:33},
-            {x: '2018-09-25',y:20},
-            {x: '2018-09-24',y:23},
-        ],
-=======
     //refetcing orders
     $scope.db.orders.toArray()
    .then((data)=>{
@@ -150,7 +133,6 @@ app.controller('reportsCtr',($scope)=>{
     var graph =  Morris.Area({
         element: 'orderChart',
         data:$scope.graphData,
->>>>>>> version1.0.1
         xkey: 'x',
         ykeys: ['y'],
         labels: ['Orders'],
@@ -173,15 +155,11 @@ app.controller('reportsCtr',($scope)=>{
             {x: '2018-09-24',y:23},
         ])
     }
-<<<<<<< HEAD
     //date strinf
     $scope.toDate = (dt)=>{
         return new Date(dt).toDateString();
     }
-})
-=======
-
- }  
+}  
  $scope.plotGraph();
  setInterval(()=>{
      if($scope.order.length !== 0){
@@ -190,4 +168,3 @@ app.controller('reportsCtr',($scope)=>{
  },300000)
 
 })
->>>>>>> version1.0.1
