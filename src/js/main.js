@@ -16,9 +16,6 @@ function isOffline(){
 }
 //on ready
 jQuery(document).ready(()=>{
-    setTimeout(()=>{
-        jQuery('#loader').remove();
-    },3800)
     if(navigator.onLine){
         isOnline();
     }else{
@@ -203,7 +200,8 @@ document.querySelector('#managerialImgInput').onchange = (e)=>{
         notifications.notify({type:"error",msg:"File size to large, please upload a picture below 4MB"})
         return false;
     }
-    console.log(file);
+    //console.log(file);
     var url = URL.createObjectURL(file);
     img.src = url;
+    
 }

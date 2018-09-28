@@ -22,12 +22,12 @@
                         <div class="row">
                             <div class="input-field col s4">
                                 <i class="material-icons prefix">person</i>
-                                <input ng-model="orderName" id="orderName" type="text" class="validate">
-                                <label for="orderName">Name</label>
+                                <input ng-model="orderInv" id="orderInv" type="text" class="validate" disabled />
+                                <label for="orderName" class="active">Invoice Number</label>
                             </div>
                             <div class="input-field col s4">
                                 <i class="material-icons prefix">date_range</i>
-                                <input id="orderDate" type="text" readonly />
+                                <input id="orderDate" type="text" disabled/>
                                 <label class="active" for="orderDate">Order Date</label>
                             </div>
                             <div class="input-field col s4">
@@ -57,17 +57,24 @@
                                 </div>
                             </div>
                             <div id="orderItems" class="col s12 scrollContainer">
-                                <div id="no-resultsOrder" class="no-results"><p>No results</p></div>
+                                <div style="display:none;" id="no-resultsOrder" class="no-results">
+                                    <p>No results</p>
+                                </div>
+                                <div id="emptyItems" ng-show="products.items.length == 0" class="no-results grey lighten-4">
+                                    <p>
+                                        No Items <small>(Go to <strong>Products > Create Items</strong>)</small>
+                                    </p>
+                                </div>
                                 <div ng-repeat="x in products.items track by $index" class="item z-depth-2">
                                     <div class="header">
-                                       <div class="dark">
-                                           <dl>
-                                            <dt class="item-name">{{x.name}}</dt>
-                                            <dd class="item-category">{{x.category}}</dd>
-                                            <dd class="item-status">{{x.status}}</dd>
-                                            <dd class="item-price">{{x.rate | currency : "XAF ":0}}</dd>
-                                        </dl>
-                                       </div>
+                                        <div class="dark">
+                                            <dl>
+                                                <dt class="item-name">{{x.name}}</dt>
+                                                <dd class="item-category">{{x.category}}</dd>
+                                                <dd class="item-status">{{x.status}}</dd>
+                                                <dd class="item-price">{{x.rate | currency : "XAF ":0}}</dd>
+                                            </dl>
+                                        </div>
                                     </div>
                                     <div class="body">
                                         <div class="inputDiv">
@@ -86,7 +93,7 @@
                         <div class="col s12 footer">
                             <div class="col s5 offset-s7">
                                 <button ng-show="orderPrint" class="btn waves-effect waves-light brown darken-4"><i class="material-icons left">print</i>Print</button>
-                                <button ng-click="createOrder()" ng-disabled="!orderName || currentOrder.items.length == 0" class="btn waves-effect waves-light green darken-1 right"><i class="material-icons left">done</i>Complete</button>
+                                <button ng-click="createOrder()" ng-disabled="currentOrder.items.length == 0" class="btn waves-effect waves-light green darken-1 right"><i class="material-icons left">done</i>Complete</button>
                             </div>
                         </div>
                     </form>
@@ -95,6 +102,61 @@
         </li>
     </ul>
     <!--End of main page-->
+    <!--Cards -->
+    <div class="row">
+        <div class="col s6">
+            <div class="info-card pink">
+                <div class="header">
+                    <h3 class="white-text right">{{orders.length}}</h3>
+                </div>
+                <div class="body white-text">
+                    <p class="center-align">Activity</p>
+                    <p>Orders: {{orders.length}}</p>
+                    <p>Printed:{{orders.length}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col s6">
+            <div class="info-card blue">
+                <div class="header">
+                    <h3 class="white-text right">{{orders.length}}</h3>
+                </div>
+                <div class="body white-text">
+                    <p class="center-align">Activity</p>
+                    <p>Orders: {{orders.length}}</p>
+                    <p>Printed:{{orders.length}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col s12">
+            <div class="white" style="margin:10px;padding: 25px;">
+                <table class="huberts-tables">
+                    <thead>
+                        <th>Name</th>
+                        <th>Items</th>
+                        <th class="small">Action</th>
+                    </thead>
+                </table>
+                <div class="huberts-table-div">
+                    <table class="huberts-tables">
+                        <tbody>
+                            <tr ng-repeat="x in orders">
+                                <td>{{x.name}}</td>
+                                <td>
+                                    <ul class="browser-default" style="list-style-type:circle;">
+                                        <li ng-repeat="o in x.items">{{o.name}}</li>
+                                    </ul>
+                                </td>
+                                <td class="small">
+                                    <a class='btn waves-effect waves-light' href='javascript:void(0)' data-target='dropdown1'><i class="material-icons left">print</i>Print</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
     <!--Modals-->
     <div id="viewSelectedORders" class="modal bottom-sheet">
         <div class="modal-content">

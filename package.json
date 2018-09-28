@@ -1,20 +1,23 @@
 {
-  "name": "nudle",
+  "name": "SnapBurger",
+  "productName": "SnapBurger CMS",
   "version": "1.0.1",
   "description": "Food store manager",
   "main": "index.js",
   "scripts": {
     "start": "electron .",
-    "rebuild": "cd node_modules/sqlite3 && npm run prepublish && echo 'chemin' pwd && node-gyp configure --module_name=node_sqlite3 --module_path=nudle/node_modules/sqlite3/lib/binding/electron-v1.4-win32-x64 && node-gyp node-gyp rebuild --target=0.36.0 --arch=x64 --target_platform=win32 --dist-url=https://atom.io/download/atom-shell --module_name=node_sqlite3 --module_path=nudle/node_modules/sqlite3/lib/binding/electron-v1.4-win32-x64 --runtime=electron"
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=logo.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager . SnapBurger-CMS --overwrite --asar=true --platform=win32 --arch=ia32 --icon=logo.ico --prune=true --out=release-builds --version-string.CompanyName=\"Silverslopescm \" --version-string.FileDescription=\"Snap Burger CMS software\" --version-string.ProductName=\"SnapBurger-CMS\""
   },
   "author": "Hubert Formin",
   "license": "ISC",
   "dependencies": {
-    "@trodi/electron-splashscreen": "^0.3.1",
     "dexie": "^2.0.4",
     "electron": "^2.0.9",
     "jquery": "^3.3.1",
-    "sqlite3": "^4.0.2",
     "tableexport": "^5.0.2"
+  },
+  "devDependencies": {
+    "electron-packager": "^12.1.2"
   }
 }

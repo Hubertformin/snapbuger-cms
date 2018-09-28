@@ -18,6 +18,9 @@ app.config(($routeProvider) => {
         .when('/reports', {
             templateUrl: "reports.html"
         })
+        .when('/profile',{
+            templateUrl:"profile.html"
+        })
 })
 
 /*app.directive('PascalCase',()=>{
@@ -43,6 +46,7 @@ app.controller("mainCtr", ($scope) => {
    $scope.staffs = [];
     $scope.managers = [];
     $scope.users = [];
+    $scope.currentUser = {};
     $scope.products = {
         tableNumber:0,
         categories:[],
@@ -52,11 +56,11 @@ app.controller("mainCtr", ($scope) => {
    var Dexie = require('dexie');
    $scope.db = new Dexie("snapBurgerDb")
    $scope.db.version(1).stores({
-       users:"++id,name,password,position,startDate,salary,status,is_mgr",
+       users:"++id,name,password,position,startDate,salary,status,is_mgr,img_url",
        categories:"++id,name,status,action",
        items:"++id,name,rate,category,status,action",
        tableNumber:"++id,number",
-       orders:"++id,name,date,*items,totalPrice,totalQuantity"
+       orders:"++id,name,date,*items,totalPrice,totalQuantity,staff",
    })
    //fetching Data
    $scope.db.users.toArray()
@@ -87,20 +91,63 @@ app.controller("mainCtr", ($scope) => {
    $scope.db.orders.toArray()
    .then((data)=>{
         $scope.orders = data;
+        $scope.orders.sort(function(a,b){
+            return (a.id < b.id)?1:((b.id < a.id)? -1:0);
+        });
    })
+   //basic checkings
+   setTimeout(()=>{
+    jQuery('#loader').remove();
+    if($scope.users.length == 0){
+        jQuery('#managerial').show();
+    }
+    },3600)
    //=========== MANAGERIAL ACCOUNT! ========
    jQuery('#createManagerialForm').submit((e)=>{
     e.preventDefault();
-    var name = jQuery('#createManagerialFormInputName').val(),
-    password = jQuery('#createManagerialFormPassword').val();
-    if(typeof name == "string" || password == ""){
+    img = document.querySelector('#managerialImgInput').files[0];
+    if(typeof img == 'undefined'){
+        blob = 'img/user-grey.png';
+    }else{
+        blob = new Blob([img],{type:img.type})
+        //var ublob = URL.createObjectURL(blob)
+    }
+    //default image url:img/user-grey.png
+    if(typeof $scope.createManagerialFormInputName !== "string" || typeof $scope.createManagerialFormPassword !== "string"){
         notifications.notify({msg:"Please fill all fields!",type:"error"})
         return false;
     }
-    $
+    //converting first character to upper case
+    $scope.createManagerialFormInputName = $scope.createManagerialFormInputName[0].toUpperCase()+$scope.createManagerialFormInputName.slice(1);
+    const mgr = {
+        name:$scope.createManagerialFormInputName,
+        password:$scope.createManagerialFormPassword,
+        position:"Manager",
+        is_mgr:true,
+        startDate: Date.now(),
+        status:"active",
+        salary:"N/A",
+        img_url:blob
+    }
+    $scope.db.users.add(mgr)
+    .then(()=>{
+        $scope.db.users.toArray()
+        .then(data=>{
+            $scope.users = data;
+            $scope.currentUser = mgr;
+            if(typeof $scope.currentUser.img_url !== 'string'){
+                $scope.currentUser.img_url = URL.createObjectURL($scope.currentUser.img_url)
+            }
+            $scope.$apply();
+            sessionStorage.setItem('user',JSON.stringify($scope.currentUser));
+            jQuery('#managerial').hide();
+            jQuery('#login').hide();
+            
+        })
+    })
+    
 })
 //users,staff
-    $scope.currentUser = '';
     if (sessionStorage.getItem('user') != null) {
         jQuery('#login').hide()
         $scope.currentUser = JSON.parse(sessionStorage.getItem('user'))
@@ -108,11 +155,11 @@ app.controller("mainCtr", ($scope) => {
         jQuery('#login').show();
     }
     //======LOGIN=============================================================================================
-    $scope.usernameInput = '';
-    $scope.passwordInput = '';
     jQuery('#loginForm').on('submit', (e) => {
         e.preventDefault();
-        if ($scope.usernameInput == '' || $scope.passwordInput == '') {
+        var name = jQuery('#usernameLogin').val(),password = jQuery('#passwordLogin').val();
+        if (typeof name !== 'string' || typeof password !== 'string') {
+            console.log(name+' '+password);
             notifications.notify({
                 msg: "Please fill the form!",
                 type: "error"
@@ -121,9 +168,12 @@ app.controller("mainCtr", ($scope) => {
         }
         //check if user exist
         for (var i = 0; i < $scope.users.length; i++) {
-            if ($scope.usernameInput.toLowerCase() == $scope.users[i].name.toLowerCase()) {
-                if ($scope.passwordInput == $scope.users[i].password) {
+            if (name.toLowerCase() == $scope.users[i].name.toLowerCase()) {
+                if (password == $scope.users[i].password) {
                     $scope.currentUser = $scope.users[i];
+                    if(typeof $scope.users[i].img_url !== 'string'){
+                        $scope.currentUser.img_url = URL.createObjectURL($scope.users[i].img_url)
+                    }
                     $scope.$apply();
                     break;
                 }
@@ -169,7 +219,6 @@ app.controller("mainCtr", ($scope) => {
             });
     }
     //=======================================================================================================================
-
     //Orders
     $scope.todaysOrders = []
     $scope.currentOrder = {
@@ -178,7 +227,12 @@ app.controller("mainCtr", ($scope) => {
         table:1,
         items:[],
         totalPrice:0,
-        totalQuantity:0
+        totalQuantity:0,
+        staff:''
+    }
+    //to date string angular function
+    $scope.toDate = (dt)=>{
+        return new Date(dt).toDateString();
     }
 })
 
