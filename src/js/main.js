@@ -116,10 +116,11 @@ function searchOrderItems(e){
     var found = false;
     val = val.toLowerCase();
     items.each((i,el)=>{
+        //console.log(jQuery(el).children('div.header').children('dl').children('dt.item-name').html())
         jQuery(el).hide()
-        item_name = jQuery(el).children('div.header').children('dl').children('dt.item-name').html().toLowerCase()
-        item_category = jQuery(el).children('div.header').children('dl').children('dd.item-category').html().toLowerCase()
-        item_status = jQuery(el).children('div.header').children('dl').children('dd.item-status').html().toLowerCase()
+        item_name = jQuery(el).children('div.header').children('.dark').children('dl').children('dt.item-name').html().toLowerCase()
+        item_category = jQuery(el).children('div.header').children('.dark').children('dl').children('dd.item-category').html().toLowerCase()
+        item_status = jQuery(el).children('div.header').children('.dark').children('dl').children('dd.item-status').html().toLowerCase()
         //search..
         if(item_name.indexOf(val) == -1 && item_category.indexOf(val) == -1 && item_status.indexOf(val) == -1){
             found = false;
