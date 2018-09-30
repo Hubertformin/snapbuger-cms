@@ -170,7 +170,7 @@ select {
 }
 
 .nothing-to-show {
-    position:fixed;
+    position: fixed;
     top: 0;
     bottom: 0;
     right: 0;
@@ -182,7 +182,7 @@ select {
 body {
     position: relative; //background-image: url('../img/back6.jpg');
     overflow-y: scroll;
-    background:#fff;
+    background: #fff;
 }
 
 //nav and search
@@ -382,8 +382,10 @@ nav:not(.nav-extended) {
 .bg-theme-rev {
     background: linear-gradient(to left, #f44336, #ff9800)!important;
 }
+
 //butoons
-button.bg-theme-rev:disabled,button.bg-theme:disabled{
+button.bg-theme-rev:disabled,
+button.bg-theme:disabled {
     background: #f1f1f1!important;
 }
 
@@ -820,6 +822,11 @@ table.huberts-tables {
     }
 }
 
+//used in reports
+.min-badge {
+    min-width: 1rem!important;
+}
+
 //reports
 div#reports {
     .date-review {
@@ -830,8 +837,10 @@ div#reports {
             border: 1px solid #999;
             padding: 5px 15px;
         }
-        .searchDate {
-            //
+        a {
+            &.active {
+                background: #ddd;
+            }
         }
     }
     div.table-div {
@@ -905,12 +914,13 @@ ul.versions {
 }
 
 //profile
-#profilePage{
+#profilePage {
     padding-top: 20px;
-    div.user-img{
-        img{
-            height:88px;width:auto;
-            cursor:pointer;
+    div.user-img {
+        img {
+            height: 88px;
+            width: auto;
+            cursor: pointer;
             border-radius: 50%;
         }
         position: relative;
@@ -920,7 +930,7 @@ ul.versions {
         height: 200px;
         width: 100%;
     }
-    form{
+    form {
         padding: 40px 20px;
     }
 }

@@ -331,7 +331,8 @@ nav:not(.nav-extended) {
   background: -o-linear-gradient(right, #f44336, #ff9800) !important;
   background: linear-gradient(to left, #f44336, #ff9800) !important; }
 
-button.bg-theme-rev:disabled, button.bg-theme:disabled {
+button.bg-theme-rev:disabled,
+button.bg-theme:disabled {
   background: #f1f1f1 !important; }
 
 .bg-theme-round {
@@ -696,6 +697,9 @@ table.huberts-tables tfoot {
     -webkit-box-shadow: 1px 1px transparent !important;
     box-shadow: 1px 1px transparent !important; }
 
+.min-badge {
+  min-width: 1rem !important; }
+
 div#reports .date-review {
   -webkit-transform: translateY(18px);
   -ms-transform: translateY(18px);
@@ -705,6 +709,8 @@ div#reports .date-review {
     border-radius: 26px;
     border: 1px solid #999;
     padding: 5px 15px; }
+  div#reports .date-review a.active {
+    background: #ddd; }
 
 div#reports div.table-div {
   height: 300px;

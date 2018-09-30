@@ -6,16 +6,16 @@
             <div class="chart">
                 <div id="orderChart" style="height: 280px;background:#fff;"></div>
             </div>
+            <span class="right"><strong>All Orders: {{orders.length}}</strong></span>
             <div class="body" style="margin-top:50px;border-top:1px solid #999">
                 <!--<button ng-click="update()" class="btn right waves-effect waves-light">Update</button>-->
                 <div class="row">
                     <div class="col s3 pr-0 date-review">
                             <input class="browser-default" type="search" placeholder="Search.." ng-keyup="searchOrders($event)">
                         <div class="table-div">
-                           <div class="searchDate">
-                            </div>
                             <div class="collection" id="collection">
-                                <a ng-repeat="a in uniqueDateOrders" href="javascript:void(0)" class="collection-item grey-text text-darken-4" ng-click="filterOrdersView(a)"><i class="material-icons left">date_range</i>{{cleaner(a)}}</a>
+                               <!-- no need for a.date, remember 'a' is already a date object -->
+                                <a ng-repeat="a in uniqueDateOrders" href="javascript:void(0)" class="collection-item grey-text text-darken-4" ng-click="filterOrdersView(a)"><i class="material-icons left">date_range</i>{{cleaner(a)}}<span class="new badge  blue-grey min-badge" data-badge-caption="">{{countDateOrders(a)}}</span></a>
                             </div>
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                                         <td>{{x.name}}</td>
                                         <td>
                                             <ul class="browser-default">
-                                                <li ng-repeat="o in x.items">{{o.name}}</li>
+                                                <li ng-repeat="o in x.items">{{o.name}} <small class="teal-text">{{o.quantity}}</small></li>
                                             </ul>
                                         </td>
                                         <td>{{x.totalPrice}}</td>

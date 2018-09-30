@@ -50,11 +50,25 @@ app.controller('reportsCtr',($scope)=>{
     }
     //function, used to show the corresponding date orders to date clicked
     $scope.filterOrdersView = (dt)=>{
+        jQuery('#collection a').on('click',(e)=>{
+            jQuery('#collection a').removeClass('active');
+            jQuery(e.target).addClass('active');
+
+        })
         dt = dt.toDateString();
         jQuery('#allOrders tr').hide();
         jQuery(`#allOrders tr[data-date="${dt}"]`).show();
         //console.log(jQuery(`#allOrders tr[data-date="${dt}"]`))
 
+    }
+    $scope.countDateOrders = (dt)=>{
+        var n = 0;
+        for(var x = 0;x<$scope.orders.length;x++){
+            if($scope.orders[x].date.toDateString() == dt.toDateString()){
+                n += 1;
+            }
+        }
+        return n;
     }
     //delete orders
     $scope.deleteOrder = (i)=>{
@@ -118,29 +132,29 @@ app.controller('reportsCtr',($scope)=>{
     //creating graph data
     $scope.plotGraph = ()=>{
 
-    $scope.graphData = [];
-    var i = ($scope.orders.length>30)?$scope.orders.length-31:0;
-    for(i = 0;i<$scope.uniqueDateOrders.length;i++){
-        var el = {x:toGraphDate($scope.uniqueDateOrders[i]),y:0}
-        for(var y = 0;y<$scope.orders.length;y++){
-            if($scope.orders[y].date.toDateString() == $scope.uniqueDateOrders[i].toDateString()){
-                el.y += 1;
+        $scope.graphData = [];
+        var i = ($scope.orders.length>30)?$scope.orders.length-31:0;
+        for(i = 0;i<$scope.uniqueDateOrders.length;i++){
+            var el = {x:toGraphDate($scope.uniqueDateOrders[i]),y:0}
+            for(var y = 0;y<$scope.orders.length;y++){
+                if($scope.orders[y].date.toDateString() == $scope.uniqueDateOrders[i].toDateString()){
+                    el.y += 1;
+                }
             }
+            $scope.graphData.push(el);
         }
-        $scope.graphData.push(el);
-    }
-    //area charts 
-    var graph =  Morris.Area({
-        element: 'orderChart',
-        data:$scope.graphData,
-        xkey: 'x',
-        ykeys: ['y'],
-        labels: ['Orders'],
-        hideHover: 'auto',
-        resize: true,
-        lineColors:['#009688'],
-        behaveLikeLine:true
-    });
+        //area charts 
+        var graph =  Morris.Area({
+            element: 'orderChart',
+            data:$scope.graphData,
+            xkey: 'x',
+            ykeys: ['y'],
+            labels: ['Orders'],
+            hideHover: 'auto',
+            resize: true,
+            lineColors:['#009688'],
+            behaveLikeLine:true
+        });
     $scope.update = ()=>{
         graph.setData([
             {x: '2018-10-03',y:76},
