@@ -119,8 +119,8 @@ app.controller('reportsCtr',($scope)=>{
     $scope.plotGraph = ()=>{
 
     $scope.graphData = [];
-    for(var i = 0;i<$scope.uniqueDateOrders.length;i++){
-        if(i == 31){break;}
+    var i = ($scope.orders.length>30)?$scope.orders.length-31:0;
+    for(i = 0;i<$scope.uniqueDateOrders.length;i++){
         var el = {x:toGraphDate($scope.uniqueDateOrders[i]),y:0}
         for(var y = 0;y<$scope.orders.length;y++){
             if($scope.orders[y].date.toDateString() == $scope.uniqueDateOrders[i].toDateString()){

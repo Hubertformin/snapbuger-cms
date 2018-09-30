@@ -63,7 +63,50 @@ app.controller("mainCtr", ($scope) => {
        orders:"++id,name,date,*items,totalPrice,totalQuantity,staff",
    })
    //fetching Data
-   $scope.db.users.toArray()
+   $scope.db.transaction('r',$scope.db.users,$scope.db.orders,$scope.db.categories,$scope.db.items,$scope.db.tableNumber,()=>{
+    $scope.db.users.toArray()
+    .then((data)=>{
+        $scope.users = data;
+        $scope.users.forEach(element => {
+         if (element.is_mgr == true) {
+             $scope.managers.push(element);
+         } else {
+             $scope.staffs.push(element)
+         }
+     });
+    });
+    //fetched users and now fetching categories
+    $scope.db.categories.toArray()
+    .then((data)=>{
+        $scope.products.categories = data;
+    })
+    //fetcing items 
+    $scope.db.items.toArray()
+    .then((data)=>{
+        $scope.products.items = data;
+    })
+    //fetching table number
+    $scope.db.tableNumber.toArray()
+    .then(data=>{
+        $scope.products.tableNumber = data;
+    })
+    //fetching orders
+    $scope.db.orders.toArray()
+   .then((data)=>{
+        $scope.orders = data;
+        $scope.orders.sort(function(a,b){
+            return (a.id < b.id)?1:((b.id < a.id)? -1:0);
+        });
+   })
+    //fetching data
+    $scope.$apply();
+   })
+   .then(()=>{
+       console.log($scope.users)
+   })
+   console.log($scope.users)
+   //
+  /* $scope.db.users.toArray()
    .then((data)=>{
        $scope.users = data;
        $scope.users.forEach(element => {
@@ -94,7 +137,7 @@ app.controller("mainCtr", ($scope) => {
         $scope.orders.sort(function(a,b){
             return (a.id < b.id)?1:((b.id < a.id)? -1:0);
         });
-   })
+   })*/
    //basic checkings
    setTimeout(()=>{
     jQuery('#loader').remove();
@@ -157,46 +200,40 @@ app.controller("mainCtr", ($scope) => {
     //======LOGIN=============================================================================================
     jQuery('#loginForm').on('submit', (e) => {
         e.preventDefault();
-        var name = jQuery('#usernameLogin').val(),password = jQuery('#passwordLogin').val();
-        if (typeof name !== 'string' || typeof password !== 'string') {
-            console.log(name+' '+password);
+        if (typeof $scope.usernameLogin !== 'string' || typeof  $scope.passwordLogin !== 'string') {
             notifications.notify({
-                msg: "Please fill the form!",
+                msg: "Please fill out the form!",
                 type: "error"
             })
             return false;
         }
         //check if user exist
-        for (var i = 0; i < $scope.users.length; i++) {
-            if (name.toLowerCase() == $scope.users[i].name.toLowerCase()) {
-                if (password == $scope.users[i].password) {
-                    $scope.currentUser = $scope.users[i];
-                    if(typeof $scope.users[i].img_url !== 'string'){
-                        $scope.currentUser.img_url = URL.createObjectURL($scope.users[i].img_url)
-                    }
-                    $scope.$apply();
-                    break;
-                }
+        $scope.db.users.where("name").equalsIgnoreCase($scope.usernameLogin)
+        .first((data)=>{
+            if(typeof data !== 'object'){
+                notifications.notify({type:"error",msg:"Wrong user name!"});
+                return false;
             }
-        }
-        if ($scope.usernameInput != 'undefined' && $scope.passwordInput != 'undefined' && $scope.currentUser == '') {
-            notifications.notify({
-                msg: "Wrong username or password!<br><small>Forgotten credentials? contact manager</small>",
-                type: "error"
-            })
-            return false;
-        }
-        if ($scope.currentUser.status == 'suspend') {
-            notifications.notify({
-                msg: "Account suspended!<br><small>Contact Manager!</small>",
-                type: "error"
-            })
-            return false;
-        }
-        //accept and proccess
-        document.querySelector('#loginForm').reset();
-        sessionStorage.setItem('user', JSON.stringify($scope.currentUser));
-        jQuery('#login').fadeOut();
+            if(data.password !== $scope.passwordLogin){
+                notifications.notify({type:"error",msg:"Wrong password!"});
+                return false;
+            }
+            if(data.status == 'suspend'){
+                notifications.notify({type:"error",msg:"Account suspended!<br><small>Contact Manager!</small> "})
+                return false;
+            }
+            //accept and proccess
+            $scope.currentUser = data;
+            if(typeof $scope.currentUser.img_url !== 'string'){
+                $scope.currentUser.img_url = URL.createObjectURL($scope.currentUser.img_url)
+            }
+            $scope.$apply();
+            document.querySelector('#loginForm').reset();
+            sessionStorage.setItem('user', JSON.stringify($scope.currentUser));
+            jQuery('#login').fadeOut();
+            
+        })
+        
     })
     //=======LOGOUT=====================================================================
     $scope.logOut = () => {

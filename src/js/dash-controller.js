@@ -123,7 +123,7 @@ app.controller("dashCtr", ($scope) => {
                 $scope.orderInv = `SB${Math.floor(Math.random() * 999) + 1000}`;
                 $scope.removeItem('deleteAll') 
                 $scope.$apply();
-                //console.log($scope.orders)
+                console.log($scope.orders)
                 //
                 swal({
                     title: "Order completed!",
@@ -135,12 +135,16 @@ app.controller("dashCtr", ($scope) => {
                 .then((click) => {
                     if (click) {
                         //print here!!
+                        delete current.id;
                         console.log(current)
                     } else {
                         return false;
                     }
                 });
             })
+        })
+        .catch(err=>{
+            console.log(err)
         })
           //reseting order custom form
           //$scope.orderInv = "";

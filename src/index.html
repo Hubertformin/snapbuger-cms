@@ -84,11 +84,11 @@
                         </div>
                         <div class="input-field col s12">
                             <i class="material-icons prefix">account_circle</i>
-                            <input placeholder="User name" id="usernameLogin" type="text" class="validate">
+                            <input placeholder="User name" ng-model="usernameLogin" type="text" class="validate">
                         </div>
                         <div class="input-field col s12">
                             <i class="material-icons prefix">lock</i>
-                            <input id="passwordLogin" placeholder="Password" type="password" class="validate">
+                            <input ng-model="passwordLogin" placeholder="Password" type="password" class="validate">
                         </div>
                         <button ng-disabled="users.length == 0" class="bg-theme btn waves-effect waves-light" type="submit" name="action">Login
                     <i class="material-icons right">arrow_forward</i>
@@ -116,8 +116,8 @@
                             <a draggable="false" href="javascript:void(0)" class="name-link"><span class="grey-text name">{{currentUser.name}} <i class="material-icons grey-text">keyboard_arrow_down</i></span></a>
                             <!--More options -->
                             <ul id="user_dropdown" class='dropdown-content'>
-                                <li><a draggable="false" href="#!profile"><i class="material-icons">person</i>Profile</a></li>
-                                <li class="divider" tabindex="-1"></li>
+                                <li ng-show="currentUser.is_mgr"><a draggable="false" href="#!profile" class="sideNavLink"><i class="material-icons">person</i>Profile</a></li>
+                                <li ng-show="currentUser.is_mgr" class="divider" tabindex="-1"></li>
                                 <li><a draggable="false" ng-click="logOut()" href="javascript:void(0)"><i class="material-icons">power_settings_new</i>Log out</a></li>
                             </ul>
                             <a draggable="false" href="javascript:void(0)" class="email-link"><span class="grey-text email">@SnapBurger</span></a>
