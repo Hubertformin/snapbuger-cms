@@ -173,7 +173,7 @@ app.controller('reportsCtr',($scope)=>{
  }  
  $scope.plotGraph();
  setInterval(()=>{
-     if($scope.order.length !== 0){
+     if($scope.orders.length !== 0){
         $scope.plotGraph();
      }
  },300000)

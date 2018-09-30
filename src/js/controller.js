@@ -48,10 +48,10 @@ app.controller("mainCtr", ($scope) => {
     $scope.users = [];
     $scope.currentUser = {};
     $scope.products = {
-        tableNumber:0,
         categories:[],
         items:[]
     }
+    $scope.settings = [];
     //
    var Dexie = require('dexie');
    $scope.db = new Dexie("snapBurgerDb")
@@ -59,11 +59,16 @@ app.controller("mainCtr", ($scope) => {
        users:"++id,name,password,position,startDate,salary,status,is_mgr,img_url",
        categories:"++id,name,status,action",
        items:"++id,name,rate,category,status,action",
-       tableNumber:"++id,number",
        orders:"++id,name,date,*items,totalPrice,totalQuantity,staff",
+       settings:"&id,tableNumber,time_range,auto_update,back_up,performance_report"
    })
+   
    //fetching Data
-   $scope.db.transaction('r',$scope.db.users,$scope.db.orders,$scope.db.categories,$scope.db.items,$scope.db.tableNumber,()=>{
+   $scope.db.transaction('r',$scope.db.users,$scope.db.orders,$scope.db.categories,$scope.db.items,$scope.db.settings,()=>{
+    $scope.db.settings.get(1)
+    .then((res)=>{
+        $scope.settings = res;
+    })
     $scope.db.users.toArray()
     .then((data)=>{
         $scope.users = data;
@@ -85,11 +90,6 @@ app.controller("mainCtr", ($scope) => {
     .then((data)=>{
         $scope.products.items = data;
     })
-    //fetching table number
-    $scope.db.tableNumber.toArray()
-    .then(data=>{
-        $scope.products.tableNumber = data;
-    })
     //fetching orders
     $scope.db.orders.toArray()
    .then((data)=>{
@@ -102,9 +102,21 @@ app.controller("mainCtr", ($scope) => {
     $scope.$apply();
    })
    .then(()=>{
-       console.log($scope.users)
+      //code to write when fetching of database succedeed!
+      jQuery('#loader').remove();
+        if($scope.users.length == 0){
+            jQuery('#managerial').show();
+        }
+        if (sessionStorage.getItem('user') != null) {
+            jQuery('#login').hide()
+            $scope.currentUser = JSON.parse(sessionStorage.getItem('user'))
+        } else if(sessionStorage.getItem('user') == null && $scope.users.length !== 0) {
+            jQuery('#login').show();
+        }
    })
-   console.log($scope.users)
+   .catch(err=>{
+       console.log(err)
+   })
    //
   /* $scope.db.users.toArray()
    .then((data)=>{
@@ -138,13 +150,6 @@ app.controller("mainCtr", ($scope) => {
             return (a.id < b.id)?1:((b.id < a.id)? -1:0);
         });
    })*/
-   //basic checkings
-   setTimeout(()=>{
-    jQuery('#loader').remove();
-    if($scope.users.length == 0){
-        jQuery('#managerial').show();
-    }
-    },3600)
    //=========== MANAGERIAL ACCOUNT! ========
    jQuery('#createManagerialForm').submit((e)=>{
     e.preventDefault();
@@ -191,12 +196,7 @@ app.controller("mainCtr", ($scope) => {
     
 })
 //users,staff
-    if (sessionStorage.getItem('user') != null) {
-        jQuery('#login').hide()
-        $scope.currentUser = JSON.parse(sessionStorage.getItem('user'))
-    } else {
-        jQuery('#login').show();
-    }
+    
     //======LOGIN=============================================================================================
     jQuery('#loginForm').on('submit', (e) => {
         e.preventDefault();

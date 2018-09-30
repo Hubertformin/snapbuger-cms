@@ -33,7 +33,7 @@
                             <div class="input-field col s4">
                                 <i class="material-icons prefix">airline_seat_legroom_extra</i>
                                 <select ng-model="orderTableNumber" class="browser-default prefixed">
-                                    <option ng-repeat="n in [].constructor(products.tableNumber[0].number) track by $index" value="{{$index+1}}">Table {{$index+1}}</option>
+                                    <option ng-repeat="n in [].constructor(settings.tableNumber) track by $index" value="{{$index+1}}">Table {{$index+1}}</option>
                                 </select>
                                 <label class="active" for="orderDate">Select Table</label>
                             </div>
