@@ -22,9 +22,12 @@ app.controller('profileCtr',($scope)=>{
             blob = new Blob([img],{type:img.type})
             $scope.currentUser.img_url = blob;
         }
+        $scope.currentUser.name = $scope.currentUser.name[0].toUpperCase()+$scope.currentUser.name.slice(1).toLowerCase()
         $scope.db.users.put($scope.currentUser)
         .then(()=>{
-            $scope.currentUser.img_url = URL.createObjectURL($scope.currentUser.img_url);
+            if(typeof $scope.currentUser.img_url !== 'string'){
+                $scope.profile_pic = URL.createObjectURL($scope.currentUser.img_url);
+            }
             $scope.$apply();
            notifications.notify({msg:"Updated!",type:"ok"})
         })

@@ -8,15 +8,23 @@
     <div class="body">
 -->
     <ul style="border-radius: 29px;" id="OrderCollapse" class="collapsible">
-        <li>
+        <li class="active">
             <div style="border-top-right-radius: 29px;border-top-left-radius: 29px" class="collapsible-header">
-                <div class="header bg-theme">
-                    <h2 class="white-text">
-                        Create new order <br><small>click to create.</small>
+                <div class="header white">
+                    <h2 class="orange-text">
+                        Create new order (Orders stop at {{settings.time_range.to}}) <br><small>click to create.</small>
                     </h2>
                 </div>
             </div>
-            <div style="border-bottom-right-radius: 29px;border-bottom-left-radius: 29px" class="collapsible-body white">
+            <div style="border-bottom-right-radius:29px;border-bottom-left-radius:29px;position:relative" class="collapsible-body white">
+                <!--Time up wrapper incase orders ends -->
+                <div ng-show="end_orders" class="white-wrapper orders-wrap">
+                    <div class="center">
+                        <img src="img/Time_limit.png" alt="">
+                        <h5 style="font-weight:bold;" class="red-text text-darken-4">Orders ended!, resumes again at {{settings.time_range.from}}</h5>
+                    </div>
+                </div>
+                <!-- end of order disable wrapper -->
                 <div class="row">
                     <form class="col s12">
                         <div class="row">
@@ -33,7 +41,7 @@
                             <div class="input-field col s4">
                                 <i class="material-icons prefix">airline_seat_legroom_extra</i>
                                 <select ng-model="orderTableNumber" class="browser-default prefixed">
-                                    <option ng-repeat="n in [].constructor(products.tableNumber[0].number) track by $index" value="{{$index+1}}">Table {{$index+1}}</option>
+                                    <option ng-repeat="n in [].constructor(settings.tableNumber) track by $index" value="{{$index+1}}">Table {{$index+1}}</option>
                                 </select>
                                 <label class="active" for="orderDate">Select Table</label>
                             </div>
@@ -43,7 +51,7 @@
                         <div class="row">
                             <div class="col s12">
                                 <div class="col s3 selected-items">
-                                    <button data-target="viewSelectedORders" ng-disabled="currentOrder.items.length == 0" class="btn waves-effect waves-default orange modal-trigger">Selected items({{currentOrder.items.length}})</button>
+                                    <button data-target="viewSelectedORders" ng-disabled="currentOrder.items.length == 0" class="btn btn-block waves-effect waves-default orange modal-trigger">Selected ({{currentOrder.items.length}})</button>
                                 </div>
                                 <div class="col s5">
                                     <div class="orderPriceDetails red white-text">
@@ -103,6 +111,8 @@
     </ul>
     <!--End of main page-->
     <!--Cards -->
+    <h5 class="section-heading red-text font-raleway">Activity panel</h5>
+    <hr class="ruler">
     <div class="row">
         <div class="col s6">
             <div class="info-card pink">
@@ -110,41 +120,45 @@
                     <h3 class="white-text right">{{orders.length}}</h3>
                 </div>
                 <div class="body white-text">
-                    <p class="center-align">Activity</p>
-                    <p>Orders: {{orders.length}}</p>
-                    <p>Printed:{{orders.length}}</p>
+                    <p class="center-align">Today</p>
+                    <p>Orders: {{todaysCompletedOrders.length}}</p>
+                    <p>Printed:{{todaysCompletedOrders.length}}</p>
                 </div>
             </div>
         </div>
-        <div class="col s6">
+        <div ng-show="currentUser.is_mgr" class="col s6">
             <div class="info-card blue">
                 <div class="header">
                     <h3 class="white-text right">{{orders.length}}</h3>
                 </div>
                 <div class="body white-text">
-                    <p class="center-align">Activity</p>
+                    <p class="center-align">All Day</p>
                     <p>Orders: {{orders.length}}</p>
                     <p>Printed:{{orders.length}}</p>
                 </div>
             </div>
         </div>
+    </div>
+    <h5 class="section-heading red-text font-raleway">Today's orders</h5>
+    <hr class="ruler">
+    <div class="row">
         <div class="col s12">
-            <div class="white" style="margin:10px;padding: 25px;">
+            <div class="white z-depth-2" style="margin:10px;padding: 25px;">
                 <table class="huberts-tables">
                     <thead>
-                        <th>Name</th>
+                        <th>Inv num</th>
                         <th>Items</th>
                         <th class="small">Action</th>
                     </thead>
                 </table>
-                <div class="huberts-table-div">
-                    <table class="huberts-tables">
+                <div id="dashboard_order_table" class="huberts-table-div">
+                    <table>
                         <tbody>
-                            <tr ng-repeat="x in orders">
+                            <tr ng-repeat="x in todaysCompletedOrders">
                                 <td>{{x.name}}</td>
                                 <td>
                                     <ul class="browser-default" style="list-style-type:circle;">
-                                        <li ng-repeat="o in x.items">{{o.name}}</li>
+                                        <li ng-repeat="o in x.items">{{o.name}} <i class="green-text badge">{{o.quantity}}</i></li>
                                     </ul>
                                 </td>
                                 <td class="small">

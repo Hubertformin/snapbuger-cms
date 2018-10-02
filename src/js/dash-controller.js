@@ -6,7 +6,7 @@ app.controller("dashCtr", ($scope) => {
     var elems = document.querySelectorAll('.collapsible');
     var instances = M.Collapsible.init(elems);
     var instance = M.Collapsible.getInstance(jQuery('#OrderCollapse'));
-    instance.open()
+    //instance.open()
     //datepicker
      let currentDate = new Date();
     var thisYear = currentDate.getFullYear();
@@ -123,7 +123,7 @@ app.controller("dashCtr", ($scope) => {
                 $scope.orderInv = `SB${Math.floor(Math.random() * 999) + 1000}`;
                 $scope.removeItem('deleteAll') 
                 $scope.$apply();
-                //console.log($scope.orders)
+                console.log($scope.orders)
                 //
                 swal({
                     title: "Order completed!",
@@ -135,6 +135,7 @@ app.controller("dashCtr", ($scope) => {
                 .then((click) => {
                     if (click) {
                         //print here!!
+                        delete current.id;
                         console.log(current)
                     } else {
                         return false;
@@ -142,10 +143,22 @@ app.controller("dashCtr", ($scope) => {
                 });
             })
         })
+        .catch(err=>{
+            console.log(err)
+        })
           //reseting order custom form
           //$scope.orderInv = "";
           //$scope.removeItem('deleteAll') 
         //console.log($scope.todaysOrders);
     }
+    
+
+    //this section represents the activity and the today's orders table
+    const today = new Date().toDateString();$scope.todaysCompletedOrders = [];
+    $scope.orders.forEach(elems=>{
+        if(elems.date.toDateString() == today){
+            $scope.todaysCompletedOrders.push(elems)
+        }
+    })
 
 })

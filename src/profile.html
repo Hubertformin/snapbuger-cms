@@ -6,7 +6,7 @@
                 <div class="dark-wrapper">
                 </div>
                 <div class="center">
-                    <img src="{{currentUser.img_url}}" id="Image" alt="profile">
+                    <img src="{{profile_pic}}" id="Image" alt="profile">
                     <p class="white-text">
                         <span>{{currentUser.name}}</span><br>
                         <span>{{currentUser.position}}</span>
@@ -39,7 +39,7 @@
                     <p id="startDate">{{toDate(currentUser.startDate)}}</p>
                     <label class="active" for="startDate">Start Date</label>
                 </div>
-                <button ng-click="updateUser()" ng-disabled="form.$pristine || !inputFile" type="button" class="waves-effect waves-default bg-theme btn"><i class="material-icons right">done</i>Update</button>
+                <button ng-click="updateUser()" type="button" class="waves-effect waves-default bg-theme btn"><i class="material-icons right">done</i>Update</button>
             </form>
         </div>
     </div>

@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
 
   // Keep a global reference of the window object, if you don't, the window will
   // be closed automatically when the JavaScript object is garbage collected.
@@ -6,14 +6,19 @@ const {app, BrowserWindow} = require('electron')
 
   function createWindow () {
     // Create the browser window.
-    win = new BrowserWindow({width: 1000,title:'SnapBurger CMS', height: 700,minWidth:950,minHeight:600,icon: './src/img/logo-round.png'})
+    win = new BrowserWindow({show:false,backgroundColor: '#2e2c29',width: 1000,title:'SnapBurger CMS', height: 700,minWidth:950,minHeight:600,icon: './src/img/logo-round.png'})
 
     // and load the index.html of the app.
     win.loadFile('src/index.html')
 
     // Open the DevTools.
     //win.webContents.openDevTools()
-//SQL lite
+    
+    //when the widow is ready to display
+    win.once('ready-to-show', () => {
+      win.show()
+    })
+
     // Emitted when the window is closed.
     win.on('closed', () => {
       // Dereference the window object, usually you would store windows
@@ -47,3 +52,8 @@ const {app, BrowserWindow} = require('electron')
 
   // In this file you can include the rest of your app's specific main process
   // code. You can also put them in separate files and require them here.
+
+  //============= LISTENING TO RENDER PROCESS MESSAGES ! ===========
+/*ipcMain.on('asynchronous-message', (event, arg) => {
+    console.log(arg)
+  })*/

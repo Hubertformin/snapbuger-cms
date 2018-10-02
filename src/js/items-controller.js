@@ -6,14 +6,14 @@ app.controller("itemsCtr", ($scope) => {
     var instances = M.Collapsible.init(elems);
     //=============== Table Number =========================
     $scope.updateTableNumber = ()=>{
-        if(typeof $scope.products.tableNumber[0].number !== 'number'){
-            notifications.notify({type:"error",msg:"Invalid Table Number!"})
-            //console.log($scope.products.tableNumber[0].number)
+        if(typeof $scope.settings.tableNumber !== 'number'){
+            //notifications.notify({type:"error",msg:"Invalid Table Number!"})
+            //console.log($scope.settings.tableNumber[0].number)
             //$scope.products.tableNumber = 1;
             return false;
         }
-        //{number:$scope.products.tableNumber}
-        $scope.db.tableNumber.put($scope.products.tableNumber[0])
+        //{number:$scope.settings.tableNumber}
+        $scope.db.settings.put($scope.settings)
         .then(()=>{
             //console.log("Done!");
         })
