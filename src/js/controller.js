@@ -180,7 +180,11 @@ app.controller("mainCtr", ($scope) => {
             //accept and proccess
             $scope.currentUser = data;
             if(typeof $scope.currentUser.img_url !== 'string'){
+                //the reason why I'm passing it to another variable 
+                //is because i want to use the initial variable when updating user data
                 $scope.profile_pic = URL.createObjectURL($scope.currentUser.img_url)
+            }else{
+                $scope.profile_pic = $scope.currentUser.img_url;
             }
             $scope.$apply();
             document.querySelector('#loginForm').reset();
