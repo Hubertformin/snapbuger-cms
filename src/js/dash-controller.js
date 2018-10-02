@@ -151,5 +151,14 @@ app.controller("dashCtr", ($scope) => {
           //$scope.removeItem('deleteAll') 
         //console.log($scope.todaysOrders);
     }
+    
+
+    //this section represents the activity and the today's orders table
+    const today = new Date().toDateString();$scope.todaysCompletedOrders = [];
+    $scope.orders.forEach(elems=>{
+        if(elems.date.toDateString() == today){
+            $scope.todaysCompletedOrders.push(elems)
+        }
+    })
 
 })

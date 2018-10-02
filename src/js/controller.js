@@ -1,5 +1,5 @@
 //rwquire electrom modules here
-const {ipcRenderer} = require('electron');
+const {ipcRenderer,shell} = require('electron');
 //angular module
 var app = angular.module('mainApp', ["ngRoute"]);
 app.config(($routeProvider) => {
@@ -23,19 +23,6 @@ app.config(($routeProvider) => {
             templateUrl:"profile.html"
         })
 })
-
-/*app.directive('PascalCase',()=>{
-    return {
-        require:'ngModel',
-        link:(scope,elem,attr,mCtr)=>{
-            function convert(val){
-               val = val[0].toUpperCase()+val.slice(1);
-               return val;
-            }
-            mCtr.$parsers.push(convert);
-        }
-    }
-})*/
 
 app.controller("mainCtr", ($scope) => {
     /*
@@ -118,39 +105,6 @@ app.controller("mainCtr", ($scope) => {
    .catch(err=>{
        console.log(err)
    })
-   //
-  /* $scope.db.users.toArray()
-   .then((data)=>{
-       $scope.users = data;
-       $scope.users.forEach(element => {
-        if (element.is_mgr == true) {
-            $scope.managers.push(element);
-        } else {
-            $scope.staffs.push(element)
-        }
-    });
-    $scope.db.categories.toArray()
-    .then((data)=>{
-        $scope.products.categories = data;
-    })
-    $scope.db.items.toArray()
-    .then((data)=>{
-        $scope.products.items = data;
-    })
-    $scope.db.tableNumber.toArray()
-    .then(data=>{
-        $scope.products.tableNumber = data;
-    })
-    //fetching data
-    $scope.$apply();
-   })
-   $scope.db.orders.toArray()
-   .then((data)=>{
-        $scope.orders = data;
-        $scope.orders.sort(function(a,b){
-            return (a.id < b.id)?1:((b.id < a.id)? -1:0);
-        });
-   })*/
    //=========== MANAGERIAL ACCOUNT! ========
    jQuery('#createManagerialForm').submit((e)=>{
     e.preventDefault();
@@ -272,6 +226,7 @@ app.controller("mainCtr", ($scope) => {
     $scope.toDate = (dt)=>{
         return new Date(dt).toDateString();
     }
+    //===================== GENERAL SCOPE FUNCTIONS ================
     //time range function that runs every 5 mins and check if time is reached
     $scope.time_range = ()=>{
         $scope.end_orders = false;
@@ -299,6 +254,19 @@ app.controller("mainCtr", ($scope) => {
         }
     }
     $scope.time_range()
-    $scope.setTime = setInterval($scope.time_range,4000)
+    $scope.setTime = setInterval($scope.time_range,4000);
+    //send message to main
+    $scope.sendMain = ({type,msg})=>{
+        const send = JSON.stringify({type,msg});
+        ipcRenderer.send('asynchronous-message',send)
+    }
+    //open external
+    $scope.openExternal = ({type,msg})=>{
+        switch(type){
+            case 'url':
+                shell.openExternal(msg)
+                break;
+        }
+    }
 })
 

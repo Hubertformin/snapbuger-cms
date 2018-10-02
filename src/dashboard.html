@@ -11,8 +11,8 @@
         <li class="active">
             <div style="border-top-right-radius: 29px;border-top-left-radius: 29px" class="collapsible-header">
                 <div class="header white">
-                    <h2 class="grey-text">
-                        Create new order (Orders stops at {{settings.time_range.to}}) <br><small>click to create.</small>
+                    <h2 class="orange-text">
+                        Create new order (Orders stop at {{settings.time_range.to}}) <br><small>click to create.</small>
                     </h2>
                 </div>
             </div>
@@ -21,7 +21,7 @@
                 <div ng-show="end_orders" class="white-wrapper orders-wrap">
                     <div class="center">
                         <img src="img/Time_limit.png" alt="">
-                        <h5 class="blue-grey-text text-darken-4">Orders ended!, resumes again at {{settings.time_range.from}}</h5>
+                        <h5 style="font-weight:bold;" class="red-text text-darken-4">Orders ended!, resumes again at {{settings.time_range.from}}</h5>
                     </div>
                 </div>
                 <!-- end of order disable wrapper -->
@@ -111,6 +111,8 @@
     </ul>
     <!--End of main page-->
     <!--Cards -->
+    <h5 class="section-heading red-text font-raleway">Activity panel</h5>
+    <hr class="ruler">
     <div class="row">
         <div class="col s6">
             <div class="info-card pink">
@@ -118,9 +120,9 @@
                     <h3 class="white-text right">{{orders.length}}</h3>
                 </div>
                 <div class="body white-text">
-                    <p class="center-align">Activity</p>
-                    <p>Orders: {{orders.length}}</p>
-                    <p>Printed:{{orders.length}}</p>
+                    <p class="center-align">Today</p>
+                    <p>Orders: {{todaysCompletedOrders.length}}</p>
+                    <p>Printed:{{todaysCompletedOrders.length}}</p>
                 </div>
             </div>
         </div>
@@ -130,29 +132,33 @@
                     <h3 class="white-text right">{{orders.length}}</h3>
                 </div>
                 <div class="body white-text">
-                    <p class="center-align">Activity</p>
+                    <p class="center-align">All Day</p>
                     <p>Orders: {{orders.length}}</p>
                     <p>Printed:{{orders.length}}</p>
                 </div>
             </div>
         </div>
+    </div>
+    <h5 class="section-heading red-text font-raleway">Today's orders</h5>
+    <hr class="ruler">
+    <div class="row">
         <div class="col s12">
-            <div class="white" style="margin:10px;padding: 25px;">
+            <div class="white z-depth-2" style="margin:10px;padding: 25px;">
                 <table class="huberts-tables">
                     <thead>
-                        <th>Name</th>
+                        <th>Inv num</th>
                         <th>Items</th>
                         <th class="small">Action</th>
                     </thead>
                 </table>
-                <div class="huberts-table-div">
-                    <table class="huberts-tables">
+                <div id="dashboard_order_table" class="huberts-table-div">
+                    <table>
                         <tbody>
-                            <tr ng-repeat="x in orders">
+                            <tr ng-repeat="x in todaysCompletedOrders">
                                 <td>{{x.name}}</td>
                                 <td>
                                     <ul class="browser-default" style="list-style-type:circle;">
-                                        <li ng-repeat="o in x.items">{{o.name}}</li>
+                                        <li ng-repeat="o in x.items">{{o.name}} <i class="green-text badge">{{o.quantity}}</i></li>
                                     </ul>
                                 </td>
                                 <td class="small">
