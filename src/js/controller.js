@@ -226,7 +226,7 @@ app.controller("mainCtr", ($scope) => {
             //accept and proccess
             $scope.currentUser = data;
             if(typeof $scope.currentUser.img_url !== 'string'){
-                $scope.currentUser.img_url = URL.createObjectURL($scope.currentUser.img_url)
+                $scope.profile_pic = URL.createObjectURL($scope.currentUser.img_url)
             }
             $scope.$apply();
             document.querySelector('#loginForm').reset();
