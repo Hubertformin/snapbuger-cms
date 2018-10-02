@@ -130,8 +130,6 @@ app.controller('reportsCtr',($scope)=>{
 
     //lastly charts
     //creating graph data
-    $scope.plotGraph = ()=>{
-
         $scope.graphData = [];
         var i = ($scope.orders.length>30)?$scope.orders.length-31:0;
         for(i = 0;i<$scope.uniqueDateOrders.length;i++){
@@ -155,22 +153,21 @@ app.controller('reportsCtr',($scope)=>{
             lineColors:['#009688'],
             behaveLikeLine:true
         });
-    $scope.update = ()=>{
-        graph.setData([
-            {x: '2018-10-03',y:76},
-            {x: '2018-10-02',y:28},
-            {x: '2018-10-01',y:23},
-            {x: '2018-09-30',y:46},
-            {x: '2018-09-29',y:28},
-            {x: '2018-09-28',y:23},
-            {x: '2018-09-27',y:36},
-            {x: '2018-09-26',y:33},
-            {x: '2018-09-25',y:20},
-            {x: '2018-09-24',y:23},
-        ])
+//update graph
+$scope.updateGraph = ()=>{
+    //empty and repass variables into the graph
+    $scope.graphData = [];
+    var i = ($scope.orders.length>30)?$scope.orders.length-31:0;
+    for(i = 0;i<$scope.uniqueDateOrders.length;i++){
+        var el = {x:toGraphDate($scope.uniqueDateOrders[i]),y:0}
+        for(var y = 0;y<$scope.orders.length;y++){
+            if($scope.orders[y].date.toDateString() == $scope.uniqueDateOrders[i].toDateString()){
+                el.y += 1;
+            }
+        }
+        $scope.graphData.push(el);
     }
-
- }  
- $scope.plotGraph();
+    graph.setData($scope.graphData)
+}
 
 })
