@@ -8,15 +8,23 @@
     <div class="body">
 -->
     <ul style="border-radius: 29px;" id="OrderCollapse" class="collapsible">
-        <li>
+        <li class="active">
             <div style="border-top-right-radius: 29px;border-top-left-radius: 29px" class="collapsible-header">
-                <div class="header bg-theme">
-                    <h2 class="white-text">
-                        Create new order <br><small>click to create.</small>
+                <div class="header white">
+                    <h2 class="grey-text">
+                        Create new order (Orders stops at {{settings.time_range.to}}) <br><small>click to create.</small>
                     </h2>
                 </div>
             </div>
-            <div style="border-bottom-right-radius: 29px;border-bottom-left-radius: 29px" class="collapsible-body white">
+            <div style="border-bottom-right-radius:29px;border-bottom-left-radius:29px;position:relative" class="collapsible-body white">
+                <!--Time up wrapper incase orders ends -->
+                <div ng-show="end_orders" class="white-wrapper orders-wrap">
+                    <div class="center">
+                        <img src="img/Time_limit.png" alt="">
+                        <h5 class="blue-grey-text text-darken-4">Orders ended!, resumes again at {{settings.time_range.from}}</h5>
+                    </div>
+                </div>
+                <!-- end of order disable wrapper -->
                 <div class="row">
                     <form class="col s12">
                         <div class="row">

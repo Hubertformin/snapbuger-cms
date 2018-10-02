@@ -6,7 +6,7 @@ app.controller("dashCtr", ($scope) => {
     var elems = document.querySelectorAll('.collapsible');
     var instances = M.Collapsible.init(elems);
     var instance = M.Collapsible.getInstance(jQuery('#OrderCollapse'));
-    instance.open()
+    //instance.open()
     //datepicker
      let currentDate = new Date();
     var thisYear = currentDate.getFullYear();

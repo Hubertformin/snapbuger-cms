@@ -191,11 +191,13 @@ main {
     width: calc(100%-250px);
     margin-left: 250px;
 }
-
+.position-relative{
+    position: relative!important;
+}
 //sidenav
 #slide-out {
-    margin-top: 64px;
-    height: calc(100% - 64px);
+    margin-top: 56px;
+    height: calc(100% - 56px);
     .row .col {
         padding: 0!important;
     }
@@ -227,19 +229,20 @@ nav:not(.nav-extended) {
     top: 0;
     z-index: 1999;
     padding-left: 15px;
+    height: 56px;
     .logo-link {
-        color: #f44336!important;
+        color: #f44336;
         font-family: kaushan_script;
         font-size: 19px;
         span {
             display: inline-block;
-            transform: translateY(-8px);
+            transform: translateY(-10px);
         }
         img {
             display: inline-block;
-            height: 45px;
-            width: 45px;
-            transform: translateY(8px);
+            height: 40px;
+            width: 40px;
+            transform: translateY(4px);
         }
     }
     form {
@@ -294,12 +297,12 @@ nav:not(.nav-extended) {
     ul {
         &.nav-list-right {
             a {
-                color: #f44336!important;
+                color: #f44336;
             }
             position: absolute;
             top: 0;
             left:90%;
-            color: #999 !important;
+            color: #999;
         }
     }
 }
@@ -374,7 +377,7 @@ nav:not(.nav-extended) {
         padding: 20px;
     }
 }
-
+//theme background
 .bg-theme {
     background: linear-gradient(to right, #f44336, #ff9800)!important;
 }
@@ -382,13 +385,6 @@ nav:not(.nav-extended) {
 .bg-theme-rev {
     background: linear-gradient(to left, #f44336, #ff9800)!important;
 }
-
-//butoons
-button.bg-theme-rev:disabled,
-button.bg-theme:disabled {
-    background: #f1f1f1!important;
-}
-
 .bg-theme-round {
     background: radial-gradient(#ff9800, #f44336)!important;
 }
@@ -404,6 +400,20 @@ button.bg-theme:disabled {
 .bg-theme-pink-orange {
     background: linear-gradient(to right, #d81b60, #f44336)
 }
+//time pickers
+.timepicker-digital-display{
+    //@extend .bg-theme;
+    //using bg-theme
+    background: linear-gradient(to bottom, #d81b60, #ff9800)
+}
+
+
+//butoons
+button.bg-theme-rev:disabled,
+button.bg-theme:disabled {
+    background: #f1f1f1!important;
+}
+
 
 //rout:dashboardF
 //collapseible
@@ -478,7 +488,7 @@ button.bg-theme:disabled {
     }
 
 }
-
+//background wrappers
 .dark-wrapper {
     position: absolute;
     top: 0;
@@ -487,6 +497,20 @@ button.bg-theme:disabled {
     left: 0;
     background: rgba(0, 0, 0, 0.6);
     z-index: 0;
+}
+.white-wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: rgba(255, 255, 255,1);
+    z-index: 5;
+    &.orders-wrap{
+        border-bottom-right-radius:29px;
+        border-bottom-left-radius:29px;
+        background: linear-gradient(to bottom,rgba(255,255,255,1),rgba(255, 255, 255,0.8))
+    }
 }
 
 .info-card {

@@ -4,8 +4,8 @@
             Settings
         </div>
         <div class="body">
-            <div class="row">
-                <p class="title">General</p>
+        <p class="title">General</p>
+            <div class="row" ng-show="currentUser.is_mgr">
                 <h6 class="settings_tittle">Orders time range:<small class="blue-grey-text"> (Default is from 8:00 to 21:30)</small></h6>
                 <div class="col s6">
                     <div class="input-field col s6">
@@ -25,7 +25,7 @@
                 Updates
                 <div class="switch right">
                     <label>
-                      <input ng-change="updateSettings()" type="checkbox" ng-model="settings.auto_update">
+                      <input ng-change="updateSettings()" type="checkbox" ng-model="settings.auto_update" ng-disabled="!currentUser.is_mgr">
                       <span class="lever"></span>
                     </label>
                 </div>
@@ -36,7 +36,7 @@
                 Back up
                 <div class="switch right">
                     <label>
-                      <input ng-change="updateSettings()" type="checkbox" ng-model="settings.back_up">
+                      <input ng-change="updateSettings()" type="checkbox" ng-model="settings.back_up" ng-disabled="!currentUser.is_mgr">
                       <span class="lever"></span>
                     </label>
                 </div>
@@ -47,7 +47,7 @@
                 Performance reports
                 <div class="switch right">
                     <label>
-                      <input ng-change="updateSettings()" type="checkbox" ng-model="settings.performance_report">
+                      <input ng-change="updateSettings()" type="checkbox" ng-model="settings.performance_report" ng-disabled="!currentUser.is_mgr">
                       <span class="lever"></span>
                     </label>
                 </div>

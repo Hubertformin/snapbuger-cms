@@ -49,7 +49,7 @@ app.controller("staffCtr", ($scope) => {
             notifications.notify({type: 1, msg: "Acount Created!"})
             $scope.db.users.toArray()
             .then((data)=>{
-                $scope.managers = [],$scope.staffs = []
+                $scope.managers = [],$scope.staffs = [];
                 $scope.users = data;
                 $scope.users.forEach(element => {
                  if (element.is_mgr) {
@@ -58,6 +58,7 @@ app.controller("staffCtr", ($scope) => {
                      $scope.staffs.push(element)
                  }
              });
+             $scope.staff_name = "";$scope.staff_password = "";$scope.staff_position = "";$scope.staff_salary = "";
              $scope.$apply();
             })
             .catch(()=>{

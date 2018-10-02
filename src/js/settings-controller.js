@@ -4,6 +4,9 @@ app.controller('settingsCtr',($scope)=>{
     var instances = M.Timepicker.init(elems,{
         twelveHour:false
     });
+    //and now lets get our specific time picker element
+    /*var instance_time_from = M.Timepicker.getInstance(jQuery('#orders_from')),
+    instance_time_to = M.Timepicker.getInstance(jQuery('#orders_to'));*/
     //
     jQuery('#orders_from').val($scope.settings.time_range.from);
     jQuery('#orders_to').val($scope.settings.time_range.to);
@@ -22,7 +25,22 @@ app.controller('settingsCtr',($scope)=>{
             $scope.settings.time_range.from = jQuery('#orders_from').val();
             $scope.settings.time_range.to = jQuery('#orders_to').val();
         }
+        //now lets make sure time ranges are valid
+        var from = $scope.settings.time_range.from.split(":");
+        var to = $scope.settings.time_range.to.split(":");
+        if(Number(from[0]) > Number(to[0])){
+            notifications.notify({msg:"<small>Starting time cannot be greater than stopping time</small>",type:"error"});
+            jQuery('#orders_from').val("8:00");
+            return false;
+        }
+        else if(Number(from[0]) == Number(to[0]) && Number(from[1]) == Number(to[1])){
+            notifications.notify({msg:"<small>Starting time cannot be equal to stopping time</small>",type:"error"});
+            jQuery('#orders_from').val("8:00");
+            jQuery('#orders_to').val("21:30");
+            return false;
+        }
 
+        //now updating to database
         $scope.db.settings.put($scope.settings)
         .then(()=>{
             $scope.db.settings.get(1)

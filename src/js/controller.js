@@ -1,4 +1,5 @@
-
+//rwquire electrom modules here
+const {ipcRenderer} = require('electron');
 //angular module
 var app = angular.module('mainApp', ["ngRoute"]);
 app.config(($routeProvider) => {
@@ -271,5 +272,33 @@ app.controller("mainCtr", ($scope) => {
     $scope.toDate = (dt)=>{
         return new Date(dt).toDateString();
     }
+    //time range function that runs every 5 mins and check if time is reached
+    $scope.time_range = ()=>{
+        $scope.end_orders = false;
+        try{
+            var from_time = $scope.settings.time_range.from.split(":"),
+            to_time = $scope.settings.time_range.to.split(":"),
+            d = new Date();
+            //send notifications in intervals of 5,10,15 mins
+            //var to_mins = new Date(`${d.toDateString()} ${$scope.settings.time_range.to}`);
+            //disable orders if time is less than time_range from time
+            if(d.getHours() > Number(to_time[0]) || d.getHours() == Number(to_time[0]) && d.getMinutes() >= Number(to_time[1])){
+               $scope.end_orders = true;
+            }else if(d.getHours() < Number(from_time[0]) || d.getHours() == Number(from_time[0]) && d.getMinutes() <= Number(from_time[1])){
+                $scope.end_orders = true;
+            }else{
+                $scope.end_orders = false;
+            }
+            $scope.$apply();   
+        }
+        catch(err){
+            return false;
+        }
+        finally{
+            return false;
+        }
+    }
+    $scope.time_range()
+    $scope.setTime = setInterval($scope.time_range,4000)
 })
 
