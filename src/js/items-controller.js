@@ -1,4 +1,8 @@
 app.controller("itemsCtr", ($scope) => {
+    //first thing, setting the sidenav link to active
+    jQuery('.sideNavLink').removeClass('active');
+    jQuery('#productsLink').addClass('active');
+    //
     $scope.category_status = "available";
     $scope.item_status = "available";
     //initializing collapse

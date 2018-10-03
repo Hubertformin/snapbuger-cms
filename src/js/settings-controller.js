@@ -1,4 +1,7 @@
 app.controller('settingsCtr',($scope)=>{
+    //first thing, setting the sidenav link to active
+    jQuery('.sideNavLink').removeClass('active');
+    jQuery('#settingsLink').addClass('active');
 //the time picker ..
     var elems = document.querySelectorAll('.timepicker');
     var instances = M.Timepicker.init(elems,{
@@ -28,13 +31,8 @@ app.controller('settingsCtr',($scope)=>{
         //now lets make sure time ranges are valid
         var from = $scope.settings.time_range.from.split(":");
         var to = $scope.settings.time_range.to.split(":");
-        if(Number(from[0]) > Number(to[0])){
-            notifications.notify({msg:"<small>Starting time cannot be greater than stopping time</small>",type:"error"});
-            jQuery('#orders_from').val("8:00");
-            return false;
-        }
-        else if(Number(from[0]) == Number(to[0]) && Number(from[1]) == Number(to[1])){
-            notifications.notify({msg:"<small>Starting time cannot be equal to stopping time</small>",type:"error"});
+        if(Number(from[0]) > Number(to[0]) || Number(from[0]) == Number(to[0]) && Number(from[1]) >= Number(to[1])){
+            notifications.notify({msg:"<small>Starting time cannot be greater than or equal to stopping time</small>",type:"error"});
             jQuery('#orders_from').val("8:00");
             jQuery('#orders_to').val("21:30");
             return false;

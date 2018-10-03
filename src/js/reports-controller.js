@@ -1,4 +1,7 @@
 app.controller('reportsCtr',($scope)=>{
+    //first thing, setting the sidenav link to active
+    jQuery('.sideNavLink').removeClass('active');
+    jQuery('#reportsLink').addClass('active');
     //refetcing orders
     $scope.db.orders.toArray()
    .then((data)=>{
@@ -6,6 +9,7 @@ app.controller('reportsCtr',($scope)=>{
         $scope.orders.sort(function(a,b){
             return (a.id < b.id)?1:((b.id < a.id)? -1:0);
         });
+        $scope.$apply();
    })
     //var instance = M.Tabs.init(jQuery('.tabs'));
     $scope.toTime  = (dt)=>{
@@ -35,20 +39,20 @@ app.controller('reportsCtr',($scope)=>{
         }
         $scope.uniqueDateOrders.push($scope.orders[i].date)
     }
-    //cleaner function that formats date and show it in the left pane of the order table
+    //cleaner function that formats date and show it in the left pane of the orders table
     $scope.cleaner = (dt)=>{
         dt = dt.toDateString();
         var time = new Date(dt).getTime(),now = Date.now(),d;
         d = Math.round((now - time)/3600000)
         if(d<24){
             return "Today";
-        }else if(d > 24 && d < 48){
+        }else if(d >= 24 && d < 48){
             return "Yesterday";
         }else{
             return dt;
         }
     }
-    //function, used to show the corresponding date orders to date clicked
+    //function, used to show the corresponding date orders when date on left pane is clicked
     $scope.filterOrdersView = (dt)=>{
         jQuery('#collection a').on('click',(e)=>{
             jQuery('#collection a').removeClass('active');
@@ -61,6 +65,7 @@ app.controller('reportsCtr',($scope)=>{
         //console.log(jQuery(`#allOrders tr[data-date="${dt}"]`))
 
     }
+    //count orders in specific dates
     $scope.countDateOrders = (dt)=>{
         var n = 0;
         for(var x = 0;x<$scope.orders.length;x++){
@@ -72,7 +77,7 @@ app.controller('reportsCtr',($scope)=>{
     }
     //delete orders
     $scope.deleteOrder = (i)=>{
-        if(confirm(`Are you sure you want to delete ${$scope.orders[i].name}'s order?`)){
+        if(confirm(`Are you sure you want to delete order:${$scope.orders[i].name}?`)){
             $scope.db.orders.delete($scope.orders[i].id)
             .then(()=>{
                 $scope.db.orders.toArray()
@@ -131,8 +136,8 @@ app.controller('reportsCtr',($scope)=>{
     //lastly charts
     //creating graph data
         $scope.graphData = [];
-        var i = ($scope.orders.length>30)?$scope.orders.length-31:0;
-        for(i = 0;i<$scope.uniqueDateOrders.length;i++){
+        var i = ($scope.uniqueDateOrders.length>30)?(Math.floor($scope.uniqueDateOrders.length/30)*30)-1 : 0;
+        for(i;i<$scope.uniqueDateOrders.length;i++){
             var el = {x:toGraphDate($scope.uniqueDateOrders[i]),y:0}
             for(var y = 0;y<$scope.orders.length;y++){
                 if($scope.orders[y].date.toDateString() == $scope.uniqueDateOrders[i].toDateString()){
@@ -169,5 +174,6 @@ $scope.updateGraph = ()=>{
     }
     graph.setData($scope.graphData)
 }
+setInterval($scope.updateGraph,6000);
 
 })

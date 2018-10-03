@@ -1,4 +1,7 @@
 app.controller("dashCtr", ($scope) => {
+    //first thing, setting the sidenav link to active
+    jQuery('.sideNavLink').removeClass('active');
+    jQuery('#dashboardLink').addClass('active');
     //modals
     var elems = document.querySelectorAll('.modal');
     var instances = M.Modal.init(elems,{opacity:0.2});
@@ -123,7 +126,7 @@ app.controller("dashCtr", ($scope) => {
                 $scope.orderInv = `SB${Math.floor(Math.random() * 999) + 1000}`;
                 $scope.removeItem('deleteAll') 
                 $scope.$apply();
-                console.log($scope.orders)
+                //console.log($scope.orders)
                 //
                 swal({
                     title: "Order completed!",
@@ -136,7 +139,7 @@ app.controller("dashCtr", ($scope) => {
                     if (click) {
                         //print here!!
                         delete current.id;
-                        console.log(current)
+                        //console.log(current)
                     } else {
                         return false;
                     }
@@ -156,9 +159,16 @@ app.controller("dashCtr", ($scope) => {
     //this section represents the activity and the today's orders table
     const today = new Date().toDateString();$scope.todaysCompletedOrders = [];
     $scope.orders.forEach(elems=>{
-        if(elems.date.toDateString() == today){
-            $scope.todaysCompletedOrders.push(elems)
+        if($scope.currentUser.is_mgr){
+            if(elems.date.toDateString() == today){
+                $scope.todaysCompletedOrders.push(elems)
+            }
+        }else if(!$scope.currentUser.is_mgr){
+            if(elems.date.toDateString() == today && elems.staff ==$scope.currentUser.name){
+                $scope.todaysCompletedOrders.push(elems)
+            }
         }
+        
     })
 
 })

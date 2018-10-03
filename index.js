@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain} = require('electron')
+const {app, BrowserWindow, ipcMain,Notification} = require('electron')
 
   // Keep a global reference of the window object, if you don't, the window will
   // be closed automatically when the JavaScript object is garbage collected.
@@ -6,13 +6,25 @@ const {app, BrowserWindow, ipcMain} = require('electron')
 
   function createWindow () {
     // Create the browser window.
-    win = new BrowserWindow({show:false,backgroundColor: '#2e2c29',width: 1000,title:'SnapBurger CMS', height: 700,minWidth:950,minHeight:600,icon: './src/img/logo-round.png'})
+    win = new BrowserWindow({
+      show:false,
+      backgroundColor:'#2e2c29',
+      width: 1000,
+      title:'SnapBurger CMS',
+      height: 700,
+      minWidth:950,
+      minHeight:600,
+      icon: './src/img/logo-round.png',
+      webPreferences: {
+        nodeIntegrationInWorker: true
+      }
+    })
 
     // and load the index.html of the app.
     win.loadFile('src/index.html')
 
     // Open the DevTools.
-    //win.webContents.openDevTools()
+    win.webContents.openDevTools()
     
     //when the widow is ready to display
     win.once('ready-to-show', () => {
@@ -54,6 +66,18 @@ const {app, BrowserWindow, ipcMain} = require('electron')
   // code. You can also put them in separate files and require them here.
 
   //============= LISTENING TO RENDER PROCESS MESSAGES ! ===========
-/*ipcMain.on('asynchronous-message', (event, arg) => {
-    console.log(arg)
-  })*/
+ipcMain.on('asynchronous-message', (event, msg) => {
+    const arg = JSON.parse(msg)
+    switch(arg.type){
+      case "notification":
+      if(Notification.isSupported()){
+        var notify = new Notification({title:"Orders ending soon!",body:arg.msg})
+        notify.show();
+        //console.log("Notifyer shown!")
+      }else{
+        console.log("Not supported!")
+      }
+        
+        break;
+    }
+  })

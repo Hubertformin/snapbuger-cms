@@ -18,7 +18,7 @@
                                 </div>
                                 <div class="input-field col s6">
                                     <input type="password" placeholder="Password" ng-model="staff_password" id="password">
-                                    <label for="password">Position</label>
+                                    <label class="active" for="password">Password</label>
                                 </div>
                                 <div class="input-field col s6">
                                     <input id="position" type="text" ng-model="staff_position" class="validate">
@@ -29,7 +29,7 @@
                                     <label for="startDate">Start Date</label>
                                 </div>
                                 <div class="input-field col s6">
-                                    <input id="salary" type="text" ng-model="staff_salary" class="validate">
+                                    <input id="salary" type="number" ng-model="staff_salary" class="validate">
                                     <label for="salary">Salary</label>
                                 </div>
                                 <div class="col s12">
@@ -62,8 +62,8 @@
                         <tr ng-repeat="x in staffs track by $index">
                             <td><input ng-change="updateStaffs($index)" type="text" ng-model="x.name"></td>
                             <td><input ng-change="updateStaffs($index)" type="text" ng-model="x.position"></td>
-                            <td><input ng-change="updateStaffs($index)" type="text" ng-model="x.startDate" class="datepicker"></td>
-                            <td><input ng-change="updateStaffs($index)" type="text" ng-model="x.salary"></td>
+                             <td>{{formatDatePicker(x.startDate)}}</td>
+                            <td><input ng-change="updateStaffs($index)" type="number" ng-model="x.salary"></td>
                             <td><input ng-change="updateStaffs($index)" type="password" ng-model="x.password"></td>
                             <td>
                             <select ng-change="updateStaffs($index)" ng-change="updateStaffs($index)" class="browser-default" ng-model="x.status">
@@ -79,14 +79,9 @@
             <table class="huberts-tables">
                 <tfoot>
                     <tr>
-                        <th>Name</th>
-                        <th>Position</th>
-                        <th>Start Date</th>
-                        <th>Salary(XAF)</th>
-                        <th>Password</th>
-                        <th>Status</th>
-                        <th></th>
-                        <th class="small"><i class="material-icons">build</i></th>
+                        <th>Totals:</th>
+                        <th>Users: {{staffs.length}}</th>
+                        <th>Salary: {{totalSalary | currency:"XAF ":00}}</th>
                     </tr>
                 </tfoot>
             </table>
@@ -99,14 +94,13 @@
             </h2>
         </div>
         <div class="body">
+           <button ng-click="createmanager()" class="right btn bg-theme-pink waves-effect waves-default"><i class="material-icons left">person_add</i> Create Manager</button>
             <table id="managers" class="huberts-tables mdl-data-table" style="width:100%">
                 <thead>
                     <tr>
                         <th>Name</th>
                         <th>Position</th>
                         <th>Start date</th>
-                        <th>Salary</th>
-                        <th class="small"><i class="material-icons">build</i></th>
                     </tr>
                 </thead>
             </table>
@@ -120,23 +114,10 @@
                             <td><input type="text" ng-model="x.name"></td>
                             <td><input readonly type="text" ng-model="x.position"></td>
                             <td>{{toDate(x.startDate)}}</td>
-                            <td><input type="text" ng-model="x.salary"></td>
-                            <td class="small"><i ng-click="deleteManagers($index)" class="material-icons">delete</i></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <table class="huberts-tables">
-                <tfoot>
-                    <tr>
-                        <th>Name</th>
-                        <th>Position</th>
-                        <th>Start date</th>
-                        <th>Salary</th>
-                        <th class="small"><i class="material-icons">build</i></th>
-                    </tr>
-                </tfoot>
-            </table>
         </div>
     </div>
 </div>

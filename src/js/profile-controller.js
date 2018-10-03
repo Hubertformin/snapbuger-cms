@@ -25,11 +25,18 @@ app.controller('profileCtr',($scope)=>{
         $scope.currentUser.name = $scope.currentUser.name[0].toUpperCase()+$scope.currentUser.name.slice(1).toLowerCase()
         $scope.db.users.put($scope.currentUser)
         .then(()=>{
-            if(typeof $scope.currentUser.img_url !== 'string'){
-                $scope.profile_pic = URL.createObjectURL($scope.currentUser.img_url);
-            }
-            $scope.$apply();
-           notifications.notify({msg:"Updated!",type:"ok"})
+            $scope.db.users.get($scope.currentUser.id)
+            .then((data)=>{
+                $scope.currentUser = data;
+                if(typeof $scope.currentUser.img_url !== 'string'){
+                    $scope.profile_pic = URL.createObjectURL($scope.currentUser.img_url);
+                }else{
+                    scope.profile_pic = $scope.currentUser.img_url;
+                }
+                $scope.$apply();
+                notifications.notify({msg:"Updated!",type:"ok"})
+            })
+            
         })
     }
 })

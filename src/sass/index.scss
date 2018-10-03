@@ -25,6 +25,31 @@
     padding: 0!important;
 }
 
+//theme background
+.bg-theme {
+    background: linear-gradient(to right, #f44336, #ff9800)!important;
+}
+
+.bg-theme-rev {
+    background: linear-gradient(to left, #f44336, #ff9800)!important;
+}
+
+.bg-theme-round {
+    background: radial-gradient(#ff9800, #f44336)!important;
+}
+
+.bg-theme-round-rev {
+    background: radial-gradient(#f44336, #ff9800)!important;
+}
+
+.bg-theme-pink {
+    background: linear-gradient(to right, #d81b60, #ff9800)
+}
+
+.bg-theme-pink-orange {
+    background: linear-gradient(to right, #d81b60, #f44336)
+}
+
 /* width */
 
 //input number
@@ -62,15 +87,16 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 //rulers
-.section-heading{
+.section-heading {
     margin-top: 40px;
 }
+
 hr {
     border-color: #ddd;
     margin-top: 5px;
     border-width: 0.5px;
     margin-bottom: 9px;
-    &.ruler{
+    &.ruler {
         margin-bottom: 25px;
     }
 }
@@ -199,9 +225,11 @@ main {
     width: calc(100%-250px);
     margin-left: 250px;
 }
-.position-relative{
+
+.position-relative {
     position: relative!important;
 }
+
 //sidenav
 #slide-out {
     margin-top: 56px;
@@ -229,6 +257,16 @@ main {
     }
     .dropdown-content {
         border-radius: 10px;
+    }
+    .sideNavLink {
+        transition: all 0.4s linear;
+        &.active {
+            i {
+                color: #fff;
+            }
+            @extend .bg-theme-pink;
+            color: #fff;
+        }
     }
 }
 
@@ -266,7 +304,7 @@ nav:not(.nav-extended) {
         box-shadow: 0px 5px 26px rgba(0, 0, 0, 0.12);
         input {
             position: absolute;
-            bottom: 5px;
+            bottom: 0px;
             color: #f44336!important;
             padding-left: 30px!important;
             font-family: "Raleway";
@@ -307,10 +345,38 @@ nav:not(.nav-extended) {
             a {
                 color: #f44336;
             }
+            display: inline-block;
+            float:right;
+        }
+        //dropdown
+        .dropdown-body {
+            display: none;
             position: absolute;
-            top: 0;
-            left:90%;
-            color: #999;
+            right: 0;
+            padding:10px;
+            background-color: #f9f9f9;
+            min-width:200px;
+            opacity: 1;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            text-align: center;
+            i{
+                font-size: 4rem;
+            }
+            span{
+                margin:5px 0;
+            }
+        }
+
+        .dropdown-body a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+        .dropdown:hover .dropdown-body {
+            display: block;
         }
     }
 }
@@ -337,7 +403,7 @@ nav:not(.nav-extended) {
     padding: 10px 25px;
     left: 40%;
     z-index: 3999;
-    width: 300px;
+    width: 360px;
     cursor: pointer;
     border-radius: 26px;
     i {
@@ -385,31 +451,9 @@ nav:not(.nav-extended) {
         padding: 20px;
     }
 }
-//theme background
-.bg-theme {
-    background: linear-gradient(to right, #f44336, #ff9800)!important;
-}
 
-.bg-theme-rev {
-    background: linear-gradient(to left, #f44336, #ff9800)!important;
-}
-.bg-theme-round {
-    background: radial-gradient(#ff9800, #f44336)!important;
-}
-
-.bg-theme-round-rev {
-    background: radial-gradient(#f44336, #ff9800)!important;
-}
-
-.bg-theme-pink {
-    background: linear-gradient(to right, #d81b60, #ff9800)
-}
-
-.bg-theme-pink-orange {
-    background: linear-gradient(to right, #d81b60, #f44336)
-}
 //time pickers
-.timepicker-digital-display{
+.timepicker-digital-display {
     //@extend .bg-theme;
     //using bg-theme
     background: linear-gradient(to bottom, #d81b60, #ff9800)
@@ -451,13 +495,14 @@ button.bg-theme:disabled {
         }
     }
 }
+
 //dashboard table
-#dashboard_order_table{
-    td{
-        padding:0px 9px!important;
+#dashboard_order_table {
+    td {
+        padding: 0px 9px!important;
         width: 16.66%;
-        &.small{
-            width:3%;
+        &.small {
+            width: 3%;
         }
     }
 }
@@ -506,6 +551,7 @@ button.bg-theme:disabled {
     }
 
 }
+
 //background wrappers
 .dark-wrapper {
     position: absolute;
@@ -516,18 +562,19 @@ button.bg-theme:disabled {
     background: rgba(0, 0, 0, 0.6);
     z-index: 0;
 }
+
 .white-wrapper {
     position: absolute;
     top: 0;
     bottom: 0;
     right: 0;
     left: 0;
-    background: rgba(255, 255, 255,1);
+    background: rgba(255, 255, 255, 1);
     z-index: 5;
-    &.orders-wrap{
-        border-bottom-right-radius:29px;
-        border-bottom-left-radius:29px;
-        background: linear-gradient(to bottom,rgba(255,255,255,1),rgba(255, 255, 255,0.8))
+    &.orders-wrap {
+        border-bottom-right-radius: 29px;
+        border-bottom-left-radius: 29px;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.8))
     }
 }
 
@@ -569,8 +616,9 @@ ul.browser-default {
 
 div.huberts-table-div {
     min-height: 50px;
-    max-height: 500px;
+    max-height: 65vh;
     overflow-y: auto;
+    border: 1px solid #ddd;
     .no-data {
         height: 100%;
         text-align: center;
@@ -871,11 +919,15 @@ table.huberts-tables {
 
 //reports
 div#reports {
+    #collection {
+        margin: 0px;
+    }
     .date-review {
         transform: translateY(18px);
         input {
             width: 100%;
             border-radius: 26px;
+            margin-bottom: 13px;
             border: 1px solid #999;
             padding: 5px 15px;
         }
@@ -886,9 +938,17 @@ div#reports {
         }
     }
     div.table-div {
-        height: 300px;
+        height: 60vh;
         overflow-y: scroll;
-        border-bottom: 1px solid #ddd;
+        border: 1px solid #ddd;
+    }
+    .details-div {
+        padding-left: 0;
+        table {
+            td {
+                padding-left: 9px;
+            }
+        }
     }
     table {
         th {
@@ -923,12 +983,6 @@ div#reports {
         position: relative;
         width: 100%;
         margin-left: 0px!important;
-    }
-    nav ul.nav-list-right {
-        position: absolute;
-        top: 0;
-        left: 81%!important;
-        color: #999 !important;
     }
 }
 
@@ -969,16 +1023,6 @@ ul.versions {
     }
     form {
         padding: 40px 20px;
-    }
-}
-
-//
-@media only screen and (max-width:858px) {
-    nav ul.nav-list-right {
-        position: absolute;
-        top: 0;
-        left: 76%!important;
-        color: #999 !important;
     }
 }
 

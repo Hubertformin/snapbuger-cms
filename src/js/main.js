@@ -1,30 +1,4 @@
 M.AutoInit();
-//offline and online function
-function isOnline(){
-    var syncBtn = $('#syncBtn');
-    syncBtn.children('i').html('sync')
-    syncBtn.addClass("spin")
-    console.log("Online!");
-}
-//fu
-function isOffline(){
-    var syncBtn = $('#syncBtn');
-    //syncBtn.css({color:"#999"})
-    syncBtn.children('i').html('sync_disabled')
-    syncBtn.removeClass("spin")
-    console.log("offline!");
-}
-//on ready
-jQuery(document).ready(()=>{
-    if(navigator.onLine){
-        isOnline();
-    }else{
-        isOffline();
-    }
-})
-window.addEventListener('online',isOnline,false)
-window.addEventListener('offline',isOffline,false)
-
 //to cosesidenav when links are clicked
 jQuery('#slide-out').on('click','.sideNavLink',()=>{
     if(jQuery(window).width()<992){
@@ -117,9 +91,9 @@ function searchOrderItems(e){
     val = val.toLowerCase();
     items.each((i,el)=>{
         jQuery(el).hide()
-        item_name = jQuery(el).children('div.header').children('dl').children('dt.item-name').html().toLowerCase()
-        item_category = jQuery(el).children('div.header').children('dl').children('dd.item-category').html().toLowerCase()
-        item_status = jQuery(el).children('div.header').children('dl').children('dd.item-status').html().toLowerCase()
+        item_name = jQuery(el).children('div.header').children('.dark').children('dl').children('dt.item-name').html().toLowerCase()
+        item_category = jQuery(el).children('div.header').children('.dark').children('dl').children('dd.item-category').html().toLowerCase()
+        item_status = jQuery(el).children('div.header').children('.dark').children('dl').children('dd.item-status').html().toLowerCase()
         //search..
         if(item_name.indexOf(val) == -1 && item_category.indexOf(val) == -1 && item_status.indexOf(val) == -1){
             found = false;

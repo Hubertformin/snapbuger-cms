@@ -3,8 +3,8 @@
     <div class="row">
         <!-- Orders Reports! -->
         <div id="ordersReports" class="white col s12">
-            <div class="chart">
-                <div id="orderChart" style="height: 280px;background:#fff;"></div>
+            <div class="chart" style="border:1px solid #000;">
+                <div id="orderChart" style="height:50vh;background:#fff;"></div>
             </div>
             <span class="right"><strong>All Orders: {{orders.length}}</strong></span>
             <div class="body" style="margin-top:50px;border-top:1px solid #999">
@@ -19,11 +19,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col s9">
+                    <div class="col s9 details-div">
                         <table>
                             <thead>
                                 <th>Inv</th>
-                                <th>Items</th>
+                                <th>Items <small class="teal-text">Qty</small></th>
                                 <th>Price</th>
                                 <th>Qty</th>
                                 <th>Staff</th>

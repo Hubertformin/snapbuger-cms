@@ -35,39 +35,39 @@
                         <span class="indicator grey active"></span>
                         <span class="indicator grey"></span>
                     </div>
-                        <div class="row">
-                            <div class="col s4 img-upload">
-                                <div class="hover" onclick="document.querySelector('#managerialImgInput').click()">
-                                    <div class="dark-wrapper">
-                                        <div class="center"><i class="material-icons medium white-text">add</i></div>
-                                    </div>
-                                    <input type="file" style="display:none;" id="managerialImgInput" accept="image/*">
-                                    <img src="img/manager.png" id="managerialImg" alt="">
+                    <div class="row">
+                        <div class="col s4 img-upload">
+                            <div class="hover" onclick="document.querySelector('#managerialImgInput').click()">
+                                <div class="dark-wrapper">
+                                    <div class="center"><i class="material-icons medium white-text">add</i></div>
                                 </div>
-                                <spall class="font-amar grey-text">Click Image to add photo</spall>
+                                <input type="file" style="display:none;" id="managerialImgInput" accept="image/*">
+                                <img src="img/manager.png" id="managerialImg" alt="">
                             </div>
-                            <div class="col s8">
-                                <div class="row">
-                                    <form action="#" id="createManagerialForm">
-                                        <div class="input-field col s12">
-                                            <i class="material-icons prefix">account_circle</i>
-                                            <input placeholder="Name(s)" ng-model="createManagerialFormInputName" type="text" class="validate">
-                                        </div>
-                                        <div class="input-field col s12">
-                                            <i class="material-icons prefix">lock</i>
-                                            <input placeholder="Password" type="password" ng-model="createManagerialFormPassword" class="validate">
-                                        </div>
-                                        <p>
-                                            <label>
+                            <spall class="font-amar grey-text">Click Image to add photo</spall>
+                        </div>
+                        <div class="col s8">
+                            <div class="row">
+                                <form action="#" id="createManagerialForm">
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">account_circle</i>
+                                        <input placeholder="Name(s)" ng-model="createManagerialFormInputName" type="text" class="validate">
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">lock</i>
+                                        <input placeholder="Password" type="password" ng-model="createManagerialFormPassword" class="validate">
+                                    </div>
+                                    <p>
+                                        <label>
                                         <input type="checkbox" class="filled-in" checked="checked" disabled />
                                             <span>I own/manage this organization.</span>
                                         </label>
-                                        </p>
-                                        <button type="submit" ng-disabled="!createManagerialFormPassword || !createManagerialFormInputName" class="btn bg-theme-rev waves-effect waves light"><i class="material-icons right">arrow_forward</i>Proceed</button>
-                                    </form>
-                                </div>
+                                    </p>
+                                    <button type="submit" ng-disabled="!createManagerialFormPassword || !createManagerialFormInputName" class="btn bg-theme-rev waves-effect waves light"><i class="material-icons right">arrow_forward</i>Proceed</button>
+                                </form>
                             </div>
                         </div>
+                    </div>
 
                 </div>
 
@@ -103,7 +103,7 @@
             <li>
                 <div class="user-view">
                     <div class="background">
-                       <div class="dark-wrapper"></div>
+                        <div class="dark-wrapper"></div>
                         <img src="img/office.jpg" alt="">
                     </div>
                     <div class="row dropdown-trigger" data-target="user_dropdown">
@@ -124,16 +124,16 @@
                 </div>
             </li>
             <li><a draggable="false" class="sideNavLink" id="dashboardLink" href="#/!"><i class="material-icons">dvr</i>Dashboard</a></li>
-            <li><a draggable="false" href="#!items" class="sideNavLink"><i class="material-icons">dns</i>Products</a></li>
-            <li><a draggable="false" href="#!settings" class="sideNavLink"><i class="material-icons">settings</i>Settings</a></li>
+            <li><a draggable="false" href="#!items" class="sideNavLink" id="productsLink"><i class="material-icons">dns</i>Products</a></li>
+            <li><a draggable="false" href="#!settings" class="sideNavLink" id="settingsLink"><i class="material-icons">settings</i>Settings</a></li>
             <!--HIDE THIS SECTION TO REGULAR USERS -->
             <div ng-show="currentUser.is_mgr">
                 <li>
                     <div class="divider"></div>
                 </li>
                 <li><a draggable="false" class="sideNavLink" class="subheader">Admin</a></li>
-                <li><a ng-hide="orders.length == 0" draggable="false" class="sideNavLink" href="#!reports"><i class="material-icons">insert_chart</i>Reports</a></li>
-                <li><a draggable="false" class="sideNavLink" href="#!emp"><i class="material-icons">people</i>Staff</a></li>
+                <li><a ng-hide="orders.length == 0" draggable="false" class="sideNavLink" href="#!reports" id="reportsLink"><i class="material-icons">insert_chart</i>Reports</a></li>
+                <li><a draggable="false" class="sideNavLink" href="#!emp" id="staffLink"><i class="material-icons">people</i>Staff</a></li>
             </div>
         </ul>
         <!-- main section -->
@@ -151,7 +151,14 @@
                 <ul class="nav-list-right">
                     <li onclick="showSearchBar(true)"><a title="Search" draggable="false" href="javascript:void(0)" class="white-text"><i class="material-icons">search</i> </a></li>
                     <!--<li><a draggable="false" href="javascript:void(0)" ng-click="logOut()"><i class="material-icons">power_settings_new</i></a></li>-->
-                    <li><a draggable="false" disabled id="syncBtn" href="javascript:void(0)" title="Sync" class="white-text"><i class="material-icons">sync</i></a></li>
+                    <li class="dropdown"><a draggable="false" disabled id="syncBtn" href="javascript:void(0)" title="Sync" class="white-text dropbtn"><i class="material-icons">sync</i></a>
+                        <div id="sync_dropdown" class="dropdown-body">
+                           <i class="icon grey-text material-icons Large">cloud_queue</i>
+                            <span class="text grey-text">Sycn changes</span>
+                            <button class="btn btn-block bg-theme-rev waves-effect waves-default">Sync</button>
+                        </div>
+                    </li>
+
                 </ul>
             </nav>
         </header>
@@ -192,7 +199,6 @@
     <script src="js/raphael.min.js"></script>
     <script src="js/morris-dist.js"></script>
     <script src="js/sweetalert.js"></script>
-    <script src="js/chart.js"></script>
     <script src="js/main.js"></script>
     <script src="js/controller.js"></script>
     <script src="js/dash-controller.js"></script>
