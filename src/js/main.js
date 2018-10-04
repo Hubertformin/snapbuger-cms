@@ -48,7 +48,7 @@ class Alerts{
 }
 
 //search table
-function searchTable(e,tb){
+function searchInputTable(e,tb){
     var i,j,td,input,
     value = e.target.value.toLowerCase(),
     table = document.querySelector(tb),
@@ -65,6 +65,25 @@ function searchTable(e,tb){
     });
     
 }
+function searchTable(e,tb){
+    var i,j,td,input,
+    value = e.target.value.toLowerCase(),
+    table = document.querySelector(tb),
+    tr = table.querySelectorAll('tbody tr');
+    tr.forEach((element,index) => {
+        td = element.querySelectorAll('td');
+        if(td[1].innerHTML.toLowerCase().indexOf(value)>-1){
+            element.style.display = "";
+        }else if(td[2].innerText.toLowerCase().indexOf(value)>-1){
+            element.style.display = "";
+        }else{
+            element.style.display = "none";
+        }
+       
+    });
+    
+}
+//
 function formatDate(string = ''){
     date = new Date();
     var day,month,year;

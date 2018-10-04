@@ -1,4 +1,28 @@
 app.controller("staffCtr", ($scope) => {
+    $scope.fetchAndComputeStaffs = ()=>{
+        $scope.db.users.toArray()
+            .then((data)=>{
+                $scope.managers = [],$scope.staffs = [];
+                $scope.users = data;
+                $scope.users.forEach(element => {
+                 if (element.is_mgr) {
+                     $scope.managers.push(element);
+                 } else {
+                     $scope.staffs.push(element)
+                 }
+             });
+             $scope.staff_name = "";$scope.staff_password = "";$scope.staff_position = "";$scope.staff_salary = "";
+             $scope.totalSalary = 0;
+            $scope.staffs.forEach(el=>{
+                 $scope.totalSalary += Number(el.salary);
+            })
+             $scope.$apply();
+            })
+            .catch(()=>{
+                notifications.notify({msg:"An error occured: Unable to refetch!",type:"error"})
+            })
+    }
+    $scope.fetchAndComputeStaffs();
     //first thing, setting the sidenav link to active
     jQuery('.sideNavLink').removeClass('active');
     jQuery('#staffLink').addClass('active');
@@ -25,14 +49,7 @@ app.controller("staffCtr", ($scope) => {
         yearRange: [thisYear, thisYear + 2]
     });
     //==================== FUNCTIONS =============
-    //compute total of salaries
-    $scope.computeSalary = ()=>{
-        $scope.totalSalary = 0;
-         $scope.staffs.forEach(el=>{
-            $scope.totalSalary += Number(el.salary);
-        })
-    }
-    $scope.computeSalary();
+    //
     //date picker to date string
     $scope.formatDatePicker = (dt)=>{
         const od = dt.split("/");
@@ -79,25 +96,7 @@ app.controller("staffCtr", ($scope) => {
         })
         .then(()=>{
             notifications.notify({type: 1, msg: "Acount Created!"})
-            $scope.db.users.toArray()
-            .then((data)=>{
-                $scope.managers = [],$scope.staffs = [];
-                $scope.users = data;
-                $scope.users.forEach(element => {
-                 if (element.is_mgr) {
-                     $scope.managers.push(element);
-                 } else {
-                     $scope.staffs.push(element)
-                 }
-             });
-             $scope.staff_name = "";$scope.staff_password = "";$scope.staff_position = "";$scope.staff_salary = "";
-             $scope.computeSalary();
-             $scope.$apply();
-            })
-            .catch(()=>{
-                notifications.notify({msg:"An error occured: Unable to refetch!",type:"error"})
-            })
-            
+            $scope.fetchAndComputeStaffs()
         })
     })
     //update staffs
@@ -148,9 +147,51 @@ app.controller("staffCtr", ($scope) => {
             })
         }
     }
+    $scope.deleteMgr = (i) => {
+        if(confirm(`Are you sure you want to delete ${$scope.managers[i].name}'s Account?`)){
+            $scope.db.users.delete($scope.managers[i].id)
+            .then(()=>{
+                $scope.db.users.toArray()
+                .then((data)=>{
+                    $scope.managers = [],$scope.staffs = []
+                    $scope.users = data;
+                    $scope.users.forEach(element => {
+                     if (element.is_mgr) {
+                         $scope.managers.push(element);
+                     } else {
+                         $scope.staffs.push(element)
+                     }
+                 });
+                 $scope.$apply();
+                })
+                .catch(()=>{
+                    notifications.notify({msg:"An error occured: Unable to refetch!",type:"error"})
+                })
+                
+            })
+        }
+    }
     //create Manager
     $scope.createmanager = ()=>{
-        jQuery('#managerial').css({display:"block"})
-        console.log(jQuery('#managerial'));
+        jQuery('#closeLoginBtn').fadeIn();
+        jQuery("#createMgrBtn2").show();
+        jQuery("#createMgrBtn1").hide();
+        jQuery('#managerial').show(()=>{
+            jQuery('#login').fadeIn();
+        }); 
     }
+    //
+    let i = 0;
+    jQuery("#createMgrBtn2").on('click',()=>{
+        console.log(i+=1)
+        $scope.createManagerFxn(false);
+    })
+    //cancel
+    jQuery('#closeLoginBtn').on('click',()=>{
+        console.log("duche bage")
+        jQuery('#login').fadeOut(()=>{
+            jQuery('#managerial').hide();
+            jQuery('#closeLoginBtn').fadeOut();
+        });
+    })
 })

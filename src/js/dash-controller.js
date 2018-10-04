@@ -2,6 +2,29 @@ app.controller("dashCtr", ($scope) => {
     //first thing, setting the sidenav link to active
     jQuery('.sideNavLink').removeClass('active');
     jQuery('#dashboardLink').addClass('active');
+    //====================== FETCH AND COMPUTE =======================
+    const today = new Date().toDateString();$scope.todaysCompletedOrders = [];
+    $scope.fetchAndComputeOrders = () => {
+        $scope.db.orders.toArray()
+            .then((data)=>{
+                $scope.todaysCompletedOrders = [];
+                $scope.orders = data;
+                $scope.orders.forEach(elems=>{
+                    if($scope.currentUser.is_mgr){
+                        if(elems.date.toDateString() == today){
+                            $scope.todaysCompletedOrders.push(elems)
+                        }
+                    }else if(!$scope.currentUser.is_mgr){
+                        if(elems.date.toDateString() == today && elems.staff ==$scope.currentUser.name){
+                            $scope.todaysCompletedOrders.push(elems)
+                        }
+                    }
+                    
+                })
+                $scope.$apply();
+            })
+    }
+    $scope.fetchAndComputeOrders();
     //modals
     var elems = document.querySelectorAll('.modal');
     var instances = M.Modal.init(elems,{opacity:0.2});
@@ -94,6 +117,13 @@ app.controller("dashCtr", ($scope) => {
             //btn.data("clicked") == false;
         }
     }
+    //
+    //this section represents the activity and the today's orders table
+
+    //========================================================
+
+
+
     ///Finally creating order, first by setting the default table number to 1
     $scope.orderTableNumber = '1';
     $scope.orderInv = `SB${Math.floor(Math.random() * 999) + 1000}`;
@@ -120,11 +150,9 @@ app.controller("dashCtr", ($scope) => {
         //$scope.todaysOrders.push(current);
         $scope.db.orders.add(current)
         .then(()=>{
-            $scope.db.orders.toArray()
-            .then((data)=>{
-                $scope.orders = data;
+                $scope.fetchAndComputeOrders();
                 $scope.orderInv = `SB${Math.floor(Math.random() * 999) + 1000}`;
-                $scope.removeItem('deleteAll') 
+                $scope.removeItem('deleteAll');
                 $scope.$apply();
                 //console.log($scope.orders)
                 //
@@ -132,19 +160,21 @@ app.controller("dashCtr", ($scope) => {
                     title: "Order completed!",
                     text: "Click okay to print!",
                     icon: "success",
-                    buttons: true,
+                    button:'Print',
                     dangerMode: false,
                 })
                 .then((click) => {
                     if (click) {
                         //print here!!
+                        $scope.printOrders();
+                        //deleting current id because next order would still have that id
+                        //and dexie would return an exception.
                         delete current.id;
                         //console.log(current)
                     } else {
                         return false;
                     }
                 });
-            })
         })
         .catch(err=>{
             console.log(err)
@@ -155,20 +185,5 @@ app.controller("dashCtr", ($scope) => {
         //console.log($scope.todaysOrders);
     }
     
-
-    //this section represents the activity and the today's orders table
-    const today = new Date().toDateString();$scope.todaysCompletedOrders = [];
-    $scope.orders.forEach(elems=>{
-        if($scope.currentUser.is_mgr){
-            if(elems.date.toDateString() == today){
-                $scope.todaysCompletedOrders.push(elems)
-            }
-        }else if(!$scope.currentUser.is_mgr){
-            if(elems.date.toDateString() == today && elems.staff ==$scope.currentUser.name){
-                $scope.todaysCompletedOrders.push(elems)
-            }
-        }
-        
-    })
 
 })

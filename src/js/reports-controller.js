@@ -3,14 +3,48 @@ app.controller('reportsCtr',($scope)=>{
     jQuery('.sideNavLink').removeClass('active');
     jQuery('#reportsLink').addClass('active');
     //refetcing orders
+    $scope.graph;$scope.uniqueDateOrders = [];$scope.graphData = [];
     $scope.db.orders.toArray()
    .then((data)=>{
+        $scope.uniqueDateOrders = [];
         $scope.orders = data;
         $scope.orders.sort(function(a,b){
             return (a.id < b.id)?1:((b.id < a.id)? -1:0);
         });
+        for(var i = 0;i<$scope.orders.length;i++){
+            //$scope.orders[i].date = toDate($scope.orders[i].date)
+            if(i>0 && toDate($scope.orders[i-1].date) == toDate($scope.orders[i].date)){
+                continue;
+            }
+            $scope.uniqueDateOrders.push($scope.orders[i].date)
+        }
+        //plotting graph
+        var i = ($scope.uniqueDateOrders.length>30)?(Math.floor($scope.uniqueDateOrders.length/30)*30)-1 : 0;
+        for(i;i<$scope.uniqueDateOrders.length;i++){
+            var el = {x:toGraphDate($scope.uniqueDateOrders[i]),y:0}
+            for(var y = 0;y<$scope.orders.length;y++){
+                if($scope.orders[y].date.toDateString() == $scope.uniqueDateOrders[i].toDateString()){
+                    el.y += 1;
+                }
+            }
+            $scope.graphData.push(el);
+        }
+        //area charts 
+        $scope.graph =  Morris.Area({
+            element: 'orderChart',
+            data:$scope.graphData,
+            xkey: 'x',
+            ykeys: ['y'],
+            labels: ['Orders'],
+            hideHover: 'auto',
+            resize: true,
+            lineColors:['#009688'],
+            behaveLikeLine:true
+        });
         $scope.$apply();
    })
+   //Instantiating
+   jQuery('.tabs').tabs({swipeable:true});
     //var instance = M.Tabs.init(jQuery('.tabs'));
     $scope.toTime  = (dt)=>{
         var time = new Date(dt),hour = time.getHours(),min = time.getMinutes();
@@ -21,7 +55,7 @@ app.controller('reportsCtr',($scope)=>{
             min = '0'+min;
         }
         //console.log(dt)
-        return `${hour}:${min}`;
+        return `${time.getDate()}/${time.getMonth()+1}/${time.getFullYear()}-${hour}:${min}`;
     }
     //for date display array, first we reverse sort
     function toDate(dt){
@@ -30,14 +64,6 @@ app.controller('reportsCtr',($scope)=>{
     function toGraphDate(dt){
         var dte = new Date(dt);
         return `${dte.getFullYear()}-${dte.getMonth()+1}-${dte.getDate()}`
-    }
-    $scope.uniqueDateOrders = []
-    for(var i = 0;i<$scope.orders.length;i++){
-        //$scope.orders[i].date = toDate($scope.orders[i].date)
-        if(i>0 && toDate($scope.orders[i-1].date) == toDate($scope.orders[i].date)){
-            continue;
-        }
-        $scope.uniqueDateOrders.push($scope.orders[i].date)
     }
     //cleaner function that formats date and show it in the left pane of the orders table
     $scope.cleaner = (dt)=>{
@@ -77,7 +103,7 @@ app.controller('reportsCtr',($scope)=>{
     }
     //delete orders
     $scope.deleteOrder = (i)=>{
-        if(confirm(`Are you sure you want to delete order:${$scope.orders[i].name}?`)){
+        if(confirm(`Are you sure you want to delete order: ${$scope.orders[i].name}?`)){
             $scope.db.orders.delete($scope.orders[i].id)
             .then(()=>{
                 $scope.db.orders.toArray()
@@ -112,52 +138,29 @@ app.controller('reportsCtr',($scope)=>{
             time = el.getElementsByTagName('td')[5].innerHTML.toLowerCase();
             if(name.indexOf(val)>-1){
                 jQuery('#collection a').show();
-                el.style.display = "block";
+                el.style.display = "table-row";
             }else if(staff.indexOf(val)>-1){
                 jQuery('#collection a').show();
-                el.style.display = "block";
+                el.style.display = "table-row";
             }else if(items.indexOf(val)>-1){
                 jQuery('#collection a').show();
-                el.style.display = "block";
+                el.style.display = "table-row";
             }
             else if(price.indexOf(val)>-1){
                 jQuery('#collection a').show();
-                el.style.display = "block";
+                el.style.display = "table-row";
             }else if(qty.indexOf(val)>-1){
                 jQuery('#collection a').show();
-                el.style.display = "block";
+                el.style.display = "table-row";
             }else if(time.indexOf(val)>-1){
                 jQuery('#collection a').show();
-                el.style.display = "block";
+                el.style.display = "table-row";
             }
         })
     }
 
     //lastly charts
     //creating graph data
-        $scope.graphData = [];
-        var i = ($scope.uniqueDateOrders.length>30)?(Math.floor($scope.uniqueDateOrders.length/30)*30)-1 : 0;
-        for(i;i<$scope.uniqueDateOrders.length;i++){
-            var el = {x:toGraphDate($scope.uniqueDateOrders[i]),y:0}
-            for(var y = 0;y<$scope.orders.length;y++){
-                if($scope.orders[y].date.toDateString() == $scope.uniqueDateOrders[i].toDateString()){
-                    el.y += 1;
-                }
-            }
-            $scope.graphData.push(el);
-        }
-        //area charts 
-        var graph =  Morris.Area({
-            element: 'orderChart',
-            data:$scope.graphData,
-            xkey: 'x',
-            ykeys: ['y'],
-            labels: ['Orders'],
-            hideHover: 'auto',
-            resize: true,
-            lineColors:['#009688'],
-            behaveLikeLine:true
-        });
 //update graph
 $scope.updateGraph = ()=>{
     //empty and repass variables into the graph
@@ -172,7 +175,7 @@ $scope.updateGraph = ()=>{
         }
         $scope.graphData.push(el);
     }
-    graph.setData($scope.graphData)
+    $scope.graph.setData($scope.graphData)
 }
 setInterval($scope.updateGraph,6000);
 

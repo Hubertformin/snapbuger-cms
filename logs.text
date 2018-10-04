@@ -10,3 +10,8 @@
     -Login screen
     - select items for orders
     -employee data
+
+
+==== ISSUES ====
+    - Creating manager doesn't add managers to the managers Tables
+    - Updating profile pic, doesn't update till user restart

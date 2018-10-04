@@ -63,14 +63,15 @@
                                             <span>I own/manage this organization.</span>
                                         </label>
                                     </p>
-                                    <button type="submit" ng-disabled="!createManagerialFormPassword || !createManagerialFormInputName" class="btn bg-theme-rev waves-effect waves light"><i class="material-icons right">arrow_forward</i>Proceed</button>
+                                    <button id="createMgrBtn1" type="button" ng-disabled="!createManagerialFormPassword || !createManagerialFormInputName" class="btn bg-theme-rev waves-effect waves light"><i class="material-icons right" ng-click="createManagerFxn(true)">arrow_forward</i>Proceed</button>
+                                    <button id="createMgrBtn2" type="button" ng-disabled="!createManagerialFormPassword || !createManagerialFormInputName" class="btn bg-theme waves-effect waves light"><i class="material-icons right">arrow_forward</i>Create</button>
                                 </form>
                             </div>
                         </div>
                     </div>
 
                 </div>
-
+                <button id="closeLoginBtn" class="btn white black-text cancel waves-effect waves-default right">Cancel</button>
             </section>
             <!-- Login Form -->
             <div class="center">

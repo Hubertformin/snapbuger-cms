@@ -16,7 +16,7 @@ app.controller('profileCtr',($scope)=>{
         img.src = url;
     }
     //updating users
-    $scope.updateUser = ()=>{
+    /*jQuery('#updateUser').on('click', () => {
         var img = document.querySelector('#profileImg').files[0],blob;
         if(typeof img == 'object'){
             blob = new Blob([img],{type:img.type})
@@ -31,12 +31,12 @@ app.controller('profileCtr',($scope)=>{
                 if(typeof $scope.currentUser.img_url !== 'string'){
                     $scope.profile_pic = URL.createObjectURL($scope.currentUser.img_url);
                 }else{
-                    scope.profile_pic = $scope.currentUser.img_url;
+                    $scope.profile_pic = $scope.currentUser.img_url;
                 }
-                $scope.$apply();
+                //$scope.$apply();
                 notifications.notify({msg:"Updated!",type:"ok"})
             })
             
         })
-    }
+    })*/
 })

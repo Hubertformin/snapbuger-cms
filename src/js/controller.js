@@ -3,6 +3,10 @@ const {
     ipcRenderer,
     shell
 } = require('electron');
+//loading printer module
+const print = require('electron').remote.require('electron-thermal-printer');
+
+
 //angular module
 var app = angular.module('mainApp', ["ngRoute"]);
 app.config(($routeProvider) => {
@@ -109,8 +113,7 @@ app.controller("mainCtr", ($scope) => {
             console.log(err)
         })
     //=========== MANAGERIAL ACCOUNT! ========
-    jQuery('#createManagerialForm').submit((e) => {
-        e.preventDefault();
+    $scope.createManagerFxn = (login) => {
         img = document.querySelector('#managerialImgInput').files[0];
         if (typeof img == 'undefined') {
             blob = 'img/user-grey.png';
@@ -129,7 +132,7 @@ app.controller("mainCtr", ($scope) => {
             return false;
         }
         //converting first character to upper case
-        $scope.createManagerialFormInputName = $scope.createManagerialFormInputName[0].toUpperCase() + $scope.createManagerialFormInputName.slice(1);
+        $scope.createManagerialFormInputName = $scope.createManagerialFormInputName[0].toUpperCase()+$scope.createManagerialFormInputName.slice(1).toLowerCase();
         const mgr = {
             name: $scope.createManagerialFormInputName,
             password: $scope.createManagerialFormPassword,
@@ -145,18 +148,34 @@ app.controller("mainCtr", ($scope) => {
                 $scope.db.users.toArray()
                     .then(data => {
                         $scope.users = data;
-                        $scope.currentUser = mgr;
-                        if (typeof $scope.currentUser.img_url !== 'string') {
-                            $scope.currentUser.img_url = URL.createObjectURL($scope.currentUser.img_url)
+                        if(login){
+                            $scope.currentUser = mgr;
+                            if (typeof $scope.currentUser.img_url !== 'string') {
+                                $scope.profile_pic = URL.createObjectURL($scope.currentUser.img_url)
+                            }
+                            sessionStorage.setItem('user', JSON.stringify($scope.currentUser));
+                            jQuery('#managerial').hide();
+                            jQuery('#login').hide();
+                        }else{
+                            $scope.managers = [];$scope.staffs = [];
+                            $scope.createManagerialFormInputName = "";$scope.createManagerialFormPassword = "";
+                            notifications.notify({type:"ok",msg:"Manager added!"});
+                            $scope.users.forEach(element => {
+                                if (element.is_mgr) {
+                                    $scope.managers.push(element);
+                                }else{
+                                    $scope.staffs.push(element);
+                                }
+                            });
                         }
                         $scope.$apply();
-                        sessionStorage.setItem('user', JSON.stringify($scope.currentUser));
-                        jQuery('#managerial').hide();
-                        jQuery('#login').hide();
-
                     })
             })
 
+    }
+    //for button to create mangarial account on set up...
+    jQuery("#createMgrBtn1").on('click',()=>{
+        $scope.createManagerFxn(true);
     })
     //users,staff
 
@@ -308,7 +327,7 @@ app.controller("mainCtr", ($scope) => {
                 $scope.end_orders = false;
                 break;
         }
-        $scope.$apply();
+        //$scope.$apply();
     }
 
     /*
@@ -355,8 +374,8 @@ app.controller("mainCtr", ($scope) => {
         dropdown.children('.icon').text('cloud_upload')
         dropdown.children('.text').text('connecting...')
         dropdown.children('button').attr('disabled','disabled');
-        
-        
+
+
     }
     //function of offline events
     function isOffline() {
@@ -379,5 +398,38 @@ app.controller("mainCtr", ($scope) => {
     })
     window.addEventListener('online', isOnline, false)
     window.addEventListener('offline', isOffline, false)
+
+    /*
+        ====================== PRINTER FUCTION ======================
+    */
+   $scope.printOrders = ()=>{
+    print.print58m( {
+       data: [
+           {type: 'bodyInit', css: {"margin": "0 0 0 0", "width": '250px'}},
+            {type: 'text', value: 'Welcome to SnapBurger', style: `font-size: 18px;text-align:center;font-weight:bold;`},
+            {type: 'text', value: 'Bienvenu a SnapBurger', style: `font-size: 17px;text-align:center;font-weight:bold;`},
+            {type: 'text', value: '- Snap Burger x2', style: `font-size: 15px;`},
+            {type: 'text', value: '- Sprite x1', style: `font-size: 15px;`},
+            {type: 'text', value: 'Total: 3,500 FCFA', style: `margin:25px 0 0 0;font-size: 17px;font-weight:bold`},
+            {
+                type: 'qrcode',
+                value: 'SB1577',
+                height: 100,
+                width: 100,
+                style: `text-align:center;width:100px;margin: 20px 0 0 0`
+            },
+            {type: 'text', value: '　', style: `text-align:center;font-size: 12px`},
+        ],
+        preview:false,
+        deviceName: 'XP-80C',
+        timeoutPerLine: 400
+    }).then((data)=>{
+        if(data){
+            notifications.notify({msg:"Printed",type:"ok"})
+        }
+    }).catch(err=>{
+        console.error(err+'Failed');
+    })
+   }
 
 }) //end main controller, nothing should come after here!

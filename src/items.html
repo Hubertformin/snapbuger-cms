@@ -54,7 +54,7 @@
                 <span><strong>Total items: {{products.categories.length}}</strong></span>
                 <input type="search" onkeyup="searchTable(event,'#categoriesTable')" name="" placeholder="Search Table.." id="">
             </div>
-            <table id="categoriesTable" class="huberts-tables mdl-data-table" style="width:100%">
+            <table class="huberts-tables mdl-data-table" style="width:100%">
                 <thead>
                     <tr>
                         <th class="small">#</th>
@@ -68,7 +68,7 @@
                 <div ng-show="products.categories.length == 0" class="no-data">
                     <p>No categories, Create categories to view</p>
                 </div>
-                <table class="huberts-tables mdl-data-table" style="width:100%">
+                <table id="categoriesTable" class="huberts-tables mdl-data-table" style="width:100%">
                     <tbody>
                         <tr ng-repeat="x in products.categories track by $index">
                             <td class="small">{{$index+1}}</td>
@@ -144,7 +144,7 @@
             </ul>
             <div class="searchTable">
                 <span><strong>Total items: {{products.items.length}}</strong></span>
-                <input type="search" onkeyup="searchTable(event,'#itemsTable')" name="" placeholder="Search Table.." id="">
+                <input type="search" onkeyup="searchInputTable(event,'#itemsTable')" name="" placeholder="Search Table.." id="">
             </div>
             <table class="huberts-tables mdl-data-table" style="width:100%">
                 <thead>
