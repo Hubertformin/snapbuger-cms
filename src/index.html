@@ -151,7 +151,7 @@
                 </form>
                 <ul class="nav-list-right">
                     <li onclick="showSearchBar(true)"><a title="Search" draggable="false" href="javascript:void(0)" class="white-text"><i class="material-icons">search</i> </a></li>
-                    <!--<li><a draggable="false" href="javascript:void(0)" ng-click="logOut()"><i class="material-icons">power_settings_new</i></a></li>-->
+                    <li><a draggable="false" title="Withdraw money" class="white-text modal-trigger" href="#withdrawMoney"><i class="material-icons">account_balance_wallet</i></a></li>
                     <li class="dropdown"><a draggable="false" disabled id="syncBtn" href="javascript:void(0)" title="Sync" class="white-text dropbtn"><i class="material-icons">sync</i></a>
                         <div id="sync_dropdown" class="dropdown-body">
                            <i class="icon grey-text material-icons Large">cloud_queue</i>
@@ -169,18 +169,16 @@
         <!--  notifications-->
         <div class="notify grey darken-4 waves-light" id="success"><span class="msg"></span><i class="yellow-text font-raleway">close</i></div>
         <div class="notify red darken-2 waves-light" id="error"><span class="msg"></span><i class="yellow-text font-raleway">close</i></div>
-
-        <!-- Context menu-->
-        <ul class="collection" id="context-menu">
-            <li class="collection-item">Alvin</li>
-            <li class="collection-item">Alvin</li>
-            <li class="collection-item">Alvin</li>
-            <li class="collection-item">Alvin</li>
-        </ul>
-        <!-- Create a managerial account-->
-        <section id="managerial">
-
-        </section>
+        <!-- Modals -->
+        <div id="withdrawMoney" class="modal">
+            <div class="modal-content">
+              <h4>Modal Header</h4>
+              <p>A bunch of text</p>
+            </div>
+            <div class="modal-footer">
+              <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+            </div>
+        </div>
         <!--   password modal-->
         <div id="promptPasword" class="modal">
             <form action="#">

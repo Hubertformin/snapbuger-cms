@@ -1,8 +1,17 @@
 <div id="reports" class="routePage white" ng-controller="reportsCtr" style="margin-top:68px;padding:0px;padding-bottom: 40px;">
-   <!--row and containing classes -->
-    <div class="row">
+    <!--row and containing classes -->
+    <div class="row" style="padding:0 10px;">
         <!-- Orders Reports! -->
-        <div id="ordersReports" class="white col s12">
+        <!--        <h5 class="section-heading teal-text font-raleway"><i class="material-icons">show_chart</i>History</h5>-->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active" data-target="#ordersReports">
+                <i class="material-icons left">show_chart</i> HISTORY
+            </li>
+            <li role="presentation" class="" data-target="#statsReports">
+                <i class="material-icons left">multiline_chart</i> LOGS
+            </li>
+        </ul>
+        <div id="ordersReports" class="white tab-prev col s12">
             <div class="chart" style="border:1px solid #000;">
                 <div id="orderChart" style="height:50vh;background:#fff;"></div>
             </div>
@@ -11,10 +20,10 @@
                 <!--<button ng-click="update()" class="btn right waves-effect waves-light">Update</button>-->
                 <div class="row">
                     <div class="col s3 pr-0 date-review">
-                            <input class="browser-default" type="search" placeholder="Search.." ng-keyup="searchOrders($event)">
+                        <input class="browser-default" type="search" placeholder="Search.." ng-keyup="searchOrders($event)">
                         <div class="table-div">
                             <div class="collection" id="collection">
-                               <!-- no need for a.date, remember 'a' is already a date object -->
+                                <!-- no need for a.date, remember 'a' is already a date object -->
                                 <a ng-repeat="a in uniqueDateOrders" href="javascript:void(0)" class="collection-item grey-text text-darken-4" ng-click="filterOrdersView(a)"><i class="material-icons left">date_range</i>{{cleaner(a)}}<span class="new badge  blue-grey min-badge" data-badge-caption="">{{countDateOrders(a)}}</span></a>
                             </div>
                         </div>
@@ -55,7 +64,7 @@
             </div>
         </div>
         <!-- Products Reports! -->
-        <div id="statsReports" class="white col s12">Test 2</div>
+        <div id="statsReports" class="white tab-prev col s12">Test 2</div>
         <!-- Staff Reports! -->
         <!--<div id="staffReports" class="white col s12">Test 3</div>-->
     </div>

@@ -1,4 +1,4 @@
-app.controller("dashCtr", ($scope) => {
+app.controller("dashCtr", ($scope,$filter) => {
     //first thing, setting the sidenav link to active
     jQuery('.sideNavLink').removeClass('active');
     jQuery('#dashboardLink').addClass('active');
@@ -119,9 +119,18 @@ app.controller("dashCtr", ($scope) => {
     }
     //
     //this section represents the activity and the today's orders table
-
+    $scope.Time  = (dt)=>{
+        var time = new Date(dt),hour = time.getHours(),min = time.getMinutes();
+        if(hour < 10){
+            hour = '0'+hour;
+        }
+        if(min < 10){
+            min = '0'+min;
+        }
+        //console.log(dt)
+        return `${hour}:${min}`;
+    }
     //========================================================
-
 
 
     ///Finally creating order, first by setting the default table number to 1
@@ -158,20 +167,30 @@ app.controller("dashCtr", ($scope) => {
                 //
                 swal({
                     title: "Order completed!",
-                    text: "Click okay to print!",
+                    text: "Added to orders queue",
                     icon: "success",
-                    button:'Print',
+                    buttons:['Cancel','Print'],
                     dangerMode: false,
                 })
                 .then((click) => {
+                    
                     if (click) {
-                        //print here!!
-                        $scope.printOrders();
+                        //printing orders
+                        $scope.db.orders.get(current.id)
+                        .then(data=>{
+                            console.log(data);
+                            $scope.printOrders(data);
+                            //deleting current id because next order would still have that id
+                            //and dexie would return an exception.
+                            delete current.id;
+                        })
+                        
+                        //$scope.printOrders();
                         //deleting current id because next order would still have that id
                         //and dexie would return an exception.
-                        delete current.id;
                         //console.log(current)
                     } else {
+                        delete current.id;
                         return false;
                     }
                 });
@@ -183,6 +202,12 @@ app.controller("dashCtr", ($scope) => {
           //$scope.orderInv = "";
           //$scope.removeItem('deleteAll') 
         //console.log($scope.todaysOrders);
+    }
+    //prompt print
+    $scope.promptPrint = (order)=>{
+        if(confirm("Are you sure you want to print this order?")){
+            $scope.printOrders(order);
+        }
     }
     
 

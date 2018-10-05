@@ -187,6 +187,8 @@
                        <th class="small">#</th>
                         <th>Inv num</th>
                         <th>Items</th>
+                        <th>Cost</th>
+                        <th>Time</th>
                         <th class="small">Status</th>
                         <th class="small">Action</th>
                     </thead>
@@ -194,7 +196,7 @@
                 <div id="dashboard_order_table" class="huberts-table-div">
                     <table id="todayOrdersTable">
                         <tbody>
-                            <tr ng-repeat="x in todaysCompletedOrders">
+                            <tr ng-repeat="x in todaysCompletedOrders | orderBy : 'id' : true ">
                                <td class="small">{{$index+1}}</td>
                                 <td>{{x.name}}</td>
                                 <td>
@@ -202,9 +204,11 @@
                                         <li ng-repeat="o in x.items">{{o.name}} <i class="green-text badge">{{o.quantity}}</i></li>
                                     </ul>
                                 </td>
+                                <td>{{x.totalPrice | currency:"FCFA ":0}}</td>
+                                <td>{{Time(x.date)}}</td>
                                 <td class="small" style="text-align:center;"><i class="material-icons green-text">check_circle</i></td>
                                 <td class="small">
-                                    <a class='btn waves-effect waves-light' href='javascript:void(0)' data-target='dropdown1'><i class="material-icons left">print</i>Print</a>
+                                    <button class='btn teal waves-effect waves-light' data-target='dropdown1' ng-click="promptPrint(x)"><i class="material-icons">print</i></button>
                                 </td>
                             </tr>
                         </tbody>

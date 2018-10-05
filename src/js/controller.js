@@ -31,12 +31,13 @@ app.config(($routeProvider) => {
         })
 })
 
-app.controller("mainCtr", ($scope) => {
+app.controller("mainCtr", ($scope,$filter) => {
     /*
     ============ DATABASES ===============
     using Dexie JS
     */
     //initializing data's
+
     $scope.orders = [];
     $scope.staffs = [];
     $scope.managers = [];
@@ -402,30 +403,39 @@ app.controller("mainCtr", ($scope) => {
     /*
         ====================== PRINTER FUCTION ======================
     */
-   $scope.printOrders = ()=>{
+   $scope.printOrders = (data)=>{
+       const date = `${data.date.getDate()}/${data.date.getMonth()+1}/${data.date.getFullYear()} ,${data.date.getHours()}:${data.date.getMinutes()}`;
+       var print_data = [
+        {type: 'bodyInit', css: {"margin": "0 0 0 0", "width": '250px'}},
+         {type: 'text', value: 'Welcome to SnapBurger', style: `font-size: 18px;text-align:center;font-weight:bold;`},
+         {type: 'text', value: 'Bienvenu a SnapBurger', style: `font-size: 17px;text-align:center;font-weight:bold;`},
+         {type: 'text', value: date, style: `font-size: 14px;text-align:center;`}
+     ]
+     data.items.forEach(el=>{
+        print_data.push({type: 'text', value:`- ${el.name} ${el.rate}x${el.quantity}`, style: `font-size: 15px;`})
+     })
+     print_data  = print_data.concat([
+        {type: 'text', value: `Total: ${$filter('currency')(data.totalPrice, "FCFA ", 0)}`, style: `margin:25px 0 0 0;font-size: 17px;font-weight:bold`},
+        {
+            type: 'qrcode',
+            value: data.name,
+            height: 64,
+            width: 64,
+            style: `text-align:center;width:64px;margin: 20px 0 0 0;float:right`
+        },
+        {type: 'text', value: '@snapburger17', style: `text-align:center;font-size: 12px`}
+     ])
+     //printing....
     print.print58m( {
-       data: [
-           {type: 'bodyInit', css: {"margin": "0 0 0 0", "width": '250px'}},
-            {type: 'text', value: 'Welcome to SnapBurger', style: `font-size: 18px;text-align:center;font-weight:bold;`},
-            {type: 'text', value: 'Bienvenu a SnapBurger', style: `font-size: 17px;text-align:center;font-weight:bold;`},
-            {type: 'text', value: '- Snap Burger x2', style: `font-size: 15px;`},
-            {type: 'text', value: '- Sprite x1', style: `font-size: 15px;`},
-            {type: 'text', value: 'Total: 3,500 FCFA', style: `margin:25px 0 0 0;font-size: 17px;font-weight:bold`},
-            {
-                type: 'qrcode',
-                value: 'SB1577',
-                height: 100,
-                width: 100,
-                style: `text-align:center;width:100px;margin: 20px 0 0 0`
-            },
-            {type: 'text', value: '　', style: `text-align:center;font-size: 12px`},
-        ],
+       data: print_data,
         preview:false,
         deviceName: 'XP-80C',
         timeoutPerLine: 400
     }).then((data)=>{
         if(data){
-            notifications.notify({msg:"Printed",type:"ok"})
+            notifications.notify({msg:"Added to printing queue",type:"ok"});
+        }else{
+            notifications.notify({msg:"Error printing",type:"error"});
         }
     }).catch(err=>{
         console.error(err+'Failed');

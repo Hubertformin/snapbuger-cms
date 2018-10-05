@@ -2,6 +2,15 @@ app.controller('reportsCtr',($scope)=>{
     //first thing, setting the sidenav link to active
     jQuery('.sideNavLink').removeClass('active');
     jQuery('#reportsLink').addClass('active');
+    //and now preview default active tab
+    jQuery('.nav-tabs li').on('click',(e)=>{
+        var data = jQuery(e.target).data("target");
+        jQuery('.nav-tabs li').removeClass('active');
+        jQuery('.tab-prev').hide("fast",()=>{
+            jQuery(e.target).addClass("active");
+            jQuery(data).fadeIn("fast");
+        })
+    })
     //refetcing orders
     $scope.graph;$scope.uniqueDateOrders = [];$scope.graphData = [];
     $scope.db.orders.toArray()
@@ -177,6 +186,6 @@ $scope.updateGraph = ()=>{
     }
     $scope.graph.setData($scope.graphData)
 }
-setInterval($scope.updateGraph,6000);
+//setInterval($scope.updateGraph,6000);
 
 })
