@@ -1,4 +1,4 @@
-<div id="reports" class="routePage white" ng-controller="reportsCtr" style="margin-top:68px;padding:0px;padding-bottom: 40px;">
+<div id="reports" class="routePage white" ng-controller="reportsCtr" style="margin-top:68px;padding:0px;">
     <!--row and containing classes -->
     <div class="row" style="padding:0 10px;">
         <!-- Orders Reports! -->
@@ -12,8 +12,8 @@
             </li>
         </ul>
         <div id="ordersReports" class="white tab-prev col s12">
-            <div class="chart" style="border:1px solid #000;">
-                <div id="orderChart" style="height:50vh;background:#fff;"></div>
+            <div class="chart" style="position:relative;border:1px solid #000;">
+                <canvas id="orderChart" height="150" width="400"></canvas>
             </div>
             <span class="right"><strong>All Orders: {{orders.length}}</strong></span>
             <div class="body" style="margin-top:50px;border-top:1px solid #999">
@@ -64,7 +64,73 @@
             </div>
         </div>
         <!-- Products Reports! -->
-        <div id="statsReports" class="white tab-prev col s12">Test 2</div>
+        <div id="statsReports" class="white tab-prev col s12">
+            <div class="row">
+                <div class="col s3 logs-table" style="padding:0">
+                    <div>
+                        <div class="collection" id="logsCollection">
+                            <!-- no need for a.date, remember 'a' is already a date object -->
+                            <a ng-repeat="a in uniqueDateOrders" href="javascript:void(0)" class="collection-item grey-text text-darken-4" ng-click="logsController(a)">{{cleaner(a)}}<span class="new badge  blue-grey min-badge" data-badge-caption="">{{countDateOrders(a)}}</span></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s9 logs-table">
+                    <div class="row">
+                    <h5 class="display-date teal-text">{{displayDate}}</h5>
+                     <div class="panels">
+                        <div class="col s4">
+                            <div class="info-card">
+                                <div class="body orange darken-4 white-text">
+                                    <div class="row">
+                                        <div class="icon col s3">
+                                            <i class="material-icons">shopping_cart</i>
+                                        </div>
+                                        <div class="icon-body col s9">
+                                           <small>ALL ORDERS</small>
+                                           <h6>{{logsCurrentOrders.length | currency:"":0}}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s4">
+                            <div class="info-card">
+                                <div class="body blue darken-4 white-text">
+                                    <div class="row">
+                                        <div class="icon col s3">
+                                            <i class="material-icons">featured_play_list</i>
+                                        </div>
+                                        <div class="icon-body col s9">
+                                           <small>TOTAL ITEMS SOLD</small>
+                                           <h6>{{logTotalQty | currency:"":0}}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s4">
+                            <div class="info-card">
+                                <div class="body pink accent-3 white-text">
+                                    <div class="row">
+                                        <div class="icon col s3">
+                                            <i class="material-icons">attach_money</i>
+                                        </div>
+                                        <div class="icon-body col s9">
+                                            <small>AMOUNT SOLD</small>
+                                            <h6>{{logTotalPrice | currency:"FCFA ":0}}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="long-container">
+                      <canvas id="logsChart" height="165" width="400"></canvas>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Staff Reports! -->
         <!--<div id="staffReports" class="white col s12">Test 3</div>-->
     </div>

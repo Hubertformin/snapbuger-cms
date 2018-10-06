@@ -412,7 +412,7 @@ app.controller("mainCtr", ($scope,$filter) => {
          {type: 'text', value: date, style: `font-size: 14px;text-align:center;`}
      ]
      data.items.forEach(el=>{
-        print_data.push({type: 'text', value:`- ${el.name} ${el.rate}x${el.quantity}`, style: `font-size: 15px;`})
+        print_data.push({type: 'text', value:`- ${el.name}  ${el.quantity} X ${el.rate}`, style: `font-size: 15px;`})
      })
      print_data  = print_data.concat([
         {type: 'text', value: `Total: ${$filter('currency')(data.totalPrice, "FCFA ", 0)}`, style: `margin:25px 0 0 0;font-size: 17px;font-weight:bold`},

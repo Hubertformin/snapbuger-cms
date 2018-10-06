@@ -6,13 +6,12 @@ app.controller('reportsCtr',($scope)=>{
     jQuery('.nav-tabs li').on('click',(e)=>{
         var data = jQuery(e.target).data("target");
         jQuery('.nav-tabs li').removeClass('active');
-        jQuery('.tab-prev').hide("fast",()=>{
-            jQuery(e.target).addClass("active");
-            jQuery(data).fadeIn("fast");
-        })
+        jQuery('.tab-prev').hide("fast");
+        jQuery(e.target).addClass("active");
+        jQuery(data).fadeIn("fast");
     })
     //refetcing orders
-    $scope.graph;$scope.uniqueDateOrders = [];$scope.graphData = [];
+    $scope.graph;$scope.uniqueDateOrders = [];$scope.graphData = {x:[],y:[]};
     $scope.db.orders.toArray()
    .then((data)=>{
         $scope.uniqueDateOrders = [];
@@ -30,30 +29,40 @@ app.controller('reportsCtr',($scope)=>{
         //plotting graph
         var i = ($scope.uniqueDateOrders.length>30)?(Math.floor($scope.uniqueDateOrders.length/30)*30)-1 : 0;
         for(i;i<$scope.uniqueDateOrders.length;i++){
-            var el = {x:toGraphDate($scope.uniqueDateOrders[i]),y:0}
+            $scope.graphData.x.unshift($scope.cleaner($scope.uniqueDateOrders[i]));
+            let counter = 0;
             for(var y = 0;y<$scope.orders.length;y++){
                 if($scope.orders[y].date.toDateString() == $scope.uniqueDateOrders[i].toDateString()){
-                    el.y += 1;
+                    counter += 1;
                 }
             }
-            $scope.graphData.push(el);
+            $scope.graphData.y.unshift(counter);
         }
         //area charts 
-        $scope.graph =  Morris.Area({
-            element: 'orderChart',
-            data:$scope.graphData,
-            xkey: 'x',
-            ykeys: ['y'],
-            labels: ['Orders'],
-            hideHover: 'auto',
-            resize: true,
-            lineColors:['#009688'],
-            behaveLikeLine:true
+        var ctx = document.getElementById('orderChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+            labels:$scope.graphData.x,
+            datasets: [{
+                label: "Orders",
+                backgroundColor: 'rgba(255, 99, 132,0.6)',
+                borderColor: 'rgb(255, 99, 132)',
+                data:$scope.graphData.y,
+            }]
+            },
+
+            // Configuration options go here
+            options: {}
         });
+        //
         $scope.$apply();
    })
    //Instantiating
-   jQuery('.tabs').tabs({swipeable:true});
+   $('select').formSelect();
     //var instance = M.Tabs.init(jQuery('.tabs'));
     $scope.toTime  = (dt)=>{
         var time = new Date(dt),hour = time.getHours(),min = time.getMinutes();
@@ -187,5 +196,95 @@ $scope.updateGraph = ()=>{
     $scope.graph.setData($scope.graphData)
 }
 //setInterval($scope.updateGraph,6000);
+//===================== LOGS ==============
+//1.Plotting the curve
+var ctx = document.getElementById("logsChart").getContext('2d');
+var barChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Quantity ordered',
+            data: [],
+            backgroundColor: getRandomColor(),
+            borderWidth: 0.5
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true,
+                    stepSize:1
+                }
+            }]
+        }
+    }
+});
+function getRandomColor(num = 1) {
+    var letters = '0123456789ABCDEF',counter = 0,colors = [],
+    color = '#';
+    do{
+        color = `rgba(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},0.7)`
+        counter++;
+        colors.push(color)
+    }
+    while(counter < num);
+    return colors;
+}
+//init..
+$scope.logsCurrentOrders = [],$scope.logsAllItems = [],$scope.logTotalPrice = 0;
+$scope.logsController = (dt)=>{
+    $scope.displayDate = $scope.cleaner(dt);
+    //re emptying
+    $scope.logsCurrentOrders = [];$scope.logsAllItems = [];$scope.itemNames = [];$scope.logTotalPrice = 0;
+    $scope.logTotalQty = 0;
+    //1.first get all orders of this date
+    $scope.orders.forEach(el=>{
+        if(el.date.toDateString() == dt.toDateString()){
+            $scope.logsCurrentOrders.push(el);
+            el.items.forEach(ele=>{    
+                $scope.logsAllItems.push(ele);
+                $scope.logTotalQty += Number(ele.quantity);
+                $scope.itemNames.push(ele.name);
+                $scope.logTotalPrice += Number(ele.price);
+            })
+        }
+    })
+    //2. getting unique items
+    $scope.uniqueItems = [];
+    $scope.itemNames.sort();
+    for(let i = 0;i<$scope.itemNames.length;i++){
+        if(i > 0 && $scope.itemNames[i-1] == $scope.itemNames[i]){
+            continue;
+        }
+        $scope.uniqueItems.push($scope.itemNames[i]);
+    }
+    //3. generating data
+    var barData = {x:[],y:[]}
+    for(let i = 0;i<$scope.uniqueItems.length;i++){
+        barData.x.push($scope.uniqueItems[i]);
+        let counter = 0;
+        for(let j =0;j<$scope.logsAllItems.length;j++){
+            if($scope.uniqueItems[i] == $scope.logsAllItems[j].name){
+                counter += Number($scope.logsAllItems[j].quantity);
+            }
+        }
+        barData.y.push(counter);
+
+    }
+    barChart.config.data = {
+        labels: barData.x,
+        datasets: [{
+            label: 'Quantity ordered',
+            data: barData.y,
+            backgroundColor: getRandomColor(barData.x.length),
+            borderWidth: 0.5
+        }]
+    }
+    barChart.update();
+}
+//
+
 
 })

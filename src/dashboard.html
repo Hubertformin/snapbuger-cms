@@ -56,7 +56,7 @@
                                 <div class="col s5">
                                     <div class="orderPriceDetails red white-text">
                                         <strong>Total Qty: <span>{{currentOrder.totalQuantity}}</span></strong>,
-                                        <strong>Total Price: <span>{{currentOrder.totalPrice | currency : "XAF ":0}}</span></strong>
+                                        <strong>Total Price: <span>{{currentOrder.totalPrice | currency : "FCFA ":0}}</span></strong>
                                     </div>
                                 </div>
                                 <div class="searchBox input-field col s4">
@@ -80,7 +80,7 @@
                                                 <dt class="item-name">{{x.name}}</dt>
                                                 <dd class="item-category">{{x.category}}</dd>
                                                 <dd class="item-status">{{x.status}}</dd>
-                                                <dd class="item-price">{{x.rate | currency : "XAF ":0}}</dd>
+                                                <dd class="item-price">{{x.rate | currency : "FCFA ":0}}</dd>
                                             </dl>
                                         </div>
                                     </div>
@@ -266,14 +266,14 @@
                             <th></th>
                             <th>Qty: {{currentOrder.totalQuantity}}</th>
                             <th></th>
-                            <th class="green-text">Price: {{currentOrder.totalPrice | currency : "XAF ":0}}</th>
+                            <th class="green-text">Price: {{currentOrder.totalPrice | currency : "FCFA ":0}}</th>
                         </tfoot>
                     </table>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <a ng-click="removeItem('deleteAll')" class="waves-effect waves-red btn-flat white-text red">clear all</a>
+            <a ng-click="removeItem('deleteAll')" class="waves-effect waves-red btn-flat white-text red left">clear all</a>
         </div>
     </div>
 </div>

@@ -985,6 +985,7 @@ table.huberts-tables {
 .tab-prev{
     display: none;
     padding-top:20px!important;
+    padding-bottom:40px!important;
     border:2px solid #ddd;
     border-top:none;
     &:first-of-type{
@@ -994,6 +995,9 @@ table.huberts-tables {
 
 //reports
 div#reports {
+    .row{
+        margin:0;
+    }
     #collection {
         margin: 0px;
     }
@@ -1048,6 +1052,30 @@ div#reports {
                 padding: 0;
             }
         }
+    }
+    .logs-table{
+        height:70vh;
+        padding: 10px;
+        border:1px solid #ddd;
+        overflow-y: scroll;
+    }
+    .info-card{
+        cursor: pointer;
+        .icon-body{
+            padding: 9px 20px;
+        }
+    }
+    .long-container{
+        .collection{
+            padding: 0;
+        }
+        width:100%;
+        white-space:nowrap;
+        overflow-x:auto;
+    }
+    .display-date{
+        margin-bottom: 10px;
+        border-bottom: 1px solid #ddd;
     }
 }
 
