@@ -68,8 +68,7 @@ app.controller("dashCtr", ($scope,$filter) => {
         }
     }
     //=========== add items to selected Items array but first let's define remove item array
-    $scope.removeItem = (name)=>{
-        jQuery('input.qty').val(1);
+    $scope.removeItem = (e,name)=>{
         if(name == 'deleteAll'){
             var viewSelectedModal = M.Modal.getInstance(jQuery('#viewSelectedORders'));
             $scope.currentOrder.items = [];
@@ -80,6 +79,7 @@ app.controller("dashCtr", ($scope,$filter) => {
                 el.added = false;
             })
             viewSelectedModal.close();
+            jQuery('input.qty').val(1);
             return true;
         }
         for(var i=0;i<$scope.currentOrder.items.length;i++){
@@ -88,8 +88,10 @@ app.controller("dashCtr", ($scope,$filter) => {
                 break;
             }
         }
+        jQuery(e.target).siblings('div.inputDiv').children('input.qty').val(1)
+        //jQuery('input.qty').val(1);
         //$scope.currentOrder.items = array
-        //console.log($scope.currentOrder.items)
+        console.log()
     }
     $scope.addItem = (e,i) =>{
         var btn = jQuery(e.target), selectedItem = $scope.products.items[i];
@@ -108,7 +110,7 @@ app.controller("dashCtr", ($scope,$filter) => {
                 //btn.data("clicked") == true;
             }
         }else{
-            $scope.removeItem(selectedItem.name);
+            $scope.removeItem(e,selectedItem.name);
             //re-computing prices and qunatity
             $scope.currentOrder.totalPrice = $scope.currentOrder.totalPrice - Number(selectedItem.price);
             $scope.currentOrder.totalQuantity = $scope.currentOrder.totalQuantity - Number(selectedItem.quantity);
