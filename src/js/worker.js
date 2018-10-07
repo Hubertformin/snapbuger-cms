@@ -11,6 +11,7 @@ function checkTimeRange() {
             })
             db.settings.get(1)
             .then((data) => {
+                try{
                     from_time = data.time_range.from.split(":"),
                     to_time = data.time_range.to.split(":"),
                     d = new Date();
@@ -24,9 +25,13 @@ function checkTimeRange() {
                     } else {
                         postMessage("resume-orders");
                     }
+                }
+                catch(e){
+                    //console.log("empty!");
+                }
             })
-            .catch(e=>{
-                return false;
+            .catch(e =>{
+                //
             })
     } catch (err) {
         console.log("Failed:" + err)
