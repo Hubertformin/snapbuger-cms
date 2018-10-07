@@ -991,15 +991,13 @@ table.huberts-tables {
 }
 .tab-prev{
     display: none;
-    padding-top:20px!important;
-    padding-bottom:40px!important;
     border:2px solid #ddd;
     position: relative;
     height:80vh;
-    overflow-y: scroll;
     border-top:none;
     &:first-of-type{
         display:block;
+        overflow-y: scroll;
     }
 }
 
@@ -1064,9 +1062,11 @@ div#reports {
         }
     }
     .logs-table{
-        height:70vh;
+        &:first-of-type{
+            padding: 0;
+        }
+        height:80vh;
         padding: 10px;
-        border:1px solid #ddd;
         overflow-y: scroll;
     }
     .info-card{
