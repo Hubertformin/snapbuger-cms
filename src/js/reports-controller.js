@@ -176,7 +176,10 @@ app.controller('reportsCtr',($scope)=>{
             }
         })
     }
-
+    //round up function
+    $scope.roundUp = (num) => {
+        return Math.round(num);
+    }
     //lastly charts
     //creating graph data
 //update graph
@@ -221,6 +224,25 @@ var barChart = new Chart(ctx, {
         }
     }
 });
+var ctx = document.getElementById("logsPieChart").getContext('2d');
+var pieChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Quantity ordered',
+            data: [],
+            backgroundColor: getRandomColor(),
+            borderWidth: 0.5
+        }]
+    },
+    options: {
+        angleLines:{
+            display:true,
+            color:'rgba(0, 0, 0, 0.6)'
+        }
+    }
+});
 function getRandomColor(num = 1) {
     var letters = '0123456789ABCDEF',counter = 0,colors = [],
     color = '#';
@@ -233,7 +255,8 @@ function getRandomColor(num = 1) {
     return colors;
 }
 //init..
-$scope.logsCurrentOrders = [],$scope.logsAllItems = [],$scope.logTotalPrice = 0;
+$scope.logsCurrentOrders = [],$scope.logsAllItems = [],$scope.logTotalPrice = 0;$scope.barData = {x:[],y:[]};
+//logs dunction
 $scope.logsController = (dt)=>{
     $scope.displayDate = $scope.cleaner(dt);
     //re emptying
@@ -261,28 +284,38 @@ $scope.logsController = (dt)=>{
         $scope.uniqueItems.push($scope.itemNames[i]);
     }
     //3. generating data
-    var barData = {x:[],y:[]}
+    $scope.barData = {x:[],y:[]}
     for(let i = 0;i<$scope.uniqueItems.length;i++){
-        barData.x.push($scope.uniqueItems[i]);
+        $scope.barData.x.push($scope.uniqueItems[i]);
         let counter = 0;
         for(let j =0;j<$scope.logsAllItems.length;j++){
             if($scope.uniqueItems[i] == $scope.logsAllItems[j].name){
                 counter += Number($scope.logsAllItems[j].quantity);
             }
         }
-        barData.y.push(counter);
+        $scope.barData.y.push(counter);
 
     }
     barChart.config.data = {
-        labels: barData.x,
+        labels: $scope.barData.x,
         datasets: [{
             label: 'Quantity ordered',
-            data: barData.y,
-            backgroundColor: getRandomColor(barData.x.length),
+            data: $scope.barData.y,
+            backgroundColor: getRandomColor($scope.barData.x.length),
             borderWidth: 0.5
         }]
     }
     barChart.update();
+    pieChart.config.data = {
+        labels: $scope.barData.x,
+        datasets: [{
+            label: 'Quantity ordered',
+            data: $scope.barData.y,
+            backgroundColor: getRandomColor($scope.barData.x.length),
+            borderWidth: 0.5
+        }]
+    }
+    pieChart.update();
 }
 //
 

@@ -69,6 +69,7 @@ app.controller("dashCtr", ($scope,$filter) => {
     }
     //=========== add items to selected Items array but first let's define remove item array
     $scope.removeItem = (name)=>{
+        jQuery('input.qty').val(1);
         if(name == 'deleteAll'){
             var viewSelectedModal = M.Modal.getInstance(jQuery('#viewSelectedORders'));
             $scope.currentOrder.items = [];
@@ -149,19 +150,12 @@ app.controller("dashCtr", ($scope,$filter) => {
         $scope.currentOrder.staff = staff.name;
         const current = $scope.currentOrder;
         //and now pushing to main --
-        //checking if order already exist
-        /*$scope.todaysOrders.forEach(el=>{
-            if(JSON.stringify(el) === JSON.stringify($scope.currentOrder)){
-                notifications.notify({type:"error",msg:"Order already exist!"})
-                return false;
-            }
-        })*/
-        //$scope.todaysOrders.push(current);
         $scope.db.orders.add(current)
         .then(()=>{
                 $scope.fetchAndComputeOrders();
                 $scope.orderInv = `SB${Math.floor(Math.random() * 999) + 1000}`;
                 $scope.removeItem('deleteAll');
+                jQuery('input.qty').val(1);
                 $scope.$apply();
                 //console.log($scope.orders)
                 //
@@ -209,6 +203,16 @@ app.controller("dashCtr", ($scope,$filter) => {
             $scope.printOrders(order);
         }
     }
+    async function showEstimatedQuota() {
+        if (navigator.storage && navigator.storage.estimate) {
+          const estimation = await navigator.storage.estimate();
+          console.log(`Quota: ${estimation.quota}`);
+          console.log(`Usage: ${estimation.usage}`);
+        } else {
+          console.error("StorageManager not found");
+        }
+      }
+      showEstimatedQuota();
     
 
 })

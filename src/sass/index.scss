@@ -24,6 +24,10 @@
 .p-0 {
     padding: 0!important;
 }
+.brb{
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
 
 //theme background
 .bg-theme {
@@ -48,6 +52,9 @@
 
 .bg-theme-pink-orange {
     background: linear-gradient(to right, #d81b60, #f44336)
+}
+.bg-ig{
+    background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
 }
 
 /* width */
@@ -987,6 +994,9 @@ table.huberts-tables {
     padding-top:20px!important;
     padding-bottom:40px!important;
     border:2px solid #ddd;
+    position: relative;
+    height:80vh;
+    overflow-y: scroll;
     border-top:none;
     &:first-of-type{
         display:block;
@@ -1076,6 +1086,9 @@ div#reports {
     .display-date{
         margin-bottom: 10px;
         border-bottom: 1px solid #ddd;
+    }
+    .pie{
+        margin-top: 40px;
     }
 }
 

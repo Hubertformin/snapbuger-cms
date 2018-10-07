@@ -5,10 +5,10 @@
         <!--        <h5 class="section-heading teal-text font-raleway"><i class="material-icons">show_chart</i>History</h5>-->
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active" data-target="#ordersReports">
-                <i class="material-icons left">show_chart</i> HISTORY
+                <i class="material-icons left">history</i>ORDER HISTORY
             </li>
             <li role="presentation" class="" data-target="#statsReports">
-                <i class="material-icons left">multiline_chart</i> LOGS
+                <i class="material-icons left">multiline_chart</i> ITEMS LOGS
             </li>
         </ul>
         <div id="ordersReports" class="white tab-prev col s12">
@@ -37,7 +37,6 @@
                                 <th>Qty</th>
                                 <th>Staff</th>
                                 <th>Time</th>
-                                <th class="small"><i class="material-icons">delete_forever</i></th>
                             </thead>
                         </table>
                         <div class="table-div">
@@ -54,7 +53,6 @@
                                         <td>{{x.totalQuantity}}</td>
                                         <td>{{x.staff}}</td>
                                         <td><small>{{toTime(x.date)}}</small></td>
-                                        <td class="small"><i ng-click="deleteOrder($index)" class="material-icons">delete</i></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -95,7 +93,7 @@
                         </div>
                         <div class="col s4">
                             <div class="info-card">
-                                <div class="body blue darken-4 white-text">
+                                <div class="body blue white-text">
                                     <div class="row">
                                         <div class="icon col s3">
                                             <i class="material-icons">featured_play_list</i>
@@ -127,6 +125,22 @@
                       <div class="long-container">
                       <canvas id="logsChart" height="165" width="400"></canvas>
                       </div>
+                      <!--percentages plus pie chart -->
+                     <div class="row pie">
+                         <div class="col s4">
+                             <div ng-repeat="i in barData.x" class="list-item-percent brb">
+                                 <h6 class="teal-text">{{i}}</h6>
+                                 <div class="progress">
+                                  <div class="determinate bg-theme" style="width:{{roundUp((barData.y[$index]/logTotalQty) *100)}}%"></div>
+                                </div>
+                             </div>
+                         </div>
+                         <div class="col offset-s2 s6">
+                              <div class="long-container">
+                                  <canvas id="logsPieChart" height="100" width="100"></canvas>
+                              </div>
+                         </div>
+                     </div>
                     </div>
                 </div>
             </div>

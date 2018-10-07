@@ -7,6 +7,7 @@ app.controller('profileCtr',($scope)=>{
     document.querySelector('#profileImg').onchange = function(e){
         $scope.inputFile = true;
         var file = e.target.files[0];
+        if(typeof file !== 'object') return false;
         if(file.size > 400000){
             notifications.notify({type:"error",msg:"File size large, please upload a picture below 4MB"})
             return false;
@@ -16,7 +17,7 @@ app.controller('profileCtr',($scope)=>{
         img.src = url;
     }
     //updating users
-    /*jQuery('#updateUser').on('click', () => {
+    jQuery('#updateUser').on('click', () => {
         var img = document.querySelector('#profileImg').files[0],blob;
         if(typeof img == 'object'){
             blob = new Blob([img],{type:img.type})
@@ -38,5 +39,5 @@ app.controller('profileCtr',($scope)=>{
             })
             
         })
-    })*/
+    })
 })

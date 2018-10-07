@@ -119,7 +119,7 @@
                                 <li ng-show="currentUser.is_mgr" class="divider" tabindex="-1"></li>
                                 <li><a draggable="false" ng-click="logOut()" href="javascript:void(0)"><i class="material-icons">power_settings_new</i>Log out</a></li>
                             </ul>
-                            <a draggable="false" href="javascript:void(0)" class="email-link"><span class="white-text email">@SnapBurger</span></a>
+                            <a draggable="false" href="javascript:void(0)" class="email-link"><span class="white-text email">@SnapBurger17</span></a>
                         </div>
                     </div>
                 </div>
@@ -151,7 +151,6 @@
                 </form>
                 <ul class="nav-list-right">
                     <li onclick="showSearchBar(true)"><a title="Search" draggable="false" href="javascript:void(0)" class="white-text"><i class="material-icons">search</i> </a></li>
-                    <li><a draggable="false" title="Withdraw money" class="white-text modal-trigger" href="#withdrawMoney"><i class="material-icons">account_balance_wallet</i></a></li>
                     <li class="dropdown"><a draggable="false" disabled id="syncBtn" href="javascript:void(0)" title="Sync" class="white-text dropbtn"><i class="material-icons">sync</i></a>
                         <div id="sync_dropdown" class="dropdown-body">
                            <i class="icon grey-text material-icons Large">cloud_queue</i>
@@ -170,13 +169,22 @@
         <div class="notify grey darken-4 waves-light" id="success"><span class="msg"></span><i class="yellow-text font-raleway">close</i></div>
         <div class="notify red darken-2 waves-light" id="error"><span class="msg"></span><i class="yellow-text font-raleway">close</i></div>
         <!-- Modals -->
-        <div id="withdrawMoney" class="modal">
+        <div id="withdrawMoney" class="modal pink-text">
             <div class="modal-content">
-              <h4>Modal Header</h4>
-              <p>A bunch of text</p>
+              <h5 align="center"><i class="material-icons small">account_balance_wallet</i>REDRAW MONEY</h5>
+              <div class="input-field col s6">
+                <input placeholder="Reason for redraw" id="reason_for_redraw" type="text" class="validate">
+                <label for="reason_for_redraw" class="active">Reason for Redraw:</label>
+               </div>
+               <h5>Amount: {{redrawAmount | currency:"FCFA ":0}}</h5>
+               <div class="input-field col s6">
+                <input placeholder="Amount" id="amount" type="number" ng-model="redrawAmount" class="validate">
+                <label for="amount" class="active">Amount:</label>
+               </div>
             </div>
-            <div class="modal-footer">
-              <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+            <div class="modal-footer pink darken-2">
+              <button class="modal-close waves-effect waves-green btn-flat white-text">Cancel</button>
+              <button class="modal-close waves-effect waves-green btn-flat white-text">Redraw</button>
             </div>
         </div>
         <!-- FAB-->
@@ -186,8 +194,8 @@
           </a>
           <ul>
             <li><a href="#!" class="btn-floating red"><i class="material-icons">shopping_cart</i></a></li>
-            <li><a class="btn-floating pink"><i class="material-icons">account_balance_wallet</i></a></li>
-            <li><a class="btn-floating orange"><i class="spin material-icons">sync</i></a></li>
+            <li><button data-target="withdrawMoney" class="btn-floating pink modal-trigger"><i class="material-icons">account_balance_wallet</i></button></li>
+            <li><button class="btn-floating orange"><i class="spin material-icons">sync</i></button></li>
           </ul>
         </div>
         <!--   password modal-->
