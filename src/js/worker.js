@@ -11,18 +11,26 @@ function checkTimeRange() {
             })
             db.settings.get(1)
             .then((data) => {
-                from_time = data.time_range.from.split(":"),
+                try{
+                    from_time = data.time_range.from.split(":"),
                     to_time = data.time_range.to.split(":"),
                     d = new Date();
-                //send notifications in intervals of 5,10,15 mins
-                //var to_mins = new Date(`${d.toDateString()} ${data.time_range.to}`);
-                //disable orders if time is less than time_range from time
-                if (d.getHours() > Number(to_time[0]) || d.getHours() == Number(to_time[0]) && d.getMinutes() >= Number(to_time[1])) {
-                    postMessage("end-orders");
-                } else if (d.getHours() < Number(from_time[0]) || d.getHours() == Number(from_time[0]) && d.getMinutes() <= Number(from_time[1])) {
-                    postMessage("end-orders");
-                } else {
-                    postMessage("resume-orders");
+                    //send notifications in intervals of 5,10,15 mins
+                    //var to_mins = new Date(`${d.toDateString()} ${data.time_range.to}`);
+                    //disable orders if time is less than time_range from time
+                    if (d.getHours() > Number(to_time[0]) || d.getHours() == Number(to_time[0]) && d.getMinutes() >= Number(to_time[1])) {
+                        postMessage("end-orders");
+                    } else if (d.getHours() < Number(from_time[0]) || d.getHours() == Number(from_time[0]) && d.getMinutes() <= Number(from_time[1])) {
+                        postMessage("end-orders");
+                    } else {
+                        postMessage("resume-orders");
+                    }
+                }
+                catch(e){
+                    //console.log("empty!");
+                }
+                finally{
+                    //
                 }
             })
     } catch (err) {
