@@ -58,17 +58,12 @@ app.controller("mainCtr", ($scope,$filter) => {
         orders: "++id,name,date,*items,totalPrice,totalQuantity,staff",
         settings: "&id,tableNumber,time_range,auto_update,back_up,performance_report"
     })
-    try{
-        $scope.db.settings.add([{
+        $scope.db.settings.add({
             id:1,tableNumber:1,time_range:{from:"8:000",from:"21:30",auto_update:true,back_up:true,performance_report:true},
-        }])
-    }
-    catch(e){
-        console.log('already created!');
-    }
-    finally{
-        //console.log('');
-    }
+        })
+        .catch(e=>{
+            return;
+        })
 
     //fetching Data
     $scope.db.transaction('r', $scope.db.users, $scope.db.orders, $scope.db.categories, $scope.db.items, $scope.db.settings, () => {
