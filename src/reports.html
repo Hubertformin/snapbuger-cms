@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <div class="routePage white" style="margin-top:67px;padding:0;" ng-controller="reportsCtr">
     <div class="box">
         <div class="header">Reports</div>
@@ -8,41 +9,54 @@
 <div id="reports" class="routePage white" ng-controller="reportsCtr" style="margin-top:68px;padding:0px;padding-bottom: 40px;">
    <!--row and containing classes -->
     <div class="row">
+=======
+<div id="reports" class="routePage white" ng-controller="reportsCtr" style="margin-top:68px;padding:0px;">
+    <!--row and containing classes -->
+    <div class="row" style="padding:0 10px;">
+>>>>>>> version1.0.1
         <!-- Orders Reports! -->
-        <div id="ordersReports" class="white col s12">
-            <div class="chart">
-                <div id="orderChart" style="height: 280px;background:#fff;"></div>
+        <!--        <h5 class="section-heading teal-text font-raleway"><i class="material-icons">show_chart</i>History</h5>-->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active" data-target="#ordersReports">
+                <i class="material-icons left">history</i>ORDER HISTORY
+            </li>
+            <li role="presentation" class="" data-target="#statsReports">
+                <i class="material-icons left">multiline_chart</i> ITEMS LOGS
+            </li>
+        </ul>
+        <div id="ordersReports" class="white tab-prev col s12">
+            <div class="chart" style="position:relative;border:1px solid #000;">
+                <canvas id="orderChart" height="150" width="400"></canvas>
             </div>
             <span class="right"><strong>All Orders: {{orders.length}}</strong></span>
             <div class="body" style="margin-top:50px;border-top:1px solid #999">
                 <!--<button ng-click="update()" class="btn right waves-effect waves-light">Update</button>-->
                 <div class="row">
                     <div class="col s3 pr-0 date-review">
-                            <input class="browser-default" type="search" placeholder="Search.." ng-keyup="searchOrders($event)">
+                        <input class="browser-default" type="search" placeholder="Search.." ng-keyup="searchOrders($event)">
                         <div class="table-div">
                             <div class="collection" id="collection">
-                               <!-- no need for a.date, remember 'a' is already a date object -->
+                                <!-- no need for a.date, remember 'a' is already a date object -->
                                 <a ng-repeat="a in uniqueDateOrders" href="javascript:void(0)" class="collection-item grey-text text-darken-4" ng-click="filterOrdersView(a)"><i class="material-icons left">date_range</i>{{cleaner(a)}}<span class="new badge  blue-grey min-badge" data-badge-caption="">{{countDateOrders(a)}}</span></a>
                             </div>
                         </div>
                     </div>
-                    <div class="col s9">
+                    <div class="col s9 details-div">
                         <table>
                             <thead>
                                 <th>Inv</th>
-                                <th>Items</th>
+                                <th>Items <small class="teal-text">Qty</small></th>
                                 <th>Price</th>
                                 <th>Qty</th>
                                 <th>Staff</th>
                                 <th>Time</th>
-                                <th class="small"><i class="material-icons">delete_forever</i></th>
                             </thead>
                         </table>
                         <div class="table-div">
                             <table id="allOrders" class="huberts-table">
                                 <tbody>
                                     <tr ng-repeat="x in orders" data-date="{{toDate(x.date)}}">
-                                        <td>{{x.name}}</td>
+                                        <td>{{x.inv}}</td>
                                         <td>
                                             <ul class="browser-default">
                                                 <li ng-repeat="o in x.items">{{o.name}} <small class="teal-text">{{o.quantity}}</small></li>
@@ -51,8 +65,7 @@
                                         <td>{{x.totalPrice}}</td>
                                         <td>{{x.totalQuantity}}</td>
                                         <td>{{x.staff}}</td>
-                                        <td>{{toTime(x.date)}}</td>
-                                        <td class="small"><i ng-click="deleteOrder($index)" class="material-icons">delete</i></td>
+                                        <td><small>{{toTime(x.date)}}</small></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -63,7 +76,121 @@
 >>>>>>> version1.0.1
         </div>
         <!-- Products Reports! -->
-        <!--<div id="productsReports" class="white col s12">Test 2</div>-->
+        <div id="statsReports" class="white tab-prev col s12 p-0">
+            <div class="row">
+                <div class="col s3 p-0">
+                    <div class="collection m-0" id="logsCollection">
+                        <a ng-click="showOverview()" href="javascript:void(0)" class="collection-item grey-text text-darken-4">
+                            Overview <i class="material-icons right">chevron_right</i>
+                        </a>
+                        <a style="padding: 2px 10px;" href="javascript:void(0)" class="collection-item grey lighten-4 grey-text"><small>Days</small></a>
+                    </div>
+                    <div class="logs-table first">
+                        <div class="collection m-0" id="logsCollection">
+                            <!-- no need for a.date, remember 'a' is already a date object -->
+                            <a ng-repeat="a in uniqueDateOrders" href="javascript:void(0)" class="collection-item grey-text text-darken-4" ng-click="logsController(a)">{{cleaner(a)}}<span class="new badge  blue-grey min-badge" data-badge-caption="">{{countDateOrders(a)}}</span></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s9 logs-table">
+                    <!--overview -->
+                    <div ng-hide="hideOverviewContainer" class="white" id="overview">
+                        <h6 align="center" class="teal-text">OVERVIEW</h6>
+                        <div class="row">
+                            <div class="col s6">
+                                <div class="input-field col s12">
+                                    <select class="browser-default">
+                                      <option value="" disabled selected>Choose start</option>
+                                      <option ng-repeat="a in uniqueDateOrders" value="{{cleaner(a)}}">{{cleaner(a)}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col s6">
+                                <div class="input-field col s12">
+                                    <select class="browser-default">
+                                      <option value="" disabled selected>Choose start</option>
+                                      <option ng-repeat="a in uniqueDateOrders" value="{{cleaner(a)}}">{{cleaner(a)}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--items logs -->
+                    <div class="row">
+                        <h5 class="display-date teal-text">{{displayDate}}</h5>
+                        <div class="panels">
+                            <div class="col s4">
+                                <div class="info-card">
+                                    <div class="body orange darken-4 white-text">
+                                        <div class="row">
+                                            <div class="icon col s3">
+                                                <i class="material-icons">shopping_cart</i>
+                                            </div>
+                                            <div class="icon-body col s9">
+                                                <small>ALL ORDERS</small>
+                                                <h6>{{logsCurrentOrders.length | currency:"":0}}</h6>
+                                                <img class="bubbles" src="img/circle.svg" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col s4">
+                                <div class="info-card">
+                                    <div class="body blue white-text">
+                                        <div class="row">
+                                            <div class="icon col s3">
+                                                <i class="material-icons">featured_play_list</i>
+                                            </div>
+                                            <div class="icon-body col s9">
+                                                <small>TOTAL ITEMS SOLD</small>
+                                                <h6>{{logTotalQty | currency:"":0}}</h6>
+                                                <img class="bubbles" src="img/circle.svg" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col s4">
+                                <div class="info-card">
+                                    <div class="body pink accent-3 white-text">
+                                        <div class="row">
+                                            <div class="icon col s3">
+                                                <i class="material-icons">attach_money</i>
+                                            </div>
+                                            <div class="icon-body col s9">
+                                                <small>AMOUNT SOLD</small>
+                                                <h6>{{logTotalPrice | currency:"FCFA ":0}}</h6>
+                                                <img class="bubbles" src="img/circle.svg" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="long-container">
+                            <canvas id="logsChart" height="165" width="400"></canvas>
+                        </div>
+                        <!--percentages plus pie chart -->
+                        <div class="row pie">
+                            <div class="col s4">
+                                <div ng-repeat="i in barData.x" class="list-item-percent brb">
+                                    <h6 class="teal-text">{{i}}</h6>
+                                    <div class="progress">
+                                        <div class="determinate bg-theme" style="width:{{roundUp((barData.y[$index]/logTotalQty) *100)}}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col offset-s2 s6">
+                                <div class="long-container">
+                                    <canvas id="logsPieChart" height="100" width="100"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Staff Reports! -->
         <!--<div id="staffReports" class="white col s12">Test 3</div>-->
     </div>

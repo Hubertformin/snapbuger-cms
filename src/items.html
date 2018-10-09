@@ -54,7 +54,7 @@
                 <span><strong>Total items: {{products.categories.length}}</strong></span>
                 <input type="search" onkeyup="searchTable(event,'#categoriesTable')" name="" placeholder="Search Table.." id="">
             </div>
-            <table id="categoriesTable" class="huberts-tables mdl-data-table" style="width:100%">
+            <table class="huberts-tables mdl-data-table" style="width:100%">
                 <thead>
                     <tr>
                         <th class="small">#</th>
@@ -68,7 +68,7 @@
                 <div ng-show="products.categories.length == 0" class="no-data">
                     <p>No categories, Create categories to view</p>
                 </div>
-                <table class="huberts-tables mdl-data-table" style="width:100%">
+                <table id="categoriesTable" class="huberts-tables mdl-data-table" style="width:100%">
                     <tbody>
                         <tr ng-repeat="x in products.categories track by $index">
                             <td class="small">{{$index+1}}</td>
@@ -120,7 +120,7 @@
                                 <div class="row">
                                     <div class="col s6">
                                         <div class="row">
-                                            <div class="col s2 orange" style="transform: translateY(10px);text-align: center;color:#fff;padding:6px 10px;">XAF</div>
+                                            <div class="col s2 orange" style="transform: translateY(10px);text-align: center;color:#fff;padding:6px 10px;">FCFA</div>
                                             <div class="col s10">
                                                 <div class="input-field" style="transform: translateY(-15px);">
                                                     <input data-error="Invalid Rate" id="item_rate" type="number" name="item_rate" ng-model="item_rate" class="validate" placeholder="Rate">
@@ -144,14 +144,14 @@
             </ul>
             <div class="searchTable">
                 <span><strong>Total items: {{products.items.length}}</strong></span>
-                <input type="search" onkeyup="searchTable(event,'#itemsTable')" name="" placeholder="Search Table.." id="">
+                <input type="search" onkeyup="searchInputTable(event,'#itemsTable')" name="" placeholder="Search Table.." id="">
             </div>
             <table class="huberts-tables mdl-data-table" style="width:100%">
                 <thead>
                     <tr>
                         <th class="small">#</th>
                         <th>Item name</th>
-                        <th>Rate(XAF)</th>
+                        <th>Rate(FCFA)</th>
                         <th>Category</th>
                         <th>Status</th>
                         <th class="small" ng-show="currentUser.is_mgr"><i class="material-icons">build</i></th>

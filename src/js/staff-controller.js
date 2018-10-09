@@ -1,4 +1,31 @@
 app.controller("staffCtr", ($scope) => {
+    $scope.fetchAndComputeStaffs = ()=>{
+        $scope.db.users.toArray()
+            .then((data)=>{
+                $scope.managers = [],$scope.staffs = [];
+                $scope.users = data;
+                $scope.users.forEach(element => {
+                 if (element.is_mgr) {
+                     $scope.managers.push(element);
+                 } else {
+                     $scope.staffs.push(element)
+                 }
+             });
+             $scope.staff_name = "";$scope.staff_password = "";$scope.staff_position = "";$scope.staff_salary = "";
+             $scope.totalSalary = 0;
+            $scope.staffs.forEach(el=>{
+                 $scope.totalSalary += Number(el.salary);
+            })
+             $scope.$apply();
+            })
+            .catch(()=>{
+                notifications.notify({msg:"An error occured: Unable to refetch!",type:"error"})
+            })
+    }
+    $scope.fetchAndComputeStaffs();
+    //first thing, setting the sidenav link to active
+    jQuery('.sideNavLink').removeClass('active');
+    jQuery('#staffLink').addClass('active');
     //initialiing ...
     var elems = document.querySelectorAll('.modal');
     var instances = M.Modal.init(elems, {
@@ -21,6 +48,14 @@ app.controller("staffCtr", ($scope) => {
         defaultDate: currentDate,
         yearRange: [thisYear, thisYear + 2]
     });
+    //==================== FUNCTIONS =============
+    //
+    //date picker to date string
+    $scope.formatDatePicker = (dt)=>{
+        const od = dt.split("/");
+        var nd = new Date(`${od[1]}/${od[0]}/${od[2]}`);
+        return nd.toDateString();
+    }
     //create staff
     jQuery('#createStaffsForm').on('submit', (e) => {
         e.preventDefault();
@@ -35,6 +70,20 @@ app.controller("staffCtr", ($scope) => {
             })
             return false;
         }
+        //lets check if username exist
+        for(var i=0;i<$scope.users.length;i++){
+            if($scope.users[i].name.toLowerCase() === $scope.staff_name.toLowerCase()){
+                notifications.notify({
+                    type: "error",
+                    msg: "Username already in use, choose another name!"
+                })
+                return false;
+            }
+        }
+        //now changing username to pascal case and converting number to number
+        $scope.staff_name = $scope.staff_name[0].toUpperCase()+$scope.staff_name.slice(1).toLowerCase();
+        $scope.staff_salary = Number($scope.staff_salary);
+        //adding to database
         $scope.db.users.add({
             name: $scope.staff_name,
             password: $scope.staff_password,
@@ -47,24 +96,7 @@ app.controller("staffCtr", ($scope) => {
         })
         .then(()=>{
             notifications.notify({type: 1, msg: "Acount Created!"})
-            $scope.db.users.toArray()
-            .then((data)=>{
-                $scope.managers = [],$scope.staffs = [];
-                $scope.users = data;
-                $scope.users.forEach(element => {
-                 if (element.is_mgr) {
-                     $scope.managers.push(element);
-                 } else {
-                     $scope.staffs.push(element)
-                 }
-             });
-             $scope.staff_name = "";$scope.staff_password = "";$scope.staff_position = "";$scope.staff_salary = "";
-             $scope.$apply();
-            })
-            .catch(()=>{
-                notifications.notify({msg:"An error occured: Unable to refetch!",type:"error"})
-            })
-            
+            $scope.fetchAndComputeStaffs()
         })
     })
     //update staffs
@@ -115,4 +147,51 @@ app.controller("staffCtr", ($scope) => {
             })
         }
     }
+    $scope.deleteMgr = (i) => {
+        if(confirm(`Are you sure you want to delete ${$scope.managers[i].name}'s Account?`)){
+            $scope.db.users.delete($scope.managers[i].id)
+            .then(()=>{
+                $scope.db.users.toArray()
+                .then((data)=>{
+                    $scope.managers = [],$scope.staffs = []
+                    $scope.users = data;
+                    $scope.users.forEach(element => {
+                     if (element.is_mgr) {
+                         $scope.managers.push(element);
+                     } else {
+                         $scope.staffs.push(element)
+                     }
+                 });
+                 $scope.$apply();
+                })
+                .catch(()=>{
+                    notifications.notify({msg:"An error occured: Unable to refetch!",type:"error"})
+                })
+                
+            })
+        }
+    }
+    //create Manager
+    $scope.createmanager = ()=>{
+        jQuery('#closeLoginBtn').fadeIn();
+        jQuery("#createMgrBtn2").show();
+        jQuery("#createMgrBtn1").hide();
+        jQuery('#managerial').show(()=>{
+            jQuery('#login').fadeIn();
+        }); 
+    }
+    //
+    let i = 0;
+    jQuery("#createMgrBtn2").on('click',()=>{
+        console.log(i+=1)
+        $scope.createManagerFxn(false);
+    })
+    //cancel
+    jQuery('#closeLoginBtn').on('click',()=>{
+        console.log("duche bage")
+        jQuery('#login').fadeOut(()=>{
+            jQuery('#managerial').hide();
+            jQuery('#closeLoginBtn').fadeOut();
+        });
+    })
 })

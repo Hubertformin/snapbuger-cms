@@ -51,12 +51,12 @@
                         <div class="row">
                             <div class="col s12">
                                 <div class="col s3 selected-items">
-                                    <button data-target="viewSelectedORders" ng-disabled="currentOrder.items.length == 0" class="btn btn-block waves-effect waves-default orange modal-trigger">Selected ({{currentOrder.items.length}})</button>
+                                    <button data-target="viewSelectedORders" ng-disabled="currentOrder.items.length == 0" class="btn btn-block waves-effect waves-default orange modal-trigger">Items ({{currentOrder.items.length}})</button>
                                 </div>
                                 <div class="col s5">
                                     <div class="orderPriceDetails red white-text">
                                         <strong>Total Qty: <span>{{currentOrder.totalQuantity}}</span></strong>,
-                                        <strong>Total Price: <span>{{currentOrder.totalPrice | currency : "XAF ":0}}</span></strong>
+                                        <strong>Total Price: <span>{{currentOrder.totalPrice | currency : "FCFA ":0}}</span></strong>
                                     </div>
                                 </div>
                                 <div class="searchBox input-field col s4">
@@ -80,7 +80,7 @@
                                                 <dt class="item-name">{{x.name}}</dt>
                                                 <dd class="item-category">{{x.category}}</dd>
                                                 <dd class="item-status">{{x.status}}</dd>
-                                                <dd class="item-price">{{x.rate | currency : "XAF ":0}}</dd>
+                                                <dd class="item-price">{{x.rate | currency : "FCFA ":0}}</dd>
                                             </dl>
                                         </div>
                                     </div>
@@ -114,55 +114,101 @@
     <h5 class="section-heading red-text font-raleway">Activity panel</h5>
     <hr class="ruler">
     <div class="row">
-        <div class="col s6">
-            <div class="info-card pink">
-                <div class="header">
-                    <h3 class="white-text right">{{orders.length}}</h3>
-                </div>
-                <div class="body white-text">
-                    <p class="center-align">Today</p>
-                    <p>Orders: {{todaysCompletedOrders.length}}</p>
-                    <p>Printed:{{todaysCompletedOrders.length}}</p>
+        <div class="col">
+            <div class="info-card">
+                <div class="body">
+                   <div class="row">
+                       <div class="icon col s3 pink white-text">
+                           <i class="material-icons">shopping_basket</i>
+                       </div>
+                       <div class="icon-body col s9">
+                         <div class="col s9">
+                          <span>Today's orders</span><br>
+                          <small>Orders recorded today</small>
+                         </div>
+                         <div class="col s3">
+                           <h3 class="right pink-text">{{todaysCompletedOrders.length | currency:"":0}}</h3>
+                         </div>
+                       </div>
+                   </div>
                 </div>
             </div>
         </div>
-        <div ng-show="currentUser.is_mgr" class="col s6">
-            <div class="info-card blue">
-                <div class="header">
-                    <h3 class="white-text right">{{orders.length}}</h3>
+        <div ng-show="currentUser.is_mgr" class="col">
+            <div class="info-card">
+                <div class="body">
+                   <div class="row">
+                       <div class="icon col s3 orange white-text">
+                            <i class="material-icons">date_range</i>
+                       </div>
+                       <div class="icon-body col s9">
+                         <div class="col s9">
+                             <span>All Orders</span><br>
+                              <small>Total recorded</small>
+                         </div>
+                         <div class="col s3">
+                            <h3 class="right orange-text">{{orders.length | currency:"":0}}</h3>
+                         </div>
+                       </div>
+                   </div>
                 </div>
-                <div class="body white-text">
-                    <p class="center-align">All Day</p>
-                    <p>Orders: {{orders.length}}</p>
-                    <p>Printed:{{orders.length}}</p>
+            </div>
+        </div>
+        <div class="col">
+            <div class="info-card">
+                <div class="body">
+                   <div class="row">
+                       <div class="icon col s3 blue white-text">
+                            <i class="material-icons">local_dining</i>
+                       </div>
+                       <div class="icon-body col s9">
+                          <div class="col s9">
+                              <span>Menu items</span><br>
+                              <small>All menu items</small>
+                          </div>
+                          <div class="col s3">
+                           <h3 class="right blue-text">{{products.items.length | currency:"":0}}</h3>
+                          </div>
+                       </div>
+                   </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Next section: Table-->
     <h5 class="section-heading red-text font-raleway">Today's orders</h5>
     <hr class="ruler">
     <div class="row">
         <div class="col s12">
             <div class="white z-depth-2" style="margin:10px;padding: 25px;">
+                <input class="table-search browser-default" type="search" placeholder="Search..." onkeyup="searchTable(event,'#todayOrdersTable')">
                 <table class="huberts-tables">
                     <thead>
+                       <th class="small">#</th>
                         <th>Inv num</th>
                         <th>Items</th>
+                        <th>Cost</th>
+                        <th>Time</th>
+                        <th class="small">Status</th>
                         <th class="small">Action</th>
                     </thead>
                 </table>
                 <div id="dashboard_order_table" class="huberts-table-div">
-                    <table>
+                    <table id="todayOrdersTable">
                         <tbody>
-                            <tr ng-repeat="x in todaysCompletedOrders">
-                                <td>{{x.name}}</td>
+                            <tr ng-repeat="x in todaysCompletedOrders | orderBy : 'id' : true ">
+                               <td class="small">{{$index+1}}</td>
+                                <td>{{x.inv}}</td>
                                 <td>
                                     <ul class="browser-default" style="list-style-type:circle;">
                                         <li ng-repeat="o in x.items">{{o.name}} <i class="green-text badge">{{o.quantity}}</i></li>
                                     </ul>
                                 </td>
+                                <td>{{x.totalPrice | currency:"FCFA ":0}}</td>
+                                <td>{{Time(x.date)}}</td>
+                                <td class="small" style="text-align:center;"><i class="material-icons green-text">check_circle</i></td>
                                 <td class="small">
-                                    <a class='btn waves-effect waves-light' href='javascript:void(0)' data-target='dropdown1'><i class="material-icons left">print</i>Print</a>
+                                    <button class='btn teal waves-effect waves-light' data-target='dropdown1' ng-click="promptPrint(x)"><i class="material-icons">print</i></button>
                                 </td>
                             </tr>
                         </tbody>
@@ -220,14 +266,14 @@
                             <th></th>
                             <th>Qty: {{currentOrder.totalQuantity}}</th>
                             <th></th>
-                            <th class="green-text">Price: {{currentOrder.totalPrice | currency : "XAF ":0}}</th>
+                            <th class="green-text">Price: {{currentOrder.totalPrice | currency : "FCFA ":0}}</th>
                         </tfoot>
                     </table>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <a ng-click="removeItem('deleteAll')" class="waves-effect waves-red btn-flat white-text red">clear all</a>
+            <a ng-click="removeItem(null,'deleteAll')" class="btn-flat white-text red left">clear all</a>
         </div>
     </div>
 </div>

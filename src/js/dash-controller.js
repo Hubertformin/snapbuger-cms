@@ -1,4 +1,30 @@
-app.controller("dashCtr", ($scope) => {
+app.controller("dashCtr", ($scope,$filter) => {
+    //first thing, setting the sidenav link to active
+    jQuery('.sideNavLink').removeClass('active');
+    jQuery('#dashboardLink').addClass('active');
+    //====================== FETCH AND COMPUTE =======================
+    const today = new Date().toDateString();$scope.todaysCompletedOrders = [];
+    $scope.fetchAndComputeOrders = () => {
+        $scope.db.orders.toArray()
+            .then((data)=>{
+                $scope.todaysCompletedOrders = [];
+                $scope.orders = data;
+                $scope.orders.forEach(elems=>{
+                    if($scope.currentUser.is_mgr){
+                        if(elems.date.toDateString() == today){
+                            $scope.todaysCompletedOrders.push(elems)
+                        }
+                    }else if(!$scope.currentUser.is_mgr){
+                        if(elems.date.toDateString() == today && elems.staff ==$scope.currentUser.name){
+                            $scope.todaysCompletedOrders.push(elems)
+                        }
+                    }
+                    
+                })
+                $scope.$apply();
+            })
+    }
+    $scope.fetchAndComputeOrders();
     //modals
     var elems = document.querySelectorAll('.modal');
     var instances = M.Modal.init(elems,{opacity:0.2});
@@ -42,7 +68,7 @@ app.controller("dashCtr", ($scope) => {
         }
     }
     //=========== add items to selected Items array but first let's define remove item array
-    $scope.removeItem = (name)=>{
+    $scope.removeItem = (e,name)=>{
         if(name == 'deleteAll'){
             var viewSelectedModal = M.Modal.getInstance(jQuery('#viewSelectedORders'));
             $scope.currentOrder.items = [];
@@ -53,6 +79,7 @@ app.controller("dashCtr", ($scope) => {
                 el.added = false;
             })
             viewSelectedModal.close();
+            jQuery('input.qty').val(1);
             return true;
         }
         for(var i=0;i<$scope.currentOrder.items.length;i++){
@@ -61,8 +88,12 @@ app.controller("dashCtr", ($scope) => {
                 break;
             }
         }
+        if(e != null){
+            jQuery(e.target).siblings('div.inputDiv').children('input.qty').val(1);
+        }
+        //jQuery('input.qty').val(1);
         //$scope.currentOrder.items = array
-        //console.log($scope.currentOrder.items)
+        console.log()
     }
     $scope.addItem = (e,i) =>{
         var btn = jQuery(e.target), selectedItem = $scope.products.items[i];
@@ -81,7 +112,7 @@ app.controller("dashCtr", ($scope) => {
                 //btn.data("clicked") == true;
             }
         }else{
-            $scope.removeItem(selectedItem.name);
+            $scope.removeItem(e,selectedItem.name);
             //re-computing prices and qunatity
             $scope.currentOrder.totalPrice = $scope.currentOrder.totalPrice - Number(selectedItem.price);
             $scope.currentOrder.totalQuantity = $scope.currentOrder.totalQuantity - Number(selectedItem.quantity);
@@ -91,6 +122,22 @@ app.controller("dashCtr", ($scope) => {
             //btn.data("clicked") == false;
         }
     }
+    //
+    //this section represents the activity and the today's orders table
+    $scope.Time  = (dt)=>{
+        var time = new Date(dt),hour = time.getHours(),min = time.getMinutes();
+        if(hour < 10){
+            hour = '0'+hour;
+        }
+        if(min < 10){
+            min = '0'+min;
+        }
+        //console.log(dt)
+        return `${hour}:${min}`;
+    }
+    //========================================================
+
+
     ///Finally creating order, first by setting the default table number to 1
     $scope.orderTableNumber = '1';
     $scope.orderInv = `SB${Math.floor(Math.random() * 999) + 1000}`;
@@ -101,47 +148,50 @@ app.controller("dashCtr", ($scope) => {
         }
         const staff = JSON.parse(sessionStorage.getItem('user'))
         //creating current order
-        $scope.currentOrder.name = $scope.orderInv;
+        $scope.currentOrder.inv = $scope.orderInv;
         $scope.currentOrder.date = new Date();
-        $scope.currentOrder.table = $scope.orderTableNumber;
+        $scope.currentOrder.tableNum = $scope.orderTableNumber;
         $scope.currentOrder.staff = staff.name;
         const current = $scope.currentOrder;
         //and now pushing to main --
-        //checking if order already exist
-        /*$scope.todaysOrders.forEach(el=>{
-            if(JSON.stringify(el) === JSON.stringify($scope.currentOrder)){
-                notifications.notify({type:"error",msg:"Order already exist!"})
-                return false;
-            }
-        })*/
-        //$scope.todaysOrders.push(current);
         $scope.db.orders.add(current)
         .then(()=>{
-            $scope.db.orders.toArray()
-            .then((data)=>{
-                $scope.orders = data;
+                $scope.fetchAndComputeOrders();
                 $scope.orderInv = `SB${Math.floor(Math.random() * 999) + 1000}`;
-                $scope.removeItem('deleteAll') 
+                $scope.removeItem(null,'deleteAll');
+                jQuery('input.qty').val(1);
                 $scope.$apply();
-                console.log($scope.orders)
+                //console.log($scope.orders)
                 //
                 swal({
                     title: "Order completed!",
-                    text: "Click okay to print!",
+                    text: "Added to orders queue",
                     icon: "success",
-                    buttons: true,
+                    buttons:['Cancel','Print'],
                     dangerMode: false,
                 })
                 .then((click) => {
+                    
                     if (click) {
-                        //print here!!
-                        delete current.id;
-                        console.log(current)
+                        //printing orders
+                        $scope.db.orders.get(current.id)
+                        .then(data=>{
+                            console.log(data);
+                            $scope.printOrders(data);
+                            //deleting current id because next order would still have that id
+                            //and dexie would return an exception.
+                            delete current.id;
+                        })
+                        
+                        //$scope.printOrders();
+                        //deleting current id because next order would still have that id
+                        //and dexie would return an exception.
+                        //console.log(current)
                     } else {
+                        delete current.id;
                         return false;
                     }
                 });
-            })
         })
         .catch(err=>{
             console.log(err)
@@ -151,14 +201,32 @@ app.controller("dashCtr", ($scope) => {
           //$scope.removeItem('deleteAll') 
         //console.log($scope.todaysOrders);
     }
-    
-
-    //this section represents the activity and the today's orders table
-    const today = new Date().toDateString();$scope.todaysCompletedOrders = [];
-    $scope.orders.forEach(elems=>{
-        if(elems.date.toDateString() == today){
-            $scope.todaysCompletedOrders.push(elems)
+    //test to see orders.
+    $scope.db.orders.hook('creating', function (primKey, obj, transaction) {
+        // You may do additional database operations using given transaction object.
+        // You may also modify given obj
+        console.log(obj)
+        console.log(transaction)
+        // You may set this.onsuccess = function (primKey){}. Called when autoincremented key is known.
+        // You may set this.onerror = callback if create operation fails.
+        // If returning any value other than undefined, the returned value will be used as primary key
+    });
+    //prompt print
+    $scope.promptPrint = (order)=>{
+        if(confirm("Are you sure you want to print this order?")){
+            $scope.printOrders(order);
         }
-    })
+    }
+    async function showEstimatedQuota() {
+        if (navigator.storage && navigator.storage.estimate) {
+          const estimation = await navigator.storage.estimate();
+          console.log(`Quota: ${estimation.quota}`);
+          console.log(`Usage: ${estimation.usage}`);
+        } else {
+          console.error("StorageManager not found");
+        }
+      }
+      //showEstimatedQuota();
+    
 
 })
