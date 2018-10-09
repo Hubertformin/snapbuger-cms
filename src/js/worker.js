@@ -156,7 +156,7 @@ function syncDatabase() {
             dbSend = [{type:"push",db:JSON.stringify(dbSend)}];
         }
         //ajax
-        ajax({url:url,dataType:'text',data:dbSend,type:"POST"})
+        ajax({url:url,dataType:'json',data:dbSend,type:"POST"})
         .then(data=>{
             console.log(data);
         })

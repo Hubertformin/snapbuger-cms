@@ -53,13 +53,13 @@ app.controller("mainCtr", ($scope,$filter) => {
     var Dexie = require('dexie');
     $scope.db = new Dexie("snapBurgerDb");
     $scope.db.version(1).stores({
-        users: "++id,name,password,position,startDate,salary,status,is_mgr,img_url",
-        categories: "++id,name,status,action",
-        items: "++id,name,rate,category,status,action",
+        users: "++id,&name,password,position,startDate,salary,status,is_mgr,img_url",
+        categories: "++id,&name,status,action",
+        items: "++id,&name,rate,category,status,action",
         orders: "++id,inv,date,*items,totalPrice,tableNum,totalQuantity,staff",
         settings: "&id,tableNumber,time_range,auto_update,back_up,performance_report,os_name",
         withdrawals:"++id,reason,amount,date",
-        tracker:"++id,type,tableName,data,date"
+        tracker:"++id,type,tableName,data,date,status"
     })
         $scope.db.settings.add({
             id:1,tableNumber:1,time_range:{from:"8:00",to:"21:30"},auto_update:true,back_up:true,performance_report:true,os_name:os.hostname()
