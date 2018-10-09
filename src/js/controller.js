@@ -3,6 +3,7 @@ const {
     ipcRenderer,
     shell
 } = require('electron');
+const os = require('os');
 //loading printer module
 const print = require('electron').remote.require('electron-thermal-printer');
 
@@ -55,16 +56,17 @@ app.controller("mainCtr", ($scope,$filter) => {
         users: "++id,name,password,position,startDate,salary,status,is_mgr,img_url",
         categories: "++id,name,status,action",
         items: "++id,name,rate,category,status,action",
-        orders: "++id,name,date,*items,totalPrice,totalQuantity,staff",
-        settings: "&id,tableNumber,time_range,auto_update,back_up,performance_report"
+        orders: "++id,inv,date,*items,totalPrice,tableNum,totalQuantity,staff",
+        settings: "&id,tableNumber,time_range,auto_update,back_up,performance_report,os_name",
+        withdrawals:"++id,reason,amount,date",
+        tracker:"++id,type,tableName,data,date"
     })
         $scope.db.settings.add({
-            id:1,tableNumber:1,time_range:{from:"8:000",from:"21:30",auto_update:true,back_up:true,performance_report:true},
+            id:1,tableNumber:1,time_range:{from:"8:00",to:"21:30"},auto_update:true,back_up:true,performance_report:true,os_name:os.hostname()
         })
         .catch(e=>{
             return;
         })
-
     //fetching Data
     $scope.db.transaction('r', $scope.db.users, $scope.db.orders, $scope.db.categories, $scope.db.items, $scope.db.settings, () => {
             $scope.db.settings.get(1)
@@ -122,7 +124,7 @@ app.controller("mainCtr", ($scope,$filter) => {
     //=========== MANAGERIAL ACCOUNT! ========
     $scope.createManagerFxn = (login) => {
         img = document.querySelector('#managerialImgInput').files[0];
-        if (typeof img == 'undefined') {
+        if (typeof img !== 'object') {
             blob = 'img/user-grey.png';
         } else {
             blob = new Blob([img], {
@@ -261,7 +263,7 @@ app.controller("mainCtr", ($scope,$filter) => {
     //Orders
     $scope.todaysOrders = []
     $scope.currentOrder = {
-        name: '',
+        inv: '',
         date: '',
         table: 1,
         items: [],
@@ -340,38 +342,6 @@ app.controller("mainCtr", ($scope,$filter) => {
     /*
     ================== UPDATE DATABASES ONLINE/OFFLINE====================
     */
-   $scope.syncData = ()=>{
-       jQuery.get('http://localhost/snapburger_sync.php?type=connect',(data)=>{
-           if(data.status && data.msg == 'connected'){
-               console.log(data.msg)
-               //change text
-               jQuery('#sync_dropdown .text').text('Updating...');
-               //send database data
-                var dbSend = [
-                    {table:"users",data:$scope.users},
-                    {table:"categories",data:$scope.products.categories},
-                    {table:"items",data:$scope.products.items},
-                    {table:"orders",data:$scope.orders},
-                    {table:"settings",data:$scope.settings}
-                ]
-                var formData = jQuery.param({db:JSON.stringify(dbSend)});
-                jQuery.ajax({
-                    url:'http://localhost/snapburger_sync.php',
-                    data:formData,
-                    method:'post',
-                    dataType:"json",
-                    success:(data)=>{
-                         console.log(data);
-                    },
-                    error:(err)=>{
-                        console.error(err.responseText);
-                    }
-                })
-           }else{
-               console.log(data.msg)
-           }
-       },'json')
-   }
     //offline and online function
     function isOnline() {
         var syncBtn = jQuery('#syncBtn').children('i'),

@@ -43,7 +43,7 @@
                             <table id="allOrders" class="huberts-table">
                                 <tbody>
                                     <tr ng-repeat="x in orders" data-date="{{toDate(x.date)}}">
-                                        <td>{{x.name}}</td>
+                                        <td>{{x.inv}}</td>
                                         <td>
                                             <ul class="browser-default">
                                                 <li ng-repeat="o in x.items">{{o.name}} <small class="teal-text">{{o.quantity}}</small></li>
@@ -64,83 +64,115 @@
         <!-- Products Reports! -->
         <div id="statsReports" class="white tab-prev col s12 p-0">
             <div class="row">
-                <div class="col s3 logs-table">
-                    <div>
-                        <div class="collection" id="logsCollection">
+                <div class="col s3 p-0">
+                    <div class="collection m-0" id="logsCollection">
+                        <a ng-click="showOverview()" href="javascript:void(0)" class="collection-item grey-text text-darken-4">
+                            Overview <i class="material-icons right">chevron_right</i>
+                        </a>
+                        <a style="padding: 2px 10px;" href="javascript:void(0)" class="collection-item grey lighten-4 grey-text"><small>Days</small></a>
+                    </div>
+                    <div class="logs-table first">
+                        <div class="collection m-0" id="logsCollection">
                             <!-- no need for a.date, remember 'a' is already a date object -->
                             <a ng-repeat="a in uniqueDateOrders" href="javascript:void(0)" class="collection-item grey-text text-darken-4" ng-click="logsController(a)">{{cleaner(a)}}<span class="new badge  blue-grey min-badge" data-badge-caption="">{{countDateOrders(a)}}</span></a>
                         </div>
                     </div>
                 </div>
                 <div class="col s9 logs-table">
+                    <!--overview -->
+                    <div ng-hide="hideOverviewContainer" class="white" id="overview">
+                        <h6 align="center" class="teal-text">OVERVIEW</h6>
+                        <div class="row">
+                            <div class="col s6">
+                                <div class="input-field col s12">
+                                    <select class="browser-default">
+                                      <option value="" disabled selected>Choose start</option>
+                                      <option ng-repeat="a in uniqueDateOrders" value="{{cleaner(a)}}">{{cleaner(a)}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col s6">
+                                <div class="input-field col s12">
+                                    <select class="browser-default">
+                                      <option value="" disabled selected>Choose start</option>
+                                      <option ng-repeat="a in uniqueDateOrders" value="{{cleaner(a)}}">{{cleaner(a)}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--items logs -->
                     <div class="row">
-                    <h5 class="display-date teal-text">{{displayDate}}</h5>
-                     <div class="panels">
-                        <div class="col s4">
-                            <div class="info-card">
-                                <div class="body orange darken-4 white-text">
-                                    <div class="row">
-                                        <div class="icon col s3">
-                                            <i class="material-icons">shopping_cart</i>
+                        <h5 class="display-date teal-text">{{displayDate}}</h5>
+                        <div class="panels">
+                            <div class="col s4">
+                                <div class="info-card">
+                                    <div class="body orange darken-4 white-text">
+                                        <div class="row">
+                                            <div class="icon col s3">
+                                                <i class="material-icons">shopping_cart</i>
+                                            </div>
+                                            <div class="icon-body col s9">
+                                                <small>ALL ORDERS</small>
+                                                <h6>{{logsCurrentOrders.length | currency:"":0}}</h6>
+                                                <img class="bubbles" src="img/circle.svg" alt="">
+                                            </div>
                                         </div>
-                                        <div class="icon-body col s9">
-                                           <small>ALL ORDERS</small>
-                                           <h6>{{logsCurrentOrders.length | currency:"":0}}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col s4">
+                                <div class="info-card">
+                                    <div class="body blue white-text">
+                                        <div class="row">
+                                            <div class="icon col s3">
+                                                <i class="material-icons">featured_play_list</i>
+                                            </div>
+                                            <div class="icon-body col s9">
+                                                <small>TOTAL ITEMS SOLD</small>
+                                                <h6>{{logTotalQty | currency:"":0}}</h6>
+                                                <img class="bubbles" src="img/circle.svg" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col s4">
+                                <div class="info-card">
+                                    <div class="body pink accent-3 white-text">
+                                        <div class="row">
+                                            <div class="icon col s3">
+                                                <i class="material-icons">attach_money</i>
+                                            </div>
+                                            <div class="icon-body col s9">
+                                                <small>AMOUNT SOLD</small>
+                                                <h6>{{logTotalPrice | currency:"FCFA ":0}}</h6>
+                                                <img class="bubbles" src="img/circle.svg" alt="">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col s4">
-                            <div class="info-card">
-                                <div class="body blue white-text">
-                                    <div class="row">
-                                        <div class="icon col s3">
-                                            <i class="material-icons">featured_play_list</i>
-                                        </div>
-                                        <div class="icon-body col s9">
-                                           <small>TOTAL ITEMS SOLD</small>
-                                           <h6>{{logTotalQty | currency:"":0}}</h6>
-                                        </div>
+                        <div class="long-container">
+                            <canvas id="logsChart" height="165" width="400"></canvas>
+                        </div>
+                        <!--percentages plus pie chart -->
+                        <div class="row pie">
+                            <div class="col s4">
+                                <div ng-repeat="i in barData.x" class="list-item-percent brb">
+                                    <h6 class="teal-text">{{i}}</h6>
+                                    <div class="progress">
+                                        <div class="determinate bg-theme" style="width:{{roundUp((barData.y[$index]/logTotalQty) *100)}}%"></div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col s4">
-                            <div class="info-card">
-                                <div class="body pink accent-3 white-text">
-                                    <div class="row">
-                                        <div class="icon col s3">
-                                            <i class="material-icons">attach_money</i>
-                                        </div>
-                                        <div class="icon-body col s9">
-                                            <small>AMOUNT SOLD</small>
-                                            <h6>{{logTotalPrice | currency:"FCFA ":0}}</h6>
-                                        </div>
-                                    </div>
+                            <div class="col offset-s2 s6">
+                                <div class="long-container">
+                                    <canvas id="logsPieChart" height="100" width="100"></canvas>
                                 </div>
                             </div>
                         </div>
-                      </div>
-                      <div class="long-container">
-                      <canvas id="logsChart" height="165" width="400"></canvas>
-                      </div>
-                      <!--percentages plus pie chart -->
-                     <div class="row pie">
-                         <div class="col s4">
-                             <div ng-repeat="i in barData.x" class="list-item-percent brb">
-                                 <h6 class="teal-text">{{i}}</h6>
-                                 <div class="progress">
-                                  <div class="determinate bg-theme" style="width:{{roundUp((barData.y[$index]/logTotalQty) *100)}}%"></div>
-                                </div>
-                             </div>
-                         </div>
-                         <div class="col offset-s2 s6">
-                              <div class="long-container">
-                                  <canvas id="logsPieChart" height="100" width="100"></canvas>
-                              </div>
-                         </div>
-                     </div>
                     </div>
                 </div>
             </div>

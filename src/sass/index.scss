@@ -24,6 +24,9 @@
 .p-0 {
     padding: 0!important;
 }
+.m-0{
+    margin: 0!important;
+}
 .brb{
     border-bottom: 1px solid #ddd;
     padding-bottom: 5px;
@@ -47,16 +50,21 @@
 }
 
 .bg-theme-pink {
-    background: linear-gradient(to right, #d81b60, #ff9800)
+    background: linear-gradient(to right, #ff416c, #ff4b2b);
 }
 
 .bg-theme-pink-orange {
     background: linear-gradient(to right, #d81b60, #f44336)
 }
 .bg-ig{
-    background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
+   background: linear-gradient(to right, #52c234, #061700);
 }
-
+.bg-blue-white{
+    background: linear-gradient(to right, #800080, #ffc0cb);
+}
+.bg-to-blue{
+    background: linear-gradient(to right, #0575e6, #021b79);
+}
 /* width */
 
 //input number
@@ -1062,15 +1070,25 @@ div#reports {
         }
     }
     .logs-table{
-        &:first-of-type{
-            padding: 0;
-        }
         height:80vh;
+        &.first{
+            padding: 0;
+            height:69vh;
+        }
         padding: 10px;
+        position: relative;
         overflow-y: scroll;
     }
     .info-card{
+        position: relative;
         cursor: pointer;
+        img.bubbles{
+                position: absolute;
+            right: 0;
+            width: auto;
+            top: 0;
+            height: 80px;
+        }
         .icon-body{
             padding: 9px 20px;
         }
@@ -1090,6 +1108,14 @@ div#reports {
     .pie{
         margin-top: 40px;
     }
+    .progress {
+        background-color:#eee;
+    }
+}
+#overview{
+    position: absolute;
+    top: 0;bottom: 0;right: 0;left: 0;
+    z-index:9;
 }
 
 //media

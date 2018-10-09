@@ -88,7 +88,9 @@ app.controller("dashCtr", ($scope,$filter) => {
                 break;
             }
         }
-        jQuery(e.target).siblings('div.inputDiv').children('input.qty').val(1)
+        if(e != null){
+            jQuery(e.target).siblings('div.inputDiv').children('input.qty').val(1);
+        }
         //jQuery('input.qty').val(1);
         //$scope.currentOrder.items = array
         console.log()
@@ -146,9 +148,9 @@ app.controller("dashCtr", ($scope,$filter) => {
         }
         const staff = JSON.parse(sessionStorage.getItem('user'))
         //creating current order
-        $scope.currentOrder.name = $scope.orderInv;
+        $scope.currentOrder.inv = $scope.orderInv;
         $scope.currentOrder.date = new Date();
-        $scope.currentOrder.table = $scope.orderTableNumber;
+        $scope.currentOrder.tableNum = $scope.orderTableNumber;
         $scope.currentOrder.staff = staff.name;
         const current = $scope.currentOrder;
         //and now pushing to main --
@@ -156,7 +158,7 @@ app.controller("dashCtr", ($scope,$filter) => {
         .then(()=>{
                 $scope.fetchAndComputeOrders();
                 $scope.orderInv = `SB${Math.floor(Math.random() * 999) + 1000}`;
-                $scope.removeItem('deleteAll');
+                $scope.removeItem(null,'deleteAll');
                 jQuery('input.qty').val(1);
                 $scope.$apply();
                 //console.log($scope.orders)
@@ -199,6 +201,16 @@ app.controller("dashCtr", ($scope,$filter) => {
           //$scope.removeItem('deleteAll') 
         //console.log($scope.todaysOrders);
     }
+    //test to see orders.
+    $scope.db.orders.hook('creating', function (primKey, obj, transaction) {
+        // You may do additional database operations using given transaction object.
+        // You may also modify given obj
+        console.log(obj)
+        console.log(transaction)
+        // You may set this.onsuccess = function (primKey){}. Called when autoincremented key is known.
+        // You may set this.onerror = callback if create operation fails.
+        // If returning any value other than undefined, the returned value will be used as primary key
+    });
     //prompt print
     $scope.promptPrint = (order)=>{
         if(confirm("Are you sure you want to print this order?")){
@@ -214,7 +226,7 @@ app.controller("dashCtr", ($scope,$filter) => {
           console.error("StorageManager not found");
         }
       }
-      showEstimatedQuota();
+      //showEstimatedQuota();
     
 
 })

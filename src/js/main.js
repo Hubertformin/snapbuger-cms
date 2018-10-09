@@ -189,8 +189,10 @@ function mouseY(e){
 document.querySelector('#managerialImgInput').onchange = (e)=>{
     var img = document.querySelector('#managerialImg'),
     file = e.target.files[0];
+    if(file)
     if(file.size > 400000){
         notifications.notify({type:"error",msg:"File size to large, please upload a picture below 4MB"})
+        e.target.files[0] = '';
         return false;
     }
     //console.log(file);

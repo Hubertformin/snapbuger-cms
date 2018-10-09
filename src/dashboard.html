@@ -198,7 +198,7 @@
                         <tbody>
                             <tr ng-repeat="x in todaysCompletedOrders | orderBy : 'id' : true ">
                                <td class="small">{{$index+1}}</td>
-                                <td>{{x.name}}</td>
+                                <td>{{x.inv}}</td>
                                 <td>
                                     <ul class="browser-default" style="list-style-type:circle;">
                                         <li ng-repeat="o in x.items">{{o.name}} <i class="green-text badge">{{o.quantity}}</i></li>
@@ -273,7 +273,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <a ng-click="removeItem($event,'deleteAll')" class="waves-effect waves-red btn-flat white-text red left">clear all</a>
+            <a ng-click="removeItem(null,'deleteAll')" class="btn-flat white-text red left">clear all</a>
         </div>
     </div>
 </div>

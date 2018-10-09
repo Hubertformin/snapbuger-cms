@@ -121,7 +121,7 @@ app.controller('reportsCtr',($scope)=>{
     }
     //delete orders
     $scope.deleteOrder = (i)=>{
-        if(confirm(`Are you sure you want to delete order: ${$scope.orders[i].name}?`)){
+        if(confirm(`Are you sure you want to delete order: ${$scope.orders[i].inv}?`)){
             $scope.db.orders.delete($scope.orders[i].id)
             .then(()=>{
                 $scope.db.orders.toArray()
@@ -212,16 +212,6 @@ var barChart = new Chart(ctx, {
             backgroundColor: getRandomColor(),
             borderWidth: 0.5
         }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true,
-                    stepSize:1
-                }
-            }]
-        }
     }
 });
 var ctx = document.getElementById("logsPieChart").getContext('2d');
@@ -258,6 +248,8 @@ function getRandomColor(num = 1) {
 $scope.logsCurrentOrders = [],$scope.logsAllItems = [],$scope.logTotalPrice = 0;$scope.barData = {x:[],y:[]};
 //logs dunction
 $scope.logsController = (dt)=>{
+    //1. hide overview container
+    $scope.hideOverviewContainer = true;
     $scope.displayDate = $scope.cleaner(dt);
     //re emptying
     $scope.logsCurrentOrders = [];$scope.logsAllItems = [];$scope.itemNames = [];$scope.logTotalPrice = 0;
@@ -269,7 +261,7 @@ $scope.logsController = (dt)=>{
             el.items.forEach(ele=>{    
                 $scope.logsAllItems.push(ele);
                 $scope.logTotalQty += Number(ele.quantity);
-                $scope.itemNames.push(ele.name);
+                $scope.itemNames.push(ele.inv);
                 $scope.logTotalPrice += Number(ele.price);
             })
         }
@@ -317,7 +309,11 @@ $scope.logsController = (dt)=>{
     }
     pieChart.update();
 }
-//
+//function to show overview 
+$scope.showOverview = ()=>{
+    //1. show overview container
+    $scope.hideOverviewContainer = false;
+}
 
 
 })
