@@ -140,10 +140,10 @@ app.controller("dashCtr", ($scope,$filter) => {
 
     ///Finally creating order, first by setting the default table number to 1
     $scope.orderTableNumber = '1';
-    $scope.orderInv = `SB${Math.floor(Math.random() * 999) + 1000}`;
+    $scope.orderInv = `SBO${Math.floor(Math.random() * (9999 - 1000) ) + 1000}`;
     $scope.createOrder = ()=>{
         if($scope.currentOrder.items.length == 0){
-            notifications.notify({type:"error",msg:"Please select items"})
+            notifications.notify({title:"No Items selected",type:"error",msg:"Please select items to proceed"})
             return false;
         }
         const staff = JSON.parse(sessionStorage.getItem('user'))
@@ -157,7 +157,7 @@ app.controller("dashCtr", ($scope,$filter) => {
         $scope.db.orders.add(current)
         .then(()=>{
                 $scope.fetchAndComputeOrders();
-                $scope.orderInv = `SB${Math.floor(Math.random() * 999) + 1000}`;
+                $scope.orderInv = `SBO${Math.floor(Math.random() * (9999 - 1000) ) + 1000}`;
                 $scope.removeItem(null,'deleteAll');
                 jQuery('input.qty').val(1);
                 $scope.$apply();

@@ -16,9 +16,7 @@ app.controller('reportsCtr',($scope)=>{
    .then((data)=>{
         $scope.uniqueDateOrders = [];
         $scope.orders = data;
-        $scope.orders.sort(function(a,b){
-            return (a.id < b.id)?1:((b.id < a.id)? -1:0);
-        });
+        $scope.orders.reverse();
         for(var i = 0;i<$scope.orders.length;i++){
             //$scope.orders[i].date = toDate($scope.orders[i].date)
             if(i>0 && toDate($scope.orders[i-1].date) == toDate($scope.orders[i].date)){
@@ -26,6 +24,7 @@ app.controller('reportsCtr',($scope)=>{
             }
             $scope.uniqueDateOrders.push($scope.orders[i].date)
         }
+        
         //plotting graph
         var i = ($scope.uniqueDateOrders.length>30)?(Math.floor($scope.uniqueDateOrders.length/30)*30)-1 : 0;
         for(i;i<$scope.uniqueDateOrders.length;i++){
@@ -84,8 +83,8 @@ app.controller('reportsCtr',($scope)=>{
         return `${dte.getFullYear()}-${dte.getMonth()+1}-${dte.getDate()}`
     }
     //cleaner function that formats date and show it in the left pane of the orders table
-    $scope.cleaner = (dt)=>{
-        dt = dt.toDateString();
+    $scope.cleaner = (en)=>{
+        dt = en.toDateString();
         var time = new Date(dt).getTime(),now = Date.now(),d;
         d = Math.round((now - time)/3600000)
         if(d<24){
@@ -93,7 +92,7 @@ app.controller('reportsCtr',($scope)=>{
         }else if(d >= 24 && d < 48){
             return "Yesterday";
         }else{
-            return dt;
+            return `${en.getDate()}/${en.getMonth()+1}/${en.getFullYear()}`;
         }
     }
     //function, used to show the corresponding date orders when date on left pane is clicked
@@ -128,10 +127,10 @@ app.controller('reportsCtr',($scope)=>{
                 .then(data=>{
                     $scope.orders = data;
                     $scope.$apply();
-                    notifications.notify({type:"ok",msg:"Deleted!"})
+                    notifications.notify({title:"Complete",type:"ok",msg:"Order deleted!"})
                 })
                 .catch(err=>{
-                    notifications.notify({type:"error",msg:`An error occured! ${err}`})
+                    notifications.notify({title:"Unknown error",type:"error",msg:`Unable to delete order`})
                 })
             })
         }
@@ -182,23 +181,6 @@ app.controller('reportsCtr',($scope)=>{
     }
     //lastly charts
     //creating graph data
-//update graph
-$scope.updateGraph = ()=>{
-    //empty and repass variables into the graph
-    $scope.graphData = [];
-    var i = ($scope.orders.length>30)?$scope.orders.length-31:0;
-    for(i = 0;i<$scope.uniqueDateOrders.length;i++){
-        var el = {x:toGraphDate($scope.uniqueDateOrders[i]),y:0}
-        for(var y = 0;y<$scope.orders.length;y++){
-            if($scope.orders[y].date.toDateString() == $scope.uniqueDateOrders[i].toDateString()){
-                el.y += 1;
-            }
-        }
-        $scope.graphData.push(el);
-    }
-    $scope.graph.setData($scope.graphData)
-}
-//setInterval($scope.updateGraph,6000);
 //===================== LOGS ==============
 //1.Plotting the curve
 var ctx = document.getElementById("logsChart").getContext('2d');
@@ -261,11 +243,12 @@ $scope.logsController = (dt)=>{
             el.items.forEach(ele=>{    
                 $scope.logsAllItems.push(ele);
                 $scope.logTotalQty += Number(ele.quantity);
-                $scope.itemNames.push(ele.inv);
+                $scope.itemNames.push(ele.name);
                 $scope.logTotalPrice += Number(ele.price);
             })
         }
     })
+    
     //2. getting unique items
     $scope.uniqueItems = [];
     $scope.itemNames.sort();
@@ -288,6 +271,7 @@ $scope.logsController = (dt)=>{
         $scope.barData.y.push(counter);
 
     }
+
     barChart.config.data = {
         labels: $scope.barData.x,
         datasets: [{

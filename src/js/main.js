@@ -19,30 +19,36 @@ class Alerts{
     constructor(){
         this.successMsg= jQuery('#success');
         this.errorMsg= jQuery('#error');
-        this.successMsg.click(()=>{
+        this.successMsg.children('.body').children('.close').click(()=>{
             this.successMsg.slideUp();
+            clearTimeout(this.timeoutSuccess);
         })
-        this.errorMsg.click(()=>{
+        this.errorMsg.children('.body').children('.close').click(()=>{
             this.errorMsg.slideUp();
-            clearTimeout()
-        })
+            clearTimeout(this.timeoutError)
+        });
     }
-    notify({msg,type}){
+    notify({msg,type,title},time = 4000){
+        if(typeof title !== 'string'){
+            title = 'Notification';
+        }
         if(type == "error"){
-            this.errorMsg.children('.msg').html(msg)
+            this.errorMsg.children('.body').children('.title').html(title)
+            this.errorMsg.children('.body').children('.msg').html(msg)
              this.errorMsg.slideDown("fast");
-             setTimeout(()=>{
+             this.timeoutError = setTimeout(()=>{
                 this.errorMsg.slideUp();
-             },3600)
+             },time)
             
         }else{
-            this.successMsg.children('.msg').html(msg)
+            this.successMsg.children('.body').children('.title').html(title)
+            this.successMsg.children('.body').children('.msg').html(msg)
             this.successMsg.slideDown("fast")
-            setTimeout(()=>{
+            this.timeoutSuccess = setTimeout(()=>{
                 if(this.successMsg.css('display') !== 'none'){
                     this.successMsg.slideUp()   
                 }
-            },3600)
+            },time)
         }
     }
 }
@@ -156,36 +162,6 @@ const notifications = new Alerts();
 //time class
 const time = new DateFunction();
 
-//context-menu
-/*document.addEventListener('contextmenu',(e)=>{
-    e.preventDefault();
-    jQuery('#context-menu').fadeIn();
-    var menu = document.querySelector('#context-menu')
-    menu.style.top = mouseY(event)+'px';
-    menu.style.left = mouseX(event)+'px';
-    window.event.returnValue = false;
-},false)
-document.addEventListener('click',()=>{
-    jQuery('#context-menu').fadeOut();
-})
-function mouseX(e){
-    if(e.pageX){
-        return e.pageX;
-    }else if(e.clientX){
-        return e.clientX + (document.documentElement.scrollLeft)?document.documentElement.scrollLeft:document.body.scrollLeft;
-    }else{
-        return null;
-    }
-}
-function mouseY(e){
-    if(e.pageY){
-        return e.pageY;
-    }else if(e.clientY){
-        return e.clientY + (document.documentElement.scrollTop)?document.documentElement.scrollTop:document.body.scrollTop;
-    }else{
-        return null;
-    }
-}*/
 document.querySelector('#managerialImgInput').onchange = (e)=>{
     var img = document.querySelector('#managerialImg'),
     file = e.target.files[0];
@@ -200,3 +176,18 @@ document.querySelector('#managerialImgInput').onchange = (e)=>{
     img.src = url;
     
 }
+//===================================================================================================================================
+//client side of app
+//register service worker
+if('serviceWorker' in navigator){
+    send().catch(err=>console.log(err));
+}
+async function send(){
+    const register = await navigator.serviceWorker.register('./js/service-worker.js');
+}
+    // Then later, request a one-off sync:
+    navigator.serviceWorker.ready.then(function(swRegistration) {
+        return swRegistration.sync.register('myFirstSync');
+    });
+
+  

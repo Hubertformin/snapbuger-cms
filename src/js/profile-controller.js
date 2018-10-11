@@ -9,7 +9,7 @@ app.controller('profileCtr',($scope)=>{
         var file = e.target.files[0];
         if(typeof file !== 'object') return false;
         if(file.size > 400000){
-            notifications.notify({type:"error",msg:"File size large, please upload a picture below 4MB"})
+            notifications.notify({title:"File too large",type:"error",msg:"File size large, please upload a picture below 4MB"})
             return false;
         }
         var img = document.querySelector('#Image'),
@@ -35,7 +35,7 @@ app.controller('profileCtr',($scope)=>{
                     $scope.profile_pic = $scope.currentUser.img_url;
                 }
                 //$scope.$apply();
-                notifications.notify({msg:"Updated!",type:"ok"})
+                notifications.notify({title:"Complete",msg:"account info updated",type:"ok"})
             })
             
         })

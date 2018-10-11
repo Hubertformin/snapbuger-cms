@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain,Notification, Tray, Menu} = require('electron')
+const {app, BrowserWindow, ipcMain, Tray, Menu} = require('electron');
 
   // Keep a global reference of the window object, if you don't, the window will
   // be closed automatically when the JavaScript object is garbage collected.
@@ -45,6 +45,7 @@ const {app, BrowserWindow, ipcMain,Notification, Tray, Menu} = require('electron
   // Some APIs can only be used after this event occurs.
   app.on('ready', createWindow)
   /*let tray = null
+  
   app.on('ready', () => {
     tray = new Tray('./src/img/logo-round.png')
     const contextMenu = Menu.buildFromTemplate([

@@ -1,6 +1,7 @@
 //all styles
 *::selection {
-    background: #f1f1f1;
+    background-color:#e65100;
+    color:#fff;
     user-drag: none;
     user-select: none;
 }
@@ -114,6 +115,12 @@ hr {
     &.ruler {
         margin-bottom: 25px;
     }
+    &.border{
+        width: 90%;
+        float: right;
+        margin-top: 10px;
+        border-color:#999;
+    }
 }
 
 select {
@@ -124,24 +131,15 @@ select {
     }
 }
 
-#login {
-    display: block;
-    img {
-        width: 150px;
-        height: auto;
-    }
-    .row {
-        position: relative;
-    }
-    #managerial {
+#managerial {
         display: none;
-        position: absolute;
+        position:fixed;
         top: 0;
         bottom: 0;
         left: 0;
         right: 0;
         background: #fff;
-        z-index: 29992;
+        z-index:3000;
         h4 {
             transform: translateY(-140%);
         }
@@ -189,6 +187,22 @@ select {
         #createMgrBtn2{
             display: none;
         }
+    }
+section#dataDbCheck{
+    display: none;
+    background:#fff;
+    position:fixed;
+    top:0;left:0;right:0;bottom:0;
+    z-index:3001;
+}
+#login {
+    display: block;
+    img {
+        width: 150px;
+        height: auto;
+    }
+    .row {
+        position: relative;
     }
     #loader {
         padding: 100px 55px;
@@ -420,19 +434,56 @@ nav:not(.nav-extended) {
 
 //
 .notify {
-    display: none;
+    display:none;
     position: fixed;
     bottom: 5%;
     color: white;
     text-align: center;
-    padding: 10px 25px;
-    left: 40%;
+    &#success{
+        left: 4%;
+    }
+    &#error{
+        right:4%;
+    }
+    div.head{
+        padding:10px 25px;
+        float:left;
+        display: inline-block;
+        position: relative;
+        height: 100%;
+        width:25%;
+        text-align: center;
+        img{
+            //position: absolute;
+            top: 50%;
+            left: 50%;
+            height:75px;width:75px;
+            //transform: translate(-40%,0%);
+        }
+    }
+    div.body{
+        width:75%;
+        float:left;
+        padding:10px 25px;
+        max-width: 300px;
+        display: inline-block;
+        h6{
+            margin-top: 0;
+        }
+        span.msg{
+            color: #999;
+            display: block;
+        }
+        button{
+            color: #999!important;
+        }
+    }
     z-index: 19999;
-    width: 360px;
+    width:auto;
     cursor: pointer;
-    border-radius: 26px;
     i {
         font-style: normal;
+        display: block;
         float: right;
     }
 }

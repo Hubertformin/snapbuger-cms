@@ -16,7 +16,7 @@ app.controller('settingsCtr',($scope)=>{
     //function to update settings
     $scope.updateSettings = (con)=>{
         if(typeof jQuery('#orders_from').val() !== 'string' || typeof jQuery('#orders_to').val() !== 'string'){
-            notifications.notify({type:"error",msg:"Please select time properly!"})
+            notifications.notify({title:"Error",type:"error",msg:"Please select time properly!"})
             return false;
         }
         if(con == 'reset-default'){
@@ -32,7 +32,7 @@ app.controller('settingsCtr',($scope)=>{
         var from = $scope.settings.time_range.from.split(":");
         var to = $scope.settings.time_range.to.split(":");
         if(Number(from[0]) > Number(to[0]) || Number(from[0]) == Number(to[0]) && Number(from[1]) >= Number(to[1])){
-            notifications.notify({msg:"<small>Starting time cannot be greater than or equal to stopping time</small>",type:"error"});
+            notifications.notify({title:"Invalid Time",msg:"Starting time cannot be greater than or equal to stopping time",type:"error"});
             jQuery('#orders_from').val("8:00");
             jQuery('#orders_to').val("21:30");
             return false;
