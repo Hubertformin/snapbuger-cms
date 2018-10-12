@@ -10,56 +10,89 @@ app.controller('reportsCtr',($scope)=>{
         jQuery(e.target).addClass("active");
         jQuery(data).fadeIn("fast");
     })
-    //refetcing orders
-    $scope.graph;$scope.uniqueDateOrders = [];$scope.graphData = {x:[],y:[]};
-    $scope.db.orders.toArray()
-   .then((data)=>{
-        $scope.uniqueDateOrders = [];
-        $scope.orders = data;
-        $scope.orders.reverse();
-        for(var i = 0;i<$scope.orders.length;i++){
-            //$scope.orders[i].date = toDate($scope.orders[i].date)
-            if(i>0 && toDate($scope.orders[i-1].date) == toDate($scope.orders[i].date)){
-                continue;
-            }
-            $scope.uniqueDateOrders.push($scope.orders[i].date)
-        }
-        
-        //plotting graph
-        var i = ($scope.uniqueDateOrders.length>30)?(Math.floor($scope.uniqueDateOrders.length/30)*30)-1 : 0;
-        for(i;i<$scope.uniqueDateOrders.length;i++){
-            $scope.graphData.x.unshift($scope.cleaner($scope.uniqueDateOrders[i]));
-            let counter = 0;
-            for(var y = 0;y<$scope.orders.length;y++){
-                if($scope.orders[y].date.toDateString() == $scope.uniqueDateOrders[i].toDateString()){
-                    counter += 1;
+    //refetcing orders and withdrawals, first declare empty variables
+    $scope.graph;$scope.uniqueDateOrders = [];$scope.uniqueDateWithdrawals = [];$scope.graphData = {x:[],y:[]};
+    //fetcing...
+    $scope.db.transaction('r',$scope.db.orders,$scope.db.withdrawals,()=>{
+        $scope.db.orders.toArray()
+        .then((data)=>{
+            $scope.uniqueDateOrders = [];
+            $scope.orders = data;
+            $scope.orders.reverse();
+            for(var i = 0;i<$scope.orders.length;i++){
+                //$scope.orders[i].date = toDate($scope.orders[i].date)
+                if(i>0 && toDate($scope.orders[i-1].date) == toDate($scope.orders[i].date)){
+                    continue;
                 }
+                $scope.uniqueDateOrders.push($scope.orders[i].date)
             }
-            $scope.graphData.y.unshift(counter);
-        }
-        //area charts 
-        var ctx = document.getElementById('orderChart').getContext('2d');
-        var chart = new Chart(ctx, {
-            // The type of chart we want to create
-            type: 'line',
-
-            // The data for our dataset
-            data: {
-            labels:$scope.graphData.x,
-            datasets: [{
-                label: "Orders",
-                backgroundColor: 'rgba(255, 99, 132,0.6)',
-                borderColor: 'rgb(255, 99, 132)',
-                data:$scope.graphData.y,
-            }]
-            },
-
-            // Configuration options go here
-            options: {}
-        });
+            
+            //plotting graph
+            var i = ($scope.uniqueDateOrders.length>30)?(Math.floor($scope.uniqueDateOrders.length/30)*30)-1 : 0;
+            for(i;i<$scope.uniqueDateOrders.length;i++){
+                $scope.graphData.x.unshift($scope.cleaner($scope.uniqueDateOrders[i]));
+                let counter = 0;
+                for(var y = 0;y<$scope.orders.length;y++){
+                    if($scope.orders[y].date.toDateString() == $scope.uniqueDateOrders[i].toDateString()){
+                        counter += 1;
+                    }
+                }
+                $scope.graphData.y.unshift(counter);
+            }
+            //area charts 
+            var ctx = document.getElementById('orderChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+                // The data for our dataset
+                data: {
+                labels:$scope.graphData.x,
+                datasets: [{
+                    label: "Orders",
+                    backgroundColor: 'rgba(255, 99, 132,0.6)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data:$scope.graphData.y,
+                }]
+                },
+    
+                // Configuration options go here
+                options: {}
+            });
+            //applying
+            $scope.$apply();
+       })
+       //fetcing for withddawals
+       //this is the total amount of withdrawals
+       $scope.amountWithdrawals = 0;
+       $scope.db.withdrawals.toArray()
+       .then((data)=>{
+           $scope.withdrawals = data;
+           $scope.uniqueDateWithdrawals = [];
+            $scope.withdrawals.reverse();
+            for(var i = 0;i<$scope.withdrawals.length;i++){
+                $scope.amountWithdrawals += $scope.withdrawals[i].amount;
+                //$scope.orders[i].date = toDate($scope.orders[i].date)
+                if(i>0 && toDate($scope.withdrawals[i-1].date) == toDate($scope.withdrawals[i].date)){
+                    continue;
+                }
+                $scope.uniqueDateWithdrawals.push($scope.withdrawals[i].date);
+            }
+          //applying
+       $scope.$apply();  
+       })
+       
+    })
+    .then(()=>{
         //
-        $scope.$apply();
-   })
+    })
+    .catch(()=>{
+        notifications.notify({
+            title:"Failed to fetch Database",
+            msg:"Database error,database was probably deleted by another application.<br>Close the app, re-open with internet connection",
+            type:"error"
+        })
+    })
+  
    //Instantiating
    $('select').formSelect();
     //var instance = M.Tabs.init(jQuery('.tabs'));
@@ -77,10 +110,6 @@ app.controller('reportsCtr',($scope)=>{
     //for date display array, first we reverse sort
     function toDate(dt){
         return new Date(dt).toDateString();
-    }
-    function toGraphDate(dt){
-        var dte = new Date(dt);
-        return `${dte.getFullYear()}-${dte.getMonth()+1}-${dte.getDate()}`
     }
     //cleaner function that formats date and show it in the left pane of the orders table
     $scope.cleaner = (en)=>{
@@ -113,6 +142,16 @@ app.controller('reportsCtr',($scope)=>{
         var n = 0;
         for(var x = 0;x<$scope.orders.length;x++){
             if($scope.orders[x].date.toDateString() == dt.toDateString()){
+                n += 1;
+            }
+        }
+        return n;
+    }
+    //count withdrawals in specific dates
+    $scope.countDatewithdrawals = (dt)=>{
+        var n = 0;
+        for(var x = 0;x<$scope.withdrawals.length;x++){
+            if($scope.withdrawals[x].date.toDateString() == dt.toDateString()){
                 n += 1;
             }
         }
@@ -178,6 +217,24 @@ app.controller('reportsCtr',($scope)=>{
     //round up function
     $scope.roundUp = (num) => {
         return Math.round(num);
+    }
+    //the withrawals, settings variables
+    $scope.displayWithdrawDate = "All day";
+    $scope.numWithdrawals = $scope.withdrawals.length;
+    //the function
+    $scope.renderInViewWithdraw = (dt)=>{
+        $scope.displayWithdrawDate = $scope.cleaner(dt);
+        console.log($scope.displayWithdrawDate);
+        //calculating totol widthdrawas and items
+        $scope.numWithdrawals = 0,$scope.amountWithdrawals = 0;
+        for(var x = 0;x<$scope.withdrawals.length;x++){
+            if($scope.withdrawals[x].date.toDateString() == dt.toDateString()){
+                $scope.numWithdrawals += 1;
+                $scope.amountWithdrawals += $scope.withdrawals[x].amount;
+            }
+        }
+        jQuery('#withdrawalsTable tr').hide();
+        jQuery(`#withdrawalsTable tr[data-date=${$scope.displayWithdrawDate}]`).css({display:''});
     }
     //lastly charts
     //creating graph data

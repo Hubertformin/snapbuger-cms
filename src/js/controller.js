@@ -472,15 +472,15 @@ app.controller("mainCtr", ($scope,$filter) => {
                 $scope.db.withdrawals.toArray()
                 .then(data=>{
                     $scope.withdrawals = data;
+                    $scope.$apply();
                 })
            })
            .then(()=>{
                 notifications.notify({
                     type:"ok",
                     title:"Withrawal registered!",
-                    msg:`You have withdrawed a sum of ${$filter('currency')($scope.redrawAmount,'FCFA ',0)}`
+                    msg:`You have withdrawed a sum of:<br /> ${$filter('currency')($scope.redrawAmount,'FCFA ',0)}`
                 })
-                console.log($scope.withdrawals);
                 document.querySelector('#createRedrawalForm').reset();
            })
            .catch((e)=>{
