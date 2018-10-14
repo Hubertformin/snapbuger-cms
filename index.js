@@ -8,7 +8,7 @@ const {app, BrowserWindow, ipcMain, Tray, Menu} = require('electron');
     // Create the browser window.
     win = new BrowserWindow({
       show:false,
-      backgroundColor:'#2e2c29',
+      backgroundColor:'#333',
       width: 1000,
       title:'SnapBurger CMS',
       height: 700,

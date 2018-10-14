@@ -2,13 +2,18 @@ app.controller('reportsCtr',($scope)=>{
     //first thing, setting the sidenav link to active
     jQuery('.sideNavLink').removeClass('active');
     jQuery('#reportsLink').addClass('active');
+    //date instances
+    var elems = document.querySelectorAll('.datepicker');
+    var instances = M.Datepicker.init(elems);
+    var startDatepicker = M.Datepicker.getInstance(jQuery('#startDate')),endDatepicker = M.Datepicker.getInstance(jQuery('#endDate'));
     //and now preview default active tab
     jQuery('.nav-tabs li').on('click',(e)=>{
         var data = jQuery(e.target).data("target");
         jQuery('.nav-tabs li').removeClass('active');
-        jQuery('.tab-prev').hide("fast");
+        jQuery('.tab-prev').css({display:'none'});
+        jQuery(data).css({display:'block'});
         jQuery(e.target).addClass("active");
-        jQuery(data).fadeIn("fast");
+        
     })
     //refetcing orders and withdrawals, first declare empty variables
     $scope.graph;$scope.uniqueDateOrders = [];$scope.uniqueDateWithdrawals = [];$scope.graphData = {x:[],y:[]};
@@ -49,8 +54,8 @@ app.controller('reportsCtr',($scope)=>{
                 labels:$scope.graphData.x,
                 datasets: [{
                     label: "Orders",
-                    backgroundColor: 'rgba(255, 99, 132,0.6)',
-                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor:getRandomColor(1)[0],
+                    borderColor:getRandomColor(1,1)[0],
                     data:$scope.graphData.y,
                 }]
                 },
@@ -83,7 +88,21 @@ app.controller('reportsCtr',($scope)=>{
        
     })
     .then(()=>{
-        //
+        $scope.$apply();
+        instances = M.Datepicker.init(elems,{
+        autoClose:true,
+          minDate:$scope.uniqueDateOrders[$scope.uniqueDateOrders.length - 1],
+            maxDate:$scope.uniqueDateOrders[0]
+        });
+        startDatepicker.options = {
+            defaultDate:$scope.uniqueDateOrders[$scope.uniqueDateOrders.length - 1],
+            setDefaultDate:$scope.uniqueDateOrders[$scope.uniqueDateOrders.length - 1]
+        }
+        endDatepicker.options = {
+            defaultDate:$scope.uniqueDateOrders[0],
+            setDefaultDate:$scope.uniqueDateOrders[0]
+        }
+        
     })
     .catch(()=>{
         notifications.notify({
@@ -112,7 +131,7 @@ app.controller('reportsCtr',($scope)=>{
         return new Date(dt).toDateString();
     }
     //cleaner function that formats date and show it in the left pane of the orders table
-    $scope.cleaner = (en)=>{
+    $scope.cleaner = (en,type = 'string')=>{
         dt = en.toDateString();
         var time = new Date(dt).getTime(),now = Date.now(),d;
         d = Math.round((now - time)/3600000)
@@ -121,7 +140,13 @@ app.controller('reportsCtr',($scope)=>{
         }else if(d >= 24 && d < 48){
             return "Yesterday";
         }else{
-            return `${en.getDate()}/${en.getMonth()+1}/${en.getFullYear()}`;
+            //return `${en.getDate()}/${en.getMonth()+1}/${en.getFullYear()}`;
+            if(type = 'string'){
+                return dt;
+            }else{
+               return `${en.getDate()}/${en.getMonth()+1}/${en.getFullYear()}`;  
+            }
+            
         }
     }
     //function, used to show the corresponding date orders when date on left pane is clicked
@@ -224,7 +249,6 @@ app.controller('reportsCtr',($scope)=>{
     //the function
     $scope.renderInViewWithdraw = (dt)=>{
         $scope.displayWithdrawDate = $scope.cleaner(dt);
-        console.log($scope.displayWithdrawDate);
         //calculating totol widthdrawas and items
         $scope.numWithdrawals = 0,$scope.amountWithdrawals = 0;
         for(var x = 0;x<$scope.withdrawals.length;x++){
@@ -272,11 +296,11 @@ var pieChart = new Chart(ctx, {
         }
     }
 });
-function getRandomColor(num = 1) {
+function getRandomColor(num = 1,alpha = 0.7) {
     var letters = '0123456789ABCDEF',counter = 0,colors = [],
-    color = '#';
+    color;
     do{
-        color = `rgba(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},0.7)`
+        color = `rgba(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${alpha})`
         counter++;
         colors.push(color)
     }
@@ -350,10 +374,114 @@ $scope.logsController = (dt)=>{
     }
     pieChart.update();
 }
+/* 
+-=================================================----------- OVERVIEW ----------================================
+
+*/
+var ele = document.querySelector('#lineMoneychart');
+var ctx = ele.getContext('2d');
+var lineChart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+    // The data for our dataset
+    data: {
+    labels:['Sat','Sun','Mon','Tue','Wed','Thurs','Fri','Yesterday','Today'],
+    datasets: [{
+        label: "ORDERS",
+        backgroundColor: 'rgba(183, 28, 28,0)',
+        borderWidth:0.9,
+        borderColor:getRandomColor(1,1)[0],
+        data:[65000,45000,44000,78000,58000,69000,57000,130000,65000,44000],
+    },{
+        label: "WITHDRAWALS",
+        backgroundColor: 'rgba(0, 121, 107,0)',
+        borderWidth:0.9,
+        borderColor: getRandomColor(1,1)[0],
+        data:[25000,65000,44000,79000,38000,55000,89000,55000,89000,100000],
+    }
+    ]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+//get salary
+$scope.totalSalary = 0;$scope.ordersPrice = 0,$scope.withdrawalsAmount = 0;$scope.netProfit = 0;
+$scope.staffs.forEach(el=>{
+    $scope.totalSalary += Number(el.salary)
+})
 //function to show overview 
 $scope.showOverview = ()=>{
     //1. show overview container
     $scope.hideOverviewContainer = false;
+    overviewCalculator(jQuery('#startDate').val(),jQuery('#endDate').val());
+    //console.log(jQuery('#startDate').val(),jQuery('#endDate').val());
+}
+function overviewCalculator(min,max){
+    if(min == '' || max == '')return;
+    var startDate = new Date(min),endDate = new Date(max), data = {x:[],orders:[],withdrawals:[]}
+    if(startDate > endDate){
+        notifications.notify({
+            title:"Invalid Range",
+            type:"error",
+            msg:"Start date can not be greater than end date"
+        },5000)
+        return;
+    }
+    let old = startDate,interval = [],i,price,amount;
+    $scope.ordersPrice = 0,$scope.withdrawalsAmount = 0;$scope.netProfit = 0;
+    while(1 == 1){
+        interval.push(old);
+        data.x.push($scope.cleaner(old,'other'))
+        if(old.toDateString() == endDate.toDateString()) break;
+        old = new Date(old.getTime() + 86400000)
+    }
+    for(i = 0;i<interval.length;i++){
+        price = 0;
+        $scope.orders.forEach(el=>{
+            if(el.date.toDateString() == interval[i].toDateString()){
+                price += el.totalPrice;
+                $scope.ordersPrice += el.totalPrice;
+            }
+            
+        })
+        data.orders.push(price);
+        //withdrawals
+        amount = 0;
+        $scope.withdrawals.forEach(el=>{
+            if(el.date.toDateString() == interval[i].toDateString()){
+                amount += el.amount;
+                $scope.withdrawalsAmount += el.amount;
+            }
+            
+        })
+        data.withdrawals.push(amount);
+    }
+    //Caculate net profit  but substraction of salaries should anly bedone at end of month
+    $scope.totalSalary *= Math.floor(interval.length/30);
+    $scope.netProfit = $scope.ordersPrice - ($scope.withdrawalsAmount + $scope.totalSalary);
+    //console.log('o: '+$scope.netProfit+' and w: '+$scope.withdrawals+' and Total sal: '+$scope.totalSalary);
+    //chart
+    lineChart.config.data = {
+        labels: data.x,
+        datasets: [
+            {
+                label: 'ORDERS',
+                data:data.orders,
+                backgroundColor:getRandomColor(1,0)[0],
+                borderColor: getRandomColor(1,1)[0],
+                borderWidth:1.2
+            },{
+                label: 'WITHDRAWALS',
+                data:data.withdrawals,
+                backgroundColor:getRandomColor(1,0)[0],
+                borderColor: getRandomColor(1,1)[0],
+                borderWidth:1.2
+            }
+       ]
+    }
+    lineChart.update();
+    
 }
 
 

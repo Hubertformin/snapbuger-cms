@@ -15,7 +15,7 @@
             </li>
         </ul>
         <div id="ordersReports" class="white tab-prev col s12">
-            <div class="chart" style="position:relative;margin-top:10px;border:1px solid #000;">
+            <div class="chart" style="position:relative;margin-top:10px;border:1px solid #ddd;">
                 <canvas id="orderChart" height="150" width="400"></canvas>
             </div>
             <span class="right"><strong>All Orders: {{orders.length}}</strong></span>
@@ -151,7 +151,7 @@
                     <div class="logs-table first">
                         <div class="collection m-0" id="logsCollection">
                             <!-- no need for a.date, remember 'a' is already a date object -->
-                            <a ng-repeat="a in uniqueDateOrders" href="javascript:void(0)" class="collection-item grey-text text-darken-4" ng-click="logsController(a)">{{cleaner(a)}}<span class="new badge  blue-grey min-badge" data-badge-caption="">{{countDateOrders(a)}}</span></a>
+                            <a ng-repeat="a in uniqueDateOrders" href="javascript:void(0)" class="collection-item grey-text text-darken-4" ng-click="logsController(a)">{{cleaner(a)}}<span class="new badge  blue min-badge" data-badge-caption="">{{countDateOrders(a)}}</span></a>
                         </div>
                     </div>
                 </div>
@@ -160,20 +160,45 @@
                     <div ng-hide="hideOverviewContainer" class="white" id="overview">
                         <h6 align="center" class="teal-text">OVERVIEW</h6>
                         <div class="row">
-                            <div class="col s6">
-                                <div class="input-field col s12">
-                                    <select class="browser-default">
-                                      <option value="" disabled selected>Choose start</option>
-                                      <option ng-repeat="a in uniqueDateOrders" value="{{cleaner(a)}}">{{cleaner(a)}}</option>
-                                    </select>
+                            <div class="col s5">
+                                <div class="input-field s12">
+                                    <input id="startDate" tabindex="-1" type="text" class="datepicker">
+                                    <label for="startDate">Start Date</label>
                                 </div>
                             </div>
-                            <div class="col s6">
-                                <div class="input-field col s12">
-                                    <select class="browser-default">
-                                      <option value="" disabled selected>Choose start</option>
-                                      <option ng-repeat="a in uniqueDateOrders" value="{{cleaner(a)}}">{{cleaner(a)}}</option>
-                                    </select>
+                            <div class="col s5">
+                                <div class="input-field s12">
+                                    <input id="endDate" tabindex="-1" type="text" class="datepicker">
+                                    <label for="endDate">End Date</label>
+                                </div>
+                            </div>
+                            <div class="col s2"><button ng-click="showOverview()" class="btn blue waves-effect waves-default">Calculate</button></div>
+                            <div class="col s12">
+                                <canvas id="lineMoneychart" height="150" width="400" style="border:1px solid #ddd;"></canvas>
+                            </div>
+                            <div class="col s12" style="margin-top:20px;">
+                                <div class="info-card big blue white-text">
+                                    <div class="row">
+                                        <div class="icon col s3 position-relative">
+                                            <img src="img/Coins_96px.png">
+                                        </div>
+                                        <div class="col s9">
+                                            <small>ORDERS</small>
+                                            <h6>{{ordersPrice | currency:"FCFA ":0}}</h6>
+                                            <hr>
+                                            <small>WITHDRAWALS</small>
+                                            <h6>{{withdrawalsAmount | currency:"FCFA ":0}}</h6>
+                                            <hr>
+                                            <small>SALARIES</small>
+                                            <h6>{{totalSalary | currency:"FCFA ":0}}</h6>
+                                        </div>
+                                        <div class="col s12">
+                                            <hr>
+                                            <div class="col s5 offset-s1">
+                                                <h6>NET PROFIT: <span style="padding:6px 10px;font-weight:bold;" class="white blue-text">{{netProfit | currency:"FCFA ":0}}</span></h6>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

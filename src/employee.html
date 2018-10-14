@@ -33,6 +33,13 @@
                                     <span class="helper-text" data-error="Invalid value" data-success="right"></span>
                                     <label for="salary">Salary</label>
                                 </div>
+                                <div class="input-field col s6">
+                                    <select class="browser-default" ng-model="staff_status">
+                                        <option value="active" selected>Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                    <label for="status" class="active">Status</label>
+                                </div>
                                 <div class="col s12">
                                     <button type="submit" class="btn right waves-effect waves-light bg-theme-rev">Add</button>
                                 </div>
@@ -69,6 +76,7 @@
                             <td>
                             <select ng-change="updateStaffs($index)" ng-change="updateStaffs($index)" class="browser-default" ng-model="x.status">
                                 <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
                                 <option value="suspend">Suspend</option>
                             </select>
                             </td>

@@ -698,7 +698,16 @@ button.bg-theme:disabled {
     transition: all 0.4s linear;
     //padding:24px;
     height:80px;
-    box-shadow: 0px 5px 26px rgba(0, 0, 0, 0.12)
+    box-shadow: 0px 5px 26px rgba(0, 0, 0, 0.12);
+    &.big{
+        margin-bottom:20px;
+        height: auto;
+        padding:14px;
+        cursor: default;
+        img{
+            transform: translateY(50%);
+        }
+    }
 }
 
 /**/
@@ -1172,6 +1181,7 @@ div#reports {
     top: 0;bottom: 0;right: 0;left: 0;
     z-index:9;
     border-bottom: 1px solid #ddd;
+    overflow-y: scroll;
 }
 #withdrawalReports{
     padding-left: 0;

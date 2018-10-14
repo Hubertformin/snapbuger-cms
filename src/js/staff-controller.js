@@ -28,13 +28,13 @@ app.controller("staffCtr", ($scope) => {
     jQuery('#staffLink').addClass('active');
     //initialiing ...
     var elems = document.querySelectorAll('.modal');
-    var instances = M.Modal.init(elems, {
+    M.Modal.init(elems, {
         dismissible: false,
         preventScrolling: true
     });
     //collapseible
     var elems = document.querySelectorAll('.collapsible');
-    var instances = M.Collapsible.init(elems, {
+    M.Collapsible.init(elems, {
         accordion: false
     });
     //date picker
@@ -42,7 +42,7 @@ app.controller("staffCtr", ($scope) => {
     var thisYear = currentDate.getFullYear();
     //console.log($scope.today);
     var elems = document.querySelectorAll('.datepicker');
-    var instances = M.Datepicker.init(elems, {
+    M.Datepicker.init(elems, {
         format: 'dd/mm/yyyy',
         minDate: currentDate,
         defaultDate: currentDate,
@@ -57,6 +57,8 @@ app.controller("staffCtr", ($scope) => {
         return nd.toDateString();
     }
     //create staff
+    $scope.staff_status = 'active';
+    //the function
     jQuery('#createStaffsForm').on('submit', (e) => {
         e.preventDefault();
         var inputDate = jQuery('#startDate').val();
@@ -139,7 +141,7 @@ app.controller("staffCtr", ($scope) => {
             position: $scope.staff_position,
             startDate: inputDate,
             salary: $scope.staff_salary,
-            status: "active",
+            status:  $scope.staff_status,
             is_mgr: false,
             img_url:'img/user-grey.png'
         })

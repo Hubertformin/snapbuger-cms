@@ -3,7 +3,7 @@ app.controller("dashCtr", ($scope,$filter) => {
     jQuery('.sideNavLink').removeClass('active');
     jQuery('#dashboardLink').addClass('active');
     //====================== FETCH AND COMPUTE =======================
-    const today = new Date().toDateString();$scope.todaysCompletedOrders = [];
+    const today = new Date().toDateString();;
     $scope.fetchAndComputeOrders = () => {
         $scope.db.orders.toArray()
             .then((data)=>{
@@ -37,12 +37,6 @@ app.controller("dashCtr", ($scope,$filter) => {
      let currentDate = new Date();
     var thisYear = currentDate.getFullYear();
     var elems = document.querySelectorAll('.datepicker');
-    var instances = M.Datepicker.init(elems, {
-        format: 'dd/mm/yyyy',
-        minDate: currentDate,
-        defaultDate: currentDate,
-        yearRange: [thisYear, thisYear + 2]
-    });
     //input current date into date picker input by default
     jQuery('#orderDate').val(formatDate());
     jQuery('.scrollContainer').on('mousewheel', function (e) {
@@ -194,7 +188,9 @@ app.controller("dashCtr", ($scope,$filter) => {
                 });
         })
         .catch(err=>{
-            console.log(err)
+            $scope.orderInv = `SBO${Math.floor(Math.random() * (9999 - 1000) ) + 1000}`;
+            $scope.createOrder()
+            //console.log(err)
         })
           //reseting order custom form
           //$scope.orderInv = "";

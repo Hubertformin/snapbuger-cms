@@ -63,6 +63,7 @@ app.controller("mainCtr", ($scope,$filter) => {
     }
     $scope.settings = [];
     $scope.withdrawals = [];
+    $scope.todaysCompletedOrders = [];
     //
     var Dexie = require('dexie');
     $scope.db = new Dexie("snapBurgerDb");
@@ -70,9 +71,9 @@ app.controller("mainCtr", ($scope,$filter) => {
         users: "++id,&name,password,position,startDate,salary,status,is_mgr,img_url",
         categories: "++id,&name,status,action",
         items: "++id,&name,rate,category,status,action",
-        orders: "++id,inv,date,*items,totalPrice,tableNum,totalQuantity,staff",
+        orders: "++id,&inv,date,*items,totalPrice,tableNum,totalQuantity,staff",
         settings: "&id,tableNumber,time_range,auto_update,back_up,performance_report,app_id",
-        withdrawals:"++id,inv,reason,amount,date,staff",
+        withdrawals:"++id,&inv,reason,amount,date,staff",
         tracker:"++id,type,tableName,data,date,status"
     })
     //by default wahen there is no data,i.e when the database is just created, we add this to settings
@@ -289,6 +290,14 @@ app.controller("mainCtr", ($scope,$filter) => {
                     })
                     return false;
                 }
+                if(data.status == 'inactive'){
+                    notifications.notify({
+                        title:"Access denied!",
+                        type: "error",
+                        msg: "Your don't have enough permissions to use this application!"
+                    },7500)
+                    return false;
+                }
                 //accept and proccess
                 $scope.currentUser = data;
                 if (typeof $scope.currentUser.img_url !== 'string') {
@@ -464,33 +473,31 @@ app.controller("mainCtr", ($scope,$filter) => {
         }
        if(confirm(`Confirm redrawal of '${$filter('currency')($scope.redrawAmount,'FCFA ',0)}'`)){
            //data:withdrawals:"++id,inv,reason,amount,date",
-           const invc = `SBR${Math.floor(Math.random() * (9999 - 1000) ) + 1000}`;
-           var data = {inv:invc,reason:$scope.redrawReason,amount:$scope.redrawAmount,date:new Date(),staff:$scope.currentUser.name}
-           $scope.db.transaction('rw',$scope.db.withdrawals,()=>{
-                $scope.db.withdrawals.add(data)
-                //refresh data
-                $scope.db.withdrawals.toArray()
-                .then(data=>{
-                    $scope.withdrawals = data;
-                    $scope.$apply();
+           $scope.createNewWithdrawal = ()=>{
+                const invc = `SBR${Math.floor(Math.random() * (9999 - 1000) ) + 1000}`;
+                var data = {inv:invc,reason:$scope.redrawReason,amount:$scope.redrawAmount,date:new Date(),staff:$scope.currentUser.name}
+                $scope.db.transaction('rw',$scope.db.withdrawals,()=>{
+                     $scope.db.withdrawals.add(data)
+                     //refresh data
+                     $scope.db.withdrawals.toArray()
+                     .then(data=>{
+                         $scope.withdrawals = data;
+                         $scope.$apply();
+                     })
                 })
-           })
-           .then(()=>{
-                notifications.notify({
-                    type:"ok",
-                    title:"Withrawal registered!",
-                    msg:`You have withdrawed a sum of:<br /> ${$filter('currency')($scope.redrawAmount,'FCFA ',0)}`
+                .then(()=>{
+                     notifications.notify({
+                         type:"ok",
+                         title:"Withrawal registered!",
+                         msg:`You have withdrawed a sum of:<br /> ${$filter('currency')($scope.redrawAmount,'FCFA ',0)}`
+                     })
+                     document.querySelector('#createRedrawalForm').reset();
+                  })
+                .catch(()=>{
+                    $scope.createNewWithdrawal();        
                 })
-                document.querySelector('#createRedrawalForm').reset();
-           })
-           .catch((e)=>{
-               console.log(e);
-               notifications.notify({
-                   type:"error",
-                   title:"Unable to create withdrawal",
-                   msg:"Failed to create withdrawal invoice. If error persist, restart the application"
-               })
-           })
+           }
+           $scope.createNewWithdrawal();
        }
    })
 
