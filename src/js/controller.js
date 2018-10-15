@@ -5,7 +5,7 @@ const {
 } = require('electron');
 const os = require('os');
 //loading printer module
-const print = require('electron').remote.require('electron-thermal-printer');
+const print = remote.require('electron-thermal-printer');
 //settinh up a worker
 const worker = new Worker('./js/web-worker.js');
 
@@ -286,7 +286,7 @@ app.controller("mainCtr", ($scope,$filter) => {
                     notifications.notify({
                         title:"Account suspended",
                         type: "error",
-                        msg: "Your account is currently suspended,please contact your contact Manager!"
+                        msg: "Your account is currently suspended,please contact your Manager!"
                     })
                     return false;
                 }
@@ -294,12 +294,44 @@ app.controller("mainCtr", ($scope,$filter) => {
                     notifications.notify({
                         title:"Access denied!",
                         type: "error",
-                        msg: "Your don't have enough permissions to use this application!"
+                        msg: "Your don't have enough permissions to use this application!,Please contact your manager"
                     },7500)
                     return false;
                 }
                 //accept and proccess
                 $scope.currentUser = data;
+                if($scope.currentUser.is_mgr){
+                    //to activate menu click mgr items 
+                    if(process.platform === 'darwin'){
+                        actionMenu.items[4].submenu.items[actionMenu.items[4].submenu.items.length-2].enabled = true;
+                        actionMenu.items[4].submenu.items[actionMenu.items[4].submenu.items.length-1].enabled = true;
+                    }else{
+                        actionMenu.items[3].submenu.items[actionMenu.items[3].submenu.items.length-2].enabled = true;
+                        actionMenu.items[3].submenu.items[actionMenu.items[3].submenu.items.length-1].enabled = true;
+                    }
+                }else{
+                    //to de-activate menu click mgr items 
+                    var date = $scope.currentUser.startDate.split("/");
+                    date = new Date(`${date[2]}-${date[1]}-${date[0]}`);
+                    if(Date.now() < date.getTime()){
+                        notifications.notify({
+                            type:'error',
+                            title:'Access denied!',
+                            msg:`Your account is inactive at the moment<br>It would be active from ${$scope.currentUser.startDate}`
+                        },9000)
+                        return;
+                    }
+                    if(process.platform === 'darwin'){
+                        actionMenu.items[4].submenu.items[actionMenu.items[4].submenu.items.length-2].enabled = false;
+                        actionMenu.items[4].submenu.items[actionMenu.items[4].submenu.items.length-1].enabled = false;
+                    }else{
+                        actionMenu.items[3].submenu.items[actionMenu.items[3].submenu.items.length-2].enabled = false;
+                        actionMenu.items[3].submenu.items[actionMenu.items[3].submenu.items.length-1].enabled = false;
+                    }
+                }
+                //activate login button
+                actionMenu.items[0].submenu.items[actionMenu.items[0].submenu.items.length-2].enabled = true;
+                //get image
                 if (typeof $scope.currentUser.img_url !== 'string') {
                     //the reason why I'm passing it to another variable
                     //is because i want to use the initial variable when updating user data
@@ -315,6 +347,7 @@ app.controller("mainCtr", ($scope,$filter) => {
             })
 
     })
+    //console.log(actionMenu.items[3].submenu.items);
     //=======LOGOUT=====================================================================
     $scope.logOut = () => {
         swal({
@@ -326,6 +359,18 @@ app.controller("mainCtr", ($scope,$filter) => {
             })
             .then((willDelete) => {
                 if (willDelete) {
+                    //to de-activate menu click mgr items and logout 
+                    if(process.platform === 'darwin'){
+                        actionMenu.items[4].submenu.items[actionMenu.items[4].submenu.items.length-2].enabled = false;
+                        actionMenu.items[4].submenu.items[actionMenu.items[4].submenu.items.length-1].enabled = false;
+                        //logout
+                        actionMenu.items[1].submenu.items[actionMenu.items[1].submenu.items.length-2].enabled = false;
+                    }else{
+                        actionMenu.items[3].submenu.items[actionMenu.items[3].submenu.items.length-2].enabled = false;
+                        actionMenu.items[3].submenu.items[actionMenu.items[3].submenu.items.length-1].enabled = false;
+                        //log out for windows process
+                        actionMenu.items[0].submenu.items[actionMenu.items[0].submenu.items.length-2].enabled = false;
+                    }
                     jQuery('#login').show();
                     $scope.currentUser = '';
                     document.querySelector('#dashboardLink').click();

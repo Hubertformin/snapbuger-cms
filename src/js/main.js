@@ -1,3 +1,191 @@
+const {remote} = require('electron')
+  const {Menu, MenuItem} = remote
+//menu-context
+const menu = new Menu()
+  menu.append(new MenuItem({label: 'MenuItem1', click() { console.log('item 1 clicked') }}))
+  menu.append(new MenuItem({type: 'separator'}))
+  menu.append(new MenuItem({label: 'MenuItem2', type: 'checkbox', checked: true}))
+  //graph menu
+  const graphMenu = new Menu()
+  graphMenu.append(new MenuItem({label: 'Refresh', click() { console.log('item 1 clicked') }}))
+  graphMenu.append(new MenuItem({label: 'autoload', type: 'checkbox', checked: true}))
+  
+  /*window.addEventListener('contextmenu', (e) => {
+    e.preventDefault()
+    menu.popup({window: remote.getCurrentWindow()})
+  }, false)*/
+  const template = [
+      {
+      label: 'Edit',
+      submenu: [
+        {role: 'undo'},
+        {role: 'redo'},
+        {type: 'separator'},
+        {role: 'cut'},
+        {role: 'copy'},
+        {role: 'paste'},
+        {role: 'pasteandmatchstyle'},
+        {role: 'delete'},
+        {role: 'selectall'}
+      ]
+    },
+    {
+      label: 'View',
+      submenu: [
+        {role: 'reload'},
+        {role: 'forcereload'},
+        {role: 'toggledevtools'},
+        {type: 'separator'},
+        {role: 'resetzoom'},
+        {role: 'zoomin'},
+        {role: 'zoomout'},
+        {type: 'separator'},
+        {role: 'togglefullscreen'}
+      ]
+    },{
+        label:'Navigate',
+        submenu:[
+            {
+                label:'Dasboard',
+                accelerator:'CommandOrControl+Shift+d',
+                click(){document.querySelector('#dashboardLink').click();}
+            },{
+                label:'Products',
+                accelerator:'CommandOrControl+Shift+p',
+                click(){document.querySelector('#productsLink').click();}
+            },{
+                label:'Settings',
+                accelerator:'CommandOrControl+Shift+s',
+                click(){document.querySelector('#settingsLink').click();}
+            },{type:'separator'},
+            {
+                label:'Reports',
+                enabled:false,
+                accelerator:'Alt+Shift+r',
+                click(){document.querySelector('#reportsLink').click();}
+            },{
+                label:'Staff',
+                enabled:false,
+                accelerator:'Alt+Shift+w',
+                click(){document.querySelector('#staffLink').click();}
+            }
+        ]
+    },{
+        label:'Action',
+        submenu:[
+            {
+                label:'Create Order',
+                click(){document.querySelector('#dashboardLink').click();}
+            },{
+                label:'Create withdrawal',
+                accelerator:'CommandOrControl+Shift+w',
+                click(){document.querySelector('#withdrawalModalTrigger').click()}
+            },{
+                label:"Sync",
+                accelerator:'Alt+Shift+s',
+                enabled:false
+            }
+        ]
+    },
+    {
+      role: 'window',
+      submenu: [
+        {role: 'minimize'},
+        {role: 'close'}
+      ]
+    },
+    {
+      role: 'help',
+      submenu: [
+        {
+          label: 'Learn More',
+          click () {console.log("undo") }
+        },
+        {
+            label:'About software',
+            click() {
+                document.querySelector('#settingsLink').click();
+            }
+        }
+      ]
+    }
+  ]
+  
+  if (process.platform === 'darwin') {
+    template.unshift({
+      label: app.getName(),
+      submenu: [
+        {role: 'account', submenu: [
+            {
+                label:'Profile',
+                accelerator:'CommandOrControl+P',
+                click(){
+                    document.querySelector('#profileLink').click();
+                }
+            },{
+                label:'Log out',
+                enabled:false,
+                accelerator:'CommandOrControl+L',
+                click(){
+                    document.querySelector('#logOutBtn').click();
+                }
+            }
+        ]},
+        {role: 'about'},
+        {type: 'separator'},
+        {role: 'hide'},
+        {role: 'hideothers'},
+        {role: 'unhide'},
+        {type: 'separator'},
+        {role: 'quit'}
+      ]
+    })
+  
+    // Edit menu
+    template[1].submenu.push(
+      {type: 'separator'},
+      {
+        label: 'Speech',
+        submenu: [
+          {role: 'startspeaking'},
+          {role: 'stopspeaking'}
+        ]
+      }
+    )
+  
+    // Window menu
+    template[5].submenu = [
+      {role: 'close'},
+      {role: 'minimize'},
+      {role: 'zoom'},
+      {type: 'separator'},
+      {role: 'front'}
+    ]
+  }else{
+      template.unshift({
+        label:'File',
+        submenu:[
+            {
+                label:'Profile',
+                accelerator:'CommandOrControl+P',
+                click(){
+                    document.querySelector('#profileLink').click();
+                }
+            },{
+                label:'Log out',
+                enabled:false,
+                accelerator:'CommandOrControl+L',
+                click(){
+                    document.querySelector('#logOutBtn').click();
+                }
+            },{role:'quit'}
+        ]
+    })
+  }
+  const actionMenu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(actionMenu)
+
+
 M.AutoInit();
 //to cosesidenav when links are clicked
 jQuery('#slide-out').on('click','.sideNavLink',()=>{
@@ -6,6 +194,25 @@ jQuery('#slide-out').on('click','.sideNavLink',()=>{
         sideNav.close();
     }
 })
+//AUTO-COMPLETE SEARCH FORM
+$('input.autocomplete').autocomplete({
+    data: {
+      "Orders": null,
+      "Products": null,
+      "Settings": null,
+      "Reports": null,
+      "Staff": null,
+      "SBRO": null,
+      "Settings": null,
+      "Settings": null,
+    },
+  });  
+
+//minimize sidnav
+function miniSideNav(){
+    jQuery('#slide-out').toggleClass('minimize');
+    jQuery('#main').toggleClass('maximize');
+}
 //
 function showSearchBar(type){
     if(type){
@@ -52,7 +259,6 @@ class Alerts{
         }
     }
 }
-
 //search table
 function searchInputTable(e,tb){
     var i,j,td,input,
@@ -140,7 +346,7 @@ function searchOrderItems(e){
 }
 //$AV_ASW
 var elems = document.querySelectorAll('.dropdown-trigger');
-var dropdown = M.Dropdown.init(elems, {coverTrigger:false});
+var dropdown = M.Dropdown.init(elems, {coverTrigger:false}); 
 //=========== Date function===
 class DateFunction{
     constructor(){

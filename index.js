@@ -1,3 +1,9 @@
+const setupEvents = require('./src/js/installer/installer')
+ if (setupEvents.handleSquirrelEvent()) {
+    // squirrel event handled and app will exit in 1000ms, so don't do anything else
+    return;
+ }
+
 const {app, BrowserWindow, ipcMain, Tray, Menu} = require('electron');
 
   // Keep a global reference of the window object, if you don't, the window will
@@ -57,7 +63,6 @@ const {app, BrowserWindow, ipcMain, Tray, Menu} = require('electron');
     tray.setToolTip('SnapBurger')
     tray.setContextMenu(contextMenu)
   })*/
-
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {
     // On macOS it is common for applications and their menu bar

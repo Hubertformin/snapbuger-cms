@@ -236,6 +236,10 @@ function implementUpdates({method,data}){
                     db.users.bulkAdd(data.users);
                 }
                 if(data.withdrawals.length>0){
+                    data.withdrawals.forEach(el=>{
+                        el.date = new Date(el.date);
+                        el.amount = Number(el.amount);
+                    })
                     db.withdrawals.bulkAdd(data.withdrawals);
                 }
             })

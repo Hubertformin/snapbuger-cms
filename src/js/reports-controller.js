@@ -1,4 +1,8 @@
 app.controller('reportsCtr',($scope)=>{
+    document.querySelector('canvas').addEventListener('contextmenu', (e) => {
+        e.preventDefault()
+        graphMenu.popup({window: remote.getCurrentWindow()})
+      }, false)
     //first thing, setting the sidenav link to active
     jQuery('.sideNavLink').removeClass('active');
     jQuery('#reportsLink').addClass('active');
@@ -54,8 +58,8 @@ app.controller('reportsCtr',($scope)=>{
                 labels:$scope.graphData.x,
                 datasets: [{
                     label: "Orders",
-                    backgroundColor:getRandomColor(1)[0],
-                    borderColor:getRandomColor(1,1)[0],
+                    backgroundColor:'rgba(237, 69, 125,0.6)',
+                    borderColor:'rgb(183, 28, 28)',
                     data:$scope.graphData.y,
                 }]
                 },
@@ -75,7 +79,7 @@ app.controller('reportsCtr',($scope)=>{
            $scope.uniqueDateWithdrawals = [];
             $scope.withdrawals.reverse();
             for(var i = 0;i<$scope.withdrawals.length;i++){
-                $scope.amountWithdrawals += $scope.withdrawals[i].amount;
+                $scope.amountWithdrawals += Number($scope.withdrawals[i].amount);
                 //$scope.orders[i].date = toDate($scope.orders[i].date)
                 if(i>0 && toDate($scope.withdrawals[i-1].date) == toDate($scope.withdrawals[i].date)){
                     continue;
@@ -88,7 +92,6 @@ app.controller('reportsCtr',($scope)=>{
        
     })
     .then(()=>{
-        $scope.$apply();
         instances = M.Datepicker.init(elems,{
         autoClose:true,
           minDate:$scope.uniqueDateOrders[$scope.uniqueDateOrders.length - 1],
@@ -102,12 +105,14 @@ app.controller('reportsCtr',($scope)=>{
             defaultDate:$scope.uniqueDateOrders[0],
             setDefaultDate:$scope.uniqueDateOrders[0]
         }
-        
+        //to plot on the 'money curve'
+        overviewCalculator($scope.uniqueDateOrders[$scope.uniqueDateOrders.length-1],$scope.uniqueDateOrders[0]);
+        $scope.$apply();
     })
     .catch(()=>{
         notifications.notify({
             title:"Failed to fetch Database",
-            msg:"Database error,database was probably deleted by another application.<br>Close the app, re-open with internet connection",
+            msg:"Database error,possibly caused by:<br>-Failed to read database.<br>-Database was probably deleted by another application.<br>Close the app, re-open with internet connection",
             type:"error"
         })
     })
@@ -254,11 +259,11 @@ app.controller('reportsCtr',($scope)=>{
         for(var x = 0;x<$scope.withdrawals.length;x++){
             if($scope.withdrawals[x].date.toDateString() == dt.toDateString()){
                 $scope.numWithdrawals += 1;
-                $scope.amountWithdrawals += $scope.withdrawals[x].amount;
+                $scope.amountWithdrawals += Number($scope.withdrawals[x].amount);
             }
         }
         jQuery('#withdrawalsTable tr').hide();
-        jQuery(`#withdrawalsTable tr[data-date=${$scope.displayWithdrawDate}]`).css({display:''});
+        jQuery(`#withdrawalsTable tr[data-date='${$scope.displayWithdrawDate}']`).css({display:''});
     }
     //lastly charts
     //creating graph data
@@ -385,19 +390,19 @@ var lineChart = new Chart(ctx, {
     type: 'line',
     // The data for our dataset
     data: {
-    labels:['Sat','Sun','Mon','Tue','Wed','Thurs','Fri','Yesterday','Today'],
+    labels:[],
     datasets: [{
         label: "ORDERS",
         backgroundColor: 'rgba(183, 28, 28,0)',
-        borderWidth:0.9,
-        borderColor:getRandomColor(1,1)[0],
-        data:[65000,45000,44000,78000,58000,69000,57000,130000,65000,44000],
+        borderWidth:2,
+        borderColor:'rgb(0, 102, 102)',
+        data:[],
     },{
         label: "WITHDRAWALS",
         backgroundColor: 'rgba(0, 121, 107,0)',
-        borderWidth:0.9,
-        borderColor: getRandomColor(1,1)[0],
-        data:[25000,65000,44000,79000,38000,55000,89000,55000,89000,100000],
+        borderWidth:2,
+        borderColor:'rgb(27, 94, 32)',
+        data:[],
     }
     ]
     },
@@ -411,6 +416,7 @@ $scope.staffs.forEach(el=>{
     $scope.totalSalary += Number(el.salary)
 })
 //function to show overview 
+//
 $scope.showOverview = ()=>{
     //1. show overview container
     $scope.hideOverviewContainer = false;
@@ -436,6 +442,7 @@ function overviewCalculator(min,max){
         if(old.toDateString() == endDate.toDateString()) break;
         old = new Date(old.getTime() + 86400000)
     }
+    interval = (Math.floor(interval.length/31)>0)?interval.slice((Math.floor(interval.length/31)*31)-1):interval;
     for(i = 0;i<interval.length;i++){
         price = 0;
         $scope.orders.forEach(el=>{
@@ -468,15 +475,15 @@ function overviewCalculator(min,max){
             {
                 label: 'ORDERS',
                 data:data.orders,
-                backgroundColor:getRandomColor(1,0)[0],
-                borderColor: getRandomColor(1,1)[0],
-                borderWidth:1.2
+                backgroundColor:'rgba(33, 150, 243,0.6)',
+                borderColor: 'rgb(33, 150, 243)',
+                borderWidth:2
             },{
                 label: 'WITHDRAWALS',
                 data:data.withdrawals,
-                backgroundColor:getRandomColor(1,0)[0],
-                borderColor: getRandomColor(1,1)[0],
-                borderWidth:1.2
+                backgroundColor:'rgba(244, 67, 54,0.6)',
+                borderColor:'rgb(244, 67, 54)',
+                borderWidth:2
             }
        ]
     }

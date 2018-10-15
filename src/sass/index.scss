@@ -267,6 +267,9 @@ main {
     position: relative;
     width: calc(100%-250px);
     margin-left: 250px;
+    &.maximize{
+        margin-left:60px;
+    }
 }
 
 .position-relative {
@@ -275,15 +278,70 @@ main {
 
 //sidenav
 #slide-out {
+    transition: all 0.2s ease;
+    overflow: hidden;
+    li{
+        &.min{
+            position: absolute;
+            cursor: pointer;
+            background: rgba(0,0,0,0.12);
+            left: 0;
+            bottom:0;
+            text-align: center;
+            right: 0;
+            i{
+                display: block;
+                padding:10px;
+                font-size: 2rem!important;
+            }
+        }
+    }
+    &.minimize{
+        width:55px;
+        white-space: nowrap;
+        .user-view {
+            position: relative;
+            padding: 0;
+            margin-bottom: 0;
+            .circle{
+                height: 50px;
+                width: 50px;
+            }
+            .img-div {
+                width: 100%;
+                padding: 20px 0!important;
+            }
+            .text-div{
+                display:none;
+            }
+        }
+        .sideNavLink{
+            text-align: center;
+            padding:0px!important;
+            i.material-icons {
+                float: left;
+                padding: 0!important;
+                height: 48px;
+                line-height: 48px;
+                margin: 0!important;
+                width: 100%;
+            }
+        }
+    }
     margin-top: 56px;
     height: calc(100% - 56px);
     .row .col {
         padding: 0!important;
     }
+    .user-view{
+            padding: 32px 32px 5px;
+    }
     .img-div {
         width: 79px;
     }
     .text-div {
+        position: absolute;
+        right:0;
         a.name-link {
             &::after {
                 content: '';
@@ -303,6 +361,9 @@ main {
     }
     .sideNavLink {
         transition: all 0.4s linear;
+        span{
+            display:inline-block;
+        }
         &.active {
             i {
                 color: #fff;
@@ -347,7 +408,6 @@ nav:not(.nav-extended) {
         box-shadow: 0px 5px 26px rgba(0, 0, 0, 0.12);
         input {
             position: absolute;
-            bottom: 0px;
             color: #f44336!important;
             padding-left: 30px!important;
             font-family: "Raleway";
@@ -1212,7 +1272,7 @@ div.loading-fill{
     main,
     header {
         position: relative;
-        width: 100%;
+        width: 100%!important;
         margin-left: 0px!important;
     }
 }
