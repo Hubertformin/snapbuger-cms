@@ -208,21 +208,8 @@ section#dataDbCheck{
     .row {
         position: relative;
     }
-    #loader {
-        padding: 100px 55px;
-        position: absolute;
-        top: 0;
-        bottom: -3px;
-        left: 0;
-        right: 0;
-        background: #fff;
-        z-index: 29991;
-        .determinate {
-            width: 0%;
-            animation-name: loadPage;
-            animation-duration: 4.3s;
-            animation-timing-function: ease-in-out;
-        }
+    div.waitMe{
+        bottom: -4px;
     }
     position: fixed;
     background:#fff;

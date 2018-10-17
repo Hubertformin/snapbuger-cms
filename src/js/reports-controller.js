@@ -6,6 +6,19 @@ app.controller('reportsCtr',($scope)=>{
     //first thing, setting the sidenav link to active
     jQuery('.sideNavLink').removeClass('active');
     jQuery('#reportsLink').addClass('active');
+
+    //loaders
+    jQuery('#orderChartDiv').waitMe({
+        effect : 'rotateplane',
+        text : 'Drawing graph ...',
+        bg : 'rgba(255,255,255,1)',
+        color : '#424242',
+        maxSize : '',
+        waitTime : -1,
+        textPos : 'vertical',
+        fontSize : '',
+        });
+
     //date instances
     var elems = document.querySelectorAll('.datepicker');
     var instances = M.Datepicker.init(elems);
@@ -75,6 +88,7 @@ app.controller('reportsCtr',($scope)=>{
                 // Configuration options go here
                 options: {}
             });
+            jQuery('#orderChartDiv').waitMe("hide");
             //applying
             $scope.$apply();
        })
@@ -154,7 +168,7 @@ app.controller('reportsCtr',($scope)=>{
             return "Yesterday";
         }else{
             //return `${en.getDate()}/${en.getMonth()+1}/${en.getFullYear()}`;
-            if(type = 'string'){
+            if(type == 'string'){
                 return dt;
             }else{
                return `${en.getDate()}/${en.getMonth()+1}/${en.getFullYear()}`;  
@@ -470,7 +484,7 @@ $scope.showOverview = ()=>{
 function overviewCalculator(min,max){
     if(min == '' || max == '')return;
     var startDate = new Date(min),endDate = new Date(max), data = {x:[],orders:[],withdrawals:[]}
-    if(startDate > endDate){
+    if(startDate.getTime() > endDate.getTime()){
         notifications.notify({
             title:"Invalid Range",
             type:"error",

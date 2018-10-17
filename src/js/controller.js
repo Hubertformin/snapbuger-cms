@@ -132,7 +132,7 @@ app.controller("mainCtr", ($scope,$filter) => {
         })
         .then(() => {
             //code to write when fetching of database succedeed!
-            jQuery('#loader').remove();
+            //jQuery('#loader').remove();
             if($scope.users.length == 0 && $scope.products.categories.length == 0
                 && $scope.orders.length == 0 && $scope.products.items.length == 0
                 && $scope.withdrawals.length == 0)

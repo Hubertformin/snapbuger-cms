@@ -190,7 +190,22 @@ M.AutoInit();
 //
 //settinh up a worker
 const worker = new Worker('./js/web-worker.js');
-
+//lets make logi paage load
+jQuery('#appLoader').waitMe({
+    effect : 'pulse',
+    text : 'Loading...',
+    bg : 'rgba(255,255,255,1)',
+    color : '#b71c1c',
+    maxSize : '',
+    waitTime : 2500,
+    textPos : 'vertical',
+    fontSize : '',
+    source : '',
+    onClose : function() {
+        jQuery('#loginInputs').css({visibility:"visible"})
+    }
+    });
+                    
 //to cosesidenav when links are clicked
 jQuery('#slide-out').on('click','.sideNavLink',()=>{
     if(jQuery(window).width()<992){

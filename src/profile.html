@@ -6,7 +6,7 @@
                 <div class="dark-wrapper">
                 </div>
                 <div class="center">
-                    <img src="{{profile_pic}}" id="Image" alt="profile">
+                    <img src="img/user-grey.png" id="Image" alt="profile">
                     <p class="white-text">
                         <span>{{currentUser.name}}</span><br>
                         <span>{{currentUser.position}}</span>
@@ -28,11 +28,11 @@
                     <label class="active" for="password">Password</label>
                 </div>
                 <div class="input-field">
-                    <input type="text" id="position" ng-model="currentUser.position">
+                    <input type="text" id="position" disabled ng-model="currentUser.position">
                     <label class="active" for="position">Position</label>
                 </div>
                 <div class="input-field">
-                    <input type="text" id="salary" ng-model="currentUser.salary">
+                    <p>{{currentUser.salary | currency:"FCFA ":2}}</p>
                     <label class="active" for="salary">Salary</label>
                 </div>
                 <div class="input-field">
