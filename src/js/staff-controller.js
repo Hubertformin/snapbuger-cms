@@ -246,9 +246,7 @@ app.controller("staffCtr", ($scope) => {
         jQuery('#managerial').show(); 
     }
     //
-    let i = 0;
     jQuery("#createMgrBtn2").on('click',()=>{
-        console.log(i+=1)
         $scope.createManagerFxn(false);
     })
     //cancel
