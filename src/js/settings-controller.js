@@ -44,7 +44,6 @@ app.controller('settingsCtr',($scope)=>{
             $scope.db.settings.get(1)
             .then(res=>{
                 $scope.settings = res;
-                console.log(res)
                 $scope.$apply();
             })
         })

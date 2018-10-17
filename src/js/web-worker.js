@@ -21,10 +21,33 @@ self.onmessage = (e)=>{
                 postMessage('err-connect');
             })
         break;
+        case 'check-file-backup':
+            readDBFile()
+            .then((data)=>{
+                updateDBFromFile(data)
+                .then(msg=>{
+                    postMessage('data-restored');
+                }).catch(err=>{
+                    console.log(err);
+                })
+            })
+            .catch((err)=>{
+                postMessage('err-file-backup');
+            })
+            break;
+            case 'update-db-file':
+                fetchDatabase()
+                .then(data=>{
+                    saveToDBFile(data).then(data=>console.log(data)).catch(err=> console.log(err));
+                })
+                .catch(()=>{
+                    console.log('error');
+                })
+            break;
     }
 }
-var Dexie = require('dexie'),
-    db,
+const Dexie = require('dexie');
+    var db,
     orders = [],
     users = [],
     products = {
@@ -86,9 +109,17 @@ function fetchDatabase() {
                 settings = data;
             })
         })
-        .then((data) => {
+        .then(() => {
+            var data = [
+                {table: "users",data:users},
+                {table: "categories",data: products.categories},
+                {table: "items",data: products.items},
+                {table: "orders",data: orders},
+                {table: "settings",data: settings},
+                {table: "withdrawals",data: withdrawals}
+            ]
             //code to write when fetching of database succedeed!
-            resolve();
+            resolve(data);
         })
         .catch(err => {
             reject(err);
@@ -172,16 +203,9 @@ var ajax = ({url,data,dataType,type})=>{
 function syncDatabase(type = null) {
     return new Promise((resolve,reject)=>{
         fetchDatabase()
-        .then(()=>{
+        .then((data)=>{
             var url = 'http://localhost/snapburger_sync.php';
-            var dbSend = [
-                {table: "users",data: users},
-                {table: "categories",data: products.categories},
-                {table: "items",data: products.items},
-                {table: "orders",data: orders},
-                {table: "settings",data: settings},
-                {table: "withdrawals",data: withdrawals}
-            ]
+            var dbSend = data
             if(type== 'fetchAll'){
                 dbSend = [{type:"fetchAll",db:""}]
             }else{
@@ -253,4 +277,86 @@ function implementUpdates({method,data}){
             break;
         }
     })
+}
+
+/*setTimeout(()=>{
+    fetchDatabase()
+    .then(data=>{
+        saveToDBFile(data).then(data=>console.log(data)).catch(err=> console.log(err));
+    })
+},5000)*/
+//functions update file and read file...
+function saveToDBFile(data){
+    return new Promise((resolve,reject)=>{
+        var fs = require('fs');
+        const file = JSON.stringify(data);
+    fs.writeFile('config.sb.json', file, function (err) {
+        if (err){
+            reject(err);
+        }else{
+            resolve('saved');
+        }
+    });
+    })
+    
+}
+function readDBFile(){
+    return new Promise((resolve,reject)=>{
+        var fs = require('fs');
+    fs.readFile('config.sb.json', function(err, data) {
+        if(err){
+            reject(err);
+        }else{
+            if(data.length == 0){
+                reject('no-data')
+            }else{
+                var file = JSON.parse(data);
+               resolve(file);
+            }
+        }
+      });
+    })
+}
+
+//update DB from file 
+function updateDBFromFile(data){
+    return new Promise((resolve,reject)=>{
+        db.transaction('rw',db.orders,db.users,db.categories,db.items,db.withdrawals,()=>{
+            data.forEach(el=>{
+                switch(el.table){
+                    case 'users':
+                        db.users.bulkAdd(el.data);
+                    break;
+                    case 'orders':
+                        el.data.forEach(dt=>{
+                            dt.date = new Date(dt.date);
+                        })
+                        db.orders.bulkAdd(el.data);
+                    break;
+                    case 'categories':
+                        db.categories.bulkAdd(el.data);
+                    break;
+                    case 'items':
+                        db.items.bulkAdd(el.data);
+                    break;
+                    case 'withdrawals':
+                        el.data.forEach(dt=>{
+                            dt.date = new Date(dt.date);
+                        })
+                        db.withdrawals.bulkAdd(el.data);
+                    break;
+                    case 'settings':
+                        db.settings.put(el.data);
+                    break;
+                }
+            })
+        })
+        .then(()=>{
+            resolve('Succesfully added!');
+        })
+        .catch((err)=>{
+            reject(err);
+        })
+    })
+
 }

@@ -69,9 +69,9 @@
             <div class="row">
                 <div class="col s3 p-0">
                     <div class="pr-0 date-review">
-                        <input class="browser-default" type="search" placeholder="Search..">
+                        <input class="browser-default" ng-keyup="searchWithdrawals($event)" type="search" placeholder="Search..">
                         <div class="logs table-div">
-                            <div class="collection" id="">
+                            <div class="collection" id="widrawalsCollection">
                                 <!-- no need for a.date, remember 'a' is already a date object -->
                                 <a ng-repeat="u in uniqueDateWithdrawals"  ng-click="renderInViewWithdraw(u)" href="javascript:void(0)" class="collection-item grey-text text-darken-4"><i class="material-icons left">date_range</i>{{cleaner(u)}}<span class="new badge  blue-grey min-badge" data-badge-caption="">{{countDatewithdrawals(u)}}</span></a>
                             </div>
@@ -194,8 +194,17 @@
                                         </div>
                                         <div class="col s12">
                                             <hr>
-                                            <div class="col s5 offset-s1">
-                                                <h6>NET PROFIT: <span style="padding:6px 10px;font-weight:bold;" class="white blue-text">{{netProfit | currency:"FCFA ":0}}</span></h6>
+                                            <div class="col s7 offset-s1">
+                                                <h6>NET PROFIT:
+                                                <span style="padding:6px 10px;font-weight:bold;" class="white blue-text">
+                                                {{netProfit | currency:"FCFA ":0}}
+                                                </span></h6>
+                                            </div>
+                                            <div class="col s4">
+                                                <h3 class="percentage-text">
+                                                <i ng-show="percentageProfitIcon" class="material-icons medium left percentage-icons green-text">arrow_drop_up</i>
+                                                <i ng-hide="percentageProfitIcon" class="material-icons medium left percentage-icons red-text">arrow_drop_down</i>
+                                                {{percentageProfit}}%</h3>
                                             </div>
                                         </div>
                                     </div>

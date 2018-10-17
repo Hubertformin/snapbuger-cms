@@ -1,5 +1,5 @@
 app.controller('profileCtr',($scope)=>{
-    jQuery('#Image').click(()=>{
+    /*jQuery('#Image').click(()=>{
         document.querySelector('#profileImg').click();
     })
     //process image
@@ -15,14 +15,14 @@ app.controller('profileCtr',($scope)=>{
         var img = document.querySelector('#Image'),
         url = URL.createObjectURL(file);
         img.src = url;
-    }
+    }*/
     //updating users
     jQuery('#updateUser').on('click', () => {
-        var img = document.querySelector('#profileImg').files[0],blob;
+        /*var img = document.querySelector('#profileImg').files[0],blob;
         if(typeof img == 'object'){
             blob = new Blob([img],{type:img.type})
             $scope.currentUser.img_url = blob;
-        }
+        }*/
         $scope.currentUser.name = $scope.currentUser.name[0].toUpperCase()+$scope.currentUser.name.slice(1).toLowerCase()
         $scope.db.users.put($scope.currentUser)
         .then(()=>{

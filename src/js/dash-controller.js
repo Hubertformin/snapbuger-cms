@@ -197,16 +197,6 @@ app.controller("dashCtr", ($scope,$filter) => {
           //$scope.removeItem('deleteAll') 
         //console.log($scope.todaysOrders);
     }
-    //test to see orders.
-    $scope.db.orders.hook('creating', function (primKey, obj, transaction) {
-        // You may do additional database operations using given transaction object.
-        // You may also modify given obj
-        console.log(obj)
-        console.log(transaction)
-        // You may set this.onsuccess = function (primKey){}. Called when autoincremented key is known.
-        // You may set this.onerror = callback if create operation fails.
-        // If returning any value other than undefined, the returned value will be used as primary key
-    });
     //prompt print
     $scope.promptPrint = (order)=>{
         if(confirm("Are you sure you want to print this order?")){

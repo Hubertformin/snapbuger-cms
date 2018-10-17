@@ -30,7 +30,6 @@ app.controller("itemsCtr", ($scope) => {
     //1. Create Categories
     jQuery('#createCategoryForm').on('submit', (e) => {
         e.preventDefault();
-        console.log(typeof $scope.category_name);
         if (typeof $scope.category_name !== 'string' || $scope.category_name == ''){
             notifications.notify({title:"Invalid values",msg:"Please insert a name",type:"error"});
             return false;

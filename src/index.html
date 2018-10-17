@@ -35,14 +35,10 @@
                     </div>
                     <div class="row">
                         <div class="col s4 img-upload">
-                            <div class="hover" onclick="document.querySelector('#managerialImgInput').click()">
-                                <div class="dark-wrapper">
-                                    <div class="center"><i class="material-icons medium white-text">add</i></div>
-                                </div>
-                                <input type="file" tabindex="-1" style="display:none;" id="managerialImgInput" accept="image/*">
+                            <div class="hover">
+                                <!--<input type="file" tabindex="-1" style="display:none;" id="managerialImgInput" accept="image/*">-->
                                 <img src="img/manager.png" id="managerialImg" alt="">
                             </div>
-                            <spall class="font-amar grey-text">Click Image to add photo</spall>
                         </div>
                         <div class="col s8">
                             <div class="row">
@@ -78,7 +74,7 @@
             <img style="width:75px;height:75px;" src="img/Cloud%20Storage.png" alt="">
             <h4 class="teal-text">Checking for back up...</h4>
                <img style="width:25px;height:25px;" src="img/Synchronize.png" class="spin" alt="">
-               <p>Please make sure you have a good internet connection.</p>
+               <p id="DBcheckstatusText">Please make sure you have a good internet connection.</p>
             </div>
         </section>
         <!-- login page-->
@@ -119,7 +115,7 @@
                     </div>
                     <div class="row">
                         <div class="img-div col s6">
-                            <a draggable="false" href="#user"><img class="circle" src="{{profile_pic}}"></a>
+                            <a draggable="false" href="#!profile"><img class="circle" src="{{profile_pic}}"></a>
                         </div>
                         <div class="col s6 text-div" style="transform: translateY(-14px)">
                             <a draggable="false" href="javascript:void(0)" class="name-link"><span class="name white-text">{{currentUser.name}}</span></a>
@@ -155,13 +151,13 @@
                 <a draggable="false" href="javascript:void(0)" data-target="slide-out" class="show-on-medium-and-down sidenav-trigger white-text"><i class="material-icons">menu</i></a>
                 <a draggable="false" href="javascript:void(0)" class="logo-link white-text"><img src="img/logo-round.png" alt="logo"> <span>Snaburger</span></a>
 
-                <form action="#" id="nav-form">
+                <form id="nav-form">
+                    <i class="material-icons search">search</i>
                     <div class="input-field">
-                      <i class="material-icons search">search</i>
                       <input type="search" placeholder="Search..." id="autocomplete-search" class="autocomplete">
-                       <div class="close-search" onclick="showSearchBar(false)">
-                           <i class="material-icons">close</i>
-                       </div>
+                    </div>
+                    <div class="close-search" onclick="showSearchBar(false)">
+                        <i class="material-icons">close</i>
                     </div>
                 </form>
                 <ul class="nav-list-right">

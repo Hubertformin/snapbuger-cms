@@ -408,6 +408,8 @@ nav:not(.nav-extended) {
         box-shadow: 0px 5px 26px rgba(0, 0, 0, 0.12);
         input {
             position: absolute;
+            bottom: 0;
+            margin-bottom: 0!important;
             color: #f44336!important;
             padding-left: 30px!important;
             font-family: "Raleway";
@@ -1106,7 +1108,7 @@ table.huberts-tables {
             background: #eee;
         }
         &.active{
-            color: #009688;
+            color:#f44336;
             border: 2px solid #ddd;
             &::after{
             content: '';
@@ -1259,6 +1261,16 @@ div#reports {
             h5{
                 margin:0 0 0 5px;
             }
+        }
+    }
+}
+.percentage-text{
+    margin: 0!important;
+    i.percentage-icons{
+        transform: translate(20%,-20%);
+        margin: 0;
+        &:last-of-type{
+            transform: translate(20%,0%);
         }
     }
 }

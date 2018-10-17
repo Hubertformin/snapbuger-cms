@@ -12,11 +12,19 @@ app.controller('reportsCtr',($scope)=>{
     var startDatepicker = M.Datepicker.getInstance(jQuery('#startDate')),endDatepicker = M.Datepicker.getInstance(jQuery('#endDate'));
     //and now preview default active tab
     jQuery('.nav-tabs li').on('click',(e)=>{
-        var data = jQuery(e.target).data("target");
-        jQuery('.nav-tabs li').removeClass('active');
-        jQuery('.tab-prev').css({display:'none'});
-        jQuery(data).css({display:'block'});
-        jQuery(e.target).addClass("active");
+        if(jQuery(e.target).is('li')){
+            var data = jQuery(e.target).data("target");
+            jQuery('.nav-tabs li').removeClass('active');
+            jQuery('.tab-prev').hide("fast");
+            jQuery(data).show("fast");
+            jQuery(e.target).addClass("active");
+        }else{
+            var data = jQuery(e.target).parent().data("target");
+            jQuery('.nav-tabs li').removeClass('active');
+            jQuery('.tab-prev').hide("fast");
+            jQuery(data).show("fast");
+            jQuery(e.target).parent().addClass("active");
+        }
         
     })
     //refetcing orders and withdrawals, first declare empty variables
@@ -244,6 +252,42 @@ app.controller('reportsCtr',($scope)=>{
             }
         })
     }
+    //withdrawala
+    $scope.searchWithdrawals = (e)=>{
+        var val = jQuery(e.target).val().toLowerCase();
+        jQuery('#widrawalsCollection a').each((i,el)=>{
+            el.style.display = "none";
+            if(el.innerHTML.toLowerCase().indexOf(val)>-1){
+                el.style.display = "block";
+            }
+        })
+        var tr = jQuery('#withdrawalsTable tr');
+        tr.each((i,el)=>{
+            el.style.display = "none";
+            var inv = el.getElementsByTagName('td')[0].innerHTML.toLowerCase(),
+            staff = el.getElementsByTagName('td')[4].innerHTML.toLowerCase(),
+            reason = el.getElementsByTagName('td')[1].innerText.toLowerCase(),
+            price = el.getElementsByTagName('td')[2].innerHTML.toLowerCase(),
+            time = el.getElementsByTagName('td')[3].innerHTML.toLowerCase();
+            if(inv.indexOf(val)>-1){
+                jQuery('#widrawalsCollection a').show();
+                el.style.display = "table-row";
+            }else if(staff.indexOf(val)>-1){
+                jQuery('#widrawalsCollection a').show();
+                el.style.display = "table-row";
+            }else if(reason.indexOf(val)>-1){
+                jQuery('#widrawalsCollection a').show();
+                el.style.display = "table-row";
+            }
+            else if(price.indexOf(val)>-1){
+                jQuery('#widrawalsCollection a').show();
+                el.style.display = "table-row";
+            }else if(time.indexOf(val)>-1){
+                jQuery('#widrawalsCollection a').show();
+                el.style.display = "table-row";
+            }
+        })
+    }
     //round up function
     $scope.roundUp = (num) => {
         return Math.round(num);
@@ -467,6 +511,9 @@ function overviewCalculator(min,max){
     //Caculate net profit  but substraction of salaries should anly bedone at end of month
     $scope.totalSalary *= Math.floor(interval.length/30);
     $scope.netProfit = $scope.ordersPrice - ($scope.withdrawalsAmount + $scope.totalSalary);
+    $scope.percentageProfit = ($scope.netProfit > 0)?Math.round(($scope.netProfit/$scope.ordersPrice)*100):Math.round(($scope.netProfit/$scope.withdrawalsAmount)*100);
+    $scope.percentageProfit = Math.abs($scope.percentageProfit);
+    $scope.percentageProfitIcon = ($scope.netProfit > 0)?true:false;
     //console.log('o: '+$scope.netProfit+' and w: '+$scope.withdrawals+' and Total sal: '+$scope.totalSalary);
     //chart
     lineChart.config.data = {

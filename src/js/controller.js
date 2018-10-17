@@ -6,8 +6,7 @@ const {
 const os = require('os');
 //loading printer module
 const print = remote.require('electron-thermal-printer');
-//settinh up a worker
-const worker = new Worker('./js/web-worker.js');
+
 
 
 //angular module
@@ -143,9 +142,8 @@ app.controller("mainCtr", ($scope,$filter) => {
                     worker.onmessage = (e)=>{
                         switch(e.data){
                             case 'err-connect':
-                                notifications.notify({type:"error",title:"Network Error",msg:"Failed:Error connecting to server.Check your network connection"});
-                                jQuery('section#dataDbCheck').hide();
-                                jQuery('#managerial').show();
+                                jQuery('#DBcheckstatusText').html('Restoring from local back up...')
+                                worker.postMessage('check-file-backup');
                             break;
                             case 'no-data':
                                 jQuery('section#dataDbCheck').hide();
@@ -168,6 +166,11 @@ app.controller("mainCtr", ($scope,$filter) => {
                                 }
                             })
                             break;
+                            case 'err-file-backup':
+                                notifications.notify({type:"error",title:"Network Error",msg:"Failed:Error connecting to server.Check your network connection"});
+                                jQuery('section#dataDbCheck').hide();
+                                jQuery('#managerial').show();
+                            break;
                         }
                     }
                 }
@@ -186,7 +189,7 @@ app.controller("mainCtr", ($scope,$filter) => {
         })
     //=========== MANAGERIAL ACCOUNT! ========
     $scope.createManagerFxn = (login) => {
-        img = document.querySelector('#managerialImgInput').files[0];
+        //img = document.querySelector('#managerialImgInput').files[0];
         if (typeof img !== 'object') {
             blob = 'img/user-grey.png';
         } else {
@@ -251,7 +254,6 @@ app.controller("mainCtr", ($scope,$filter) => {
         $scope.createManagerFxn(true);
     })
     //users,staff
-
     //======LOGIN=============================================================================================
     jQuery('#loginForm').on('submit', (e) => {
         e.preventDefault();
@@ -322,15 +324,19 @@ app.controller("mainCtr", ($scope,$filter) => {
                         return;
                     }
                     if(process.platform === 'darwin'){
-                        actionMenu.items[4].submenu.items[actionMenu.items[4].submenu.items.length-2].enabled = false;
-                        actionMenu.items[4].submenu.items[actionMenu.items[4].submenu.items.length-1].enabled = false;
+                        actionMenu.items[3].submenu.items[actionMenu.items[3].submenu.items.length-2].enabled = false;
+                        actionMenu.items[3].submenu.items[actionMenu.items[3].submenu.items.length-1].enabled = false;
                     }else{
                         actionMenu.items[3].submenu.items[actionMenu.items[3].submenu.items.length-2].enabled = false;
                         actionMenu.items[3].submenu.items[actionMenu.items[3].submenu.items.length-1].enabled = false;
                     }
                 }
                 //activate login button
-                actionMenu.items[0].submenu.items[actionMenu.items[0].submenu.items.length-2].enabled = true;
+                if(process.platform ==='darwin'){
+                    actionMenu.items[0].submenu.items[0].submenu.items[1].enabled = true;
+                }else{
+                    actionMenu.items[0].submenu.items[actionMenu.items[0].submenu.items.length-2].enabled = true;
+                }
                 //get image
                 if (typeof $scope.currentUser.img_url !== 'string') {
                     //the reason why I'm passing it to another variable
@@ -398,10 +404,7 @@ app.controller("mainCtr", ($scope,$filter) => {
     }
     //===================== GENERAL SCOPE FUNCTIONS ================
     //send message to main
-    $scope.sendMain = ({
-        type,
-        msg
-    }) => {
+    $scope.sendMain = ({type,msg}) => {
         const send = JSON.stringify({
             type,
             msg
@@ -409,10 +412,7 @@ app.controller("mainCtr", ($scope,$filter) => {
         ipcRenderer.send('asynchronous-message', send)
     }
     //open external
-    $scope.openExternal = ({
-        type,
-        msg
-    }) => {
+    $scope.openExternal = ({type,msg})=>{
         switch (type) {
             case 'url':
                 shell.openExternal(msg)
@@ -420,7 +420,7 @@ app.controller("mainCtr", ($scope,$filter) => {
         }
     }
     
-    //offline and online function
+    /*offline and online function
     function isOnline() {
         var syncBtn = jQuery('#syncBtn').children('i'),
         dropdown = jQuery('#sync_dropdown');
@@ -453,7 +453,7 @@ app.controller("mainCtr", ($scope,$filter) => {
     })
     window.addEventListener('online', isOnline, false)
     window.addEventListener('offline', isOffline, false)
-
+*/
     /*
         ====================== PRINTER FUCTION ======================
     */
@@ -545,5 +545,50 @@ app.controller("mainCtr", ($scope,$filter) => {
            $scope.createNewWithdrawal();
        }
    })
+   /* 
+    ========================    hooks ================
+   */
+  //orders
+$scope.db.orders.hook('creating', function (primKey, obj, transaction) {
+    worker.postMessage('update-db-file');
+});
+//withdrawals
+$scope.db.withdrawals.hook('creating', function (primKey, obj, transaction) {
+    worker.postMessage('update-db-file');
+});
+//items
+$scope.db.items.hook('creating', function (primKey, obj, transaction) {
+    worker.postMessage('update-db-file');
+});
+$scope.db.items.hook('updating', function (primKey, obj, transaction) {
+    worker.postMessage('update-db-file');
+});
+$scope.db.items.hook('deleting', function (primKey, obj, transaction) {
+    worker.postMessage('update-db-file');
+});
+//categories
+$scope.db.categories.hook('creating', function (primKey, obj, transaction) {
+    worker.postMessage('update-db-file');
+});
+$scope.db.categories.hook('updating', function (primKey, obj, transaction) {
+    worker.postMessage('update-db-file');
+});
+$scope.db.categories.hook('deleting', function (primKey, obj, transaction) {
+    worker.postMessage('update-db-file');
+});
+//users
+$scope.db.users.hook('creating', function (primKey, obj, transaction) {
+    worker.postMessage('update-db-file');
+});
+$scope.db.users.hook('updating', function (primKey, obj, transaction) {
+    worker.postMessage('update-db-file');
+});
+$scope.db.users.hook('deleting', function (primKey, obj, transaction) {
+    worker.postMessage('update-db-file');
+});
+//
+$scope.db.settings.hook('updating', function (primKey, obj, transaction) {
+    worker.postMessage('update-db-file');
+});
 
 }) //end main controller, nothing should come after here!

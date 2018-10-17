@@ -187,6 +187,10 @@ const menu = new Menu()
 
 
 M.AutoInit();
+//
+//settinh up a worker
+const worker = new Worker('./js/web-worker.js');
+
 //to cosesidenav when links are clicked
 jQuery('#slide-out').on('click','.sideNavLink',()=>{
     if(jQuery(window).width()<992){
@@ -197,7 +201,7 @@ jQuery('#slide-out').on('click','.sideNavLink',()=>{
 //AUTO-COMPLETE SEARCH FORM
 $('input.autocomplete').autocomplete({
     data: {
-      "Orders": null,
+      "Orders":'./img/Combo_Chart_100px.png',
       "Products": null,
       "Settings": null,
       "Reports": null,
@@ -344,6 +348,7 @@ function searchOrderItems(e){
         no_result.show();
     }
 }
+
 //$AV_ASW
 var elems = document.querySelectorAll('.dropdown-trigger');
 var dropdown = M.Dropdown.init(elems, {coverTrigger:false}); 
@@ -368,7 +373,7 @@ const notifications = new Alerts();
 //time class
 const time = new DateFunction();
 
-document.querySelector('#managerialImgInput').onchange = (e)=>{
+/*document.querySelector('#managerialImgInput').onchange = (e)=>{
     var img = document.querySelector('#managerialImg'),
     file = e.target.files[0];
     if(file)
@@ -381,11 +386,11 @@ document.querySelector('#managerialImgInput').onchange = (e)=>{
     var url = URL.createObjectURL(file);
     img.src = url;
     
-}
+}*/
 //===================================================================================================================================
 //client side of app
 //register service worker
-if('serviceWorker' in navigator){
+/*if('serviceWorker' in navigator){
     send().catch(err=>console.log(err));
 }
 async function send(){
@@ -394,6 +399,43 @@ async function send(){
     // Then later, request a one-off sync:
     navigator.serviceWorker.ready.then(function(swRegistration) {
         return swRegistration.sync.register('myFirstSync');
+    });*/
+//lets persist the database
+async function persist() {
+    return await navigator.storage && navigator.storage.persist &&
+    navigator.storage.persist();
+}
+async function isStoragePersisted() {
+    return await navigator.storage && navigator.storage.persisted &&
+      navigator.storage.persisted();
+  }
+  async function tryPersistWithoutPromtingUser() {
+    if (!navigator.storage || !navigator.storage.persisted) {
+      return "never";
+    }
+    let persisted = await navigator.storage.persisted();
+    if (persisted) {
+      return "persisted";
+    }
+    if (!navigator.permissions || !navigator.permissions.query) {
+      return "prompt"; // It MAY be successful to prompt. Don't know.
+    }
+    const permission = await navigator.permissions.query({
+      name: "persistent-storage"
     });
-
+    if (permission.status === "granted") {
+      persisted = await navigator.storage.persist();
+      if (persisted) {
+        return "persisted";
+      } else {
+        console.error("Failed to persist");
+        return;
+      }
+    }
+    if (permission.status === "prompt") {
+      return "prompt";
+    }
+    return "never";
+  }
+  tryPersistWithoutPromtingUser().then(yes=>console.log(yes));
   
