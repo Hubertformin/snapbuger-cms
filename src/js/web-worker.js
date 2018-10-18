@@ -321,7 +321,7 @@ function readDBFile(){
 //update DB from file 
 function updateDBFromFile(data){
     return new Promise((resolve,reject)=>{
-        db.transaction('rw',db.orders,db.users,db.categories,db.items,db.withdrawals,()=>{
+        db.transaction('rw',db.orders,db.users,db.categories,db.items,db.withdrawals,db.settings,()=>{
             data.forEach(el=>{
                 switch(el.table){
                     case 'users':

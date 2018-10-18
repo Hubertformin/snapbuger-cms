@@ -15,10 +15,14 @@ function getInstallerConfig () {
 
   return Promise.resolve({
     appDirectory: path.join(outPath, 'SnapBurger-CMS-win32-ia32/'),
-    authors: 'Silverslopescm',
-    noMsi: true,
+    authors: 'Hubert Formin',
+    owners:'Silverslopecm',
+    noMsi:true,
+    loadingGif:path.join(rootPath, 'setup.gif'),
     outputDirectory: path.join(outPath, 'windows-installer'),
     exe: 'SnapBurger-CMS.exe',
+    certificateFile:path.join(rootPath, 'snap_key.pfx'),
+    certificatePassword:'snapburger17',
     setupExe: 'snapburger-setup.exe',
     setupIcon: path.join(rootPath, 'logo.ico')
   })

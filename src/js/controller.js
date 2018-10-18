@@ -39,9 +39,11 @@ app.controller("mainCtr", ($scope,$filter) => {
         switch (e.data) {
             case 'end-orders':
                 $scope.end_orders = true;
+                $scope.$apply();
                 break;
             case 'resume-orders':
                 $scope.end_orders = false;
+                $scope.$apply();
                 break;
         }
     }
@@ -305,8 +307,8 @@ app.controller("mainCtr", ($scope,$filter) => {
                 if($scope.currentUser.is_mgr){
                     //to activate menu click mgr items 
                     if(process.platform === 'darwin'){
-                        actionMenu.items[4].submenu.items[actionMenu.items[4].submenu.items.length-2].enabled = true;
-                        actionMenu.items[4].submenu.items[actionMenu.items[4].submenu.items.length-1].enabled = true;
+                        actionMenu.items[3].submenu.items[actionMenu.items[3].submenu.items.length-2].enabled = true;
+                        actionMenu.items[3].submenu.items[actionMenu.items[3].submenu.items.length-1].enabled = true;
                     }else{
                         actionMenu.items[3].submenu.items[actionMenu.items[3].submenu.items.length-2].enabled = true;
                         actionMenu.items[3].submenu.items[actionMenu.items[3].submenu.items.length-1].enabled = true;

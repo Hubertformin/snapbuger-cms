@@ -12,14 +12,14 @@ const {app, BrowserWindow, ipcMain, Tray, Menu, Notification} = require('electro
 
   function createWindow () {
     //getting full witdth and heigth
-    //const {width,height} = require('electron').screen.getPrimaryDisplay().workAreaSize
+    const {width,height} = require('electron').screen.getPrimaryDisplay().workAreaSize
     // Create the browser window.
     win = new BrowserWindow({
       show:false,
       backgroundColor:'#333',
-      width:1000,
+      width:width,
       title:'SnapBurger CMS',
-      height:950,
+      height:height,
       minWidth:950,
       minHeight:600,
       icon: './src/img/logo-round.png',
@@ -31,9 +31,9 @@ const {app, BrowserWindow, ipcMain, Tray, Menu, Notification} = require('electro
     win.loadFile('src/index.html')
 
     // Open the DevTools.
-    win.webContents.openDevTools()
+    //win.webContents.openDevTools()
     //maximise windows when openned
-    win.maximize()
+    //win.maximize()
     
     
     //when the widow is ready to display
@@ -54,25 +54,7 @@ const {app, BrowserWindow, ipcMain, Tray, Menu, Notification} = require('electro
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   app.on('ready', createWindow)
-  let tray = null
-  
-  app.on('ready', () => {
-    tray = new Tray('./src/img/logo-round.png')
-    const contextMenu = Menu.buildFromTemplate([
-      {label: 'Open',click(){
-        win.show()
-      }},
-      {label: 'Sync', enabled:false},
-    ])
-    tray.setToolTip('SnapBurger')
-    tray.setContextMenu(contextMenu)
 
-    const notification = new Notification({
-      title:"Hubs bitch",
-      body:"This worked"
-    })
-    notification.show();
-  })
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {
     // On macOS it is common for applications and their menu bar
