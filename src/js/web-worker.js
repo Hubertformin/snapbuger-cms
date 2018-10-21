@@ -136,6 +136,13 @@ function checkTimeRange() {
                         to_time = data.time_range.to.split(":"),
                         d = new Date();
                     //send notifications in intervals of 5,10,15 mins
+                    var end_time = new Date(`${d.toDateString()} ${data.time_range.to}`),
+                    diff = Math.ceil((end_time.getTime() - d.getTime())/60000);
+                    if(diff <= 15){
+                        if(diff> 0 && (diff)%5 == 0){
+                            postMessage(JSON.stringify({type:"end-orders-alert",min:diff}))
+                        }
+                    }
                     //var to_mins = new Date(`jQuery{d.toDateString()} jQuery{data.time_range.to}`);
                     //disable orders if time is less than time_range from time
                     if (d.getHours() > Number(to_time[0]) || d.getHours() == Number(to_time[0]) && d.getMinutes() >= Number(to_time[1])) {

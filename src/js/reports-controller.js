@@ -142,7 +142,7 @@ app.controller('reportsCtr',($scope)=>{
    //Instantiating
    $('select').formSelect();
     //var instance = M.Tabs.init(jQuery('.tabs'));
-    $scope.toTime  = (dt)=>{
+    $scope.Time  = (dt)=>{
         var time = new Date(dt),hour = time.getHours(),min = time.getMinutes();
         if(hour < 10){
             hour = '0'+hour;
@@ -151,7 +151,7 @@ app.controller('reportsCtr',($scope)=>{
             min = '0'+min;
         }
         //console.log(dt)
-        return `${time.getDate()}/${time.getMonth()+1}/${time.getFullYear()}-${hour}:${min}`;
+        return `${hour}:${min}`;
     }
     //for date display array, first we reverse sort
     function toDate(dt){
@@ -222,6 +222,23 @@ app.controller('reportsCtr',($scope)=>{
                 })
                 .catch(err=>{
                     notifications.notify({title:"Unknown error",type:"error",msg:`Unable to delete order`})
+                })
+            })
+        }
+    }
+    //delete withdrawals
+    $scope.deleteWithdrawals = (i)=>{
+        if(confirm(`Are you sure you want to delete : ${$scope.withdrawals[i].inv}?`)){
+            $scope.db.withdrawals.delete($scope.withdrawals[i].id)
+            .then(()=>{
+                $scope.db.withdrawals.toArray()
+                .then(data=>{
+                    $scope.withdrawals = data;
+                    $scope.$apply();
+                    notifications.notify({title:"Complete",type:"ok",msg:"Withdrawal deleted!"})
+                })
+                .catch(err=>{
+                    notifications.notify({title:"Unknown error",type:"error",msg:`Unable to delete withdrawal`})
                 })
             })
         }

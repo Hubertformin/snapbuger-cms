@@ -598,12 +598,14 @@ button.bg-theme:disabled {
 
 //rout:dashboardF
 //collapseible
-#dashboard .collapsible-header {
+.collapsible-header {
     background: #fff;
-    padding: 0px!important;
+    &.head{
+        padding: 0px!important;
+        border-radius: 29px;
+    }
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     position: relative;
-    border-radius: 2px;
     .header {
         width: 100%;
         color: #555;
@@ -624,6 +626,9 @@ button.bg-theme:disabled {
         }
     }
 }
+    .rounded{
+        border-radius: 29px;
+    }
 //dashboard
 .table-search{
     width:60%;
@@ -977,11 +982,11 @@ table.huberts-tables {
 
 .scrollContainer {
     border: 1px solid #ddd;
-    height: 280px;
+    height: 480px;
     position: relative;
     margin: 10px;
     overflow-x: hidden;
-    white-space: nowrap;
+    //white-space: nowrap;
     .no-results {
         position: absolute;
         text-align: center;
@@ -1002,8 +1007,8 @@ table.huberts-tables {
     }
     .item {
         display: inline-block;
-        width: 220px;
-        margin: 10px 7px;
+        max-width: 500px;
+        margin: 10px 3px;
         border: 1px solid #ddd;
         height: 250px;
         .header {

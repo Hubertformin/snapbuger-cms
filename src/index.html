@@ -24,58 +24,58 @@
     <section ng-app="mainApp" ng-controller="mainCtr">
         <!-- Incase there is no manager/user -->
         <section id="managerial">
-                <div class="head align-center">
-                    <img src="img/logo-round.png" alt="logo">
-                    <h6 class="red-text font-kaushan">Snapburger</h6>
+            <div class="head align-center">
+                <img src="img/logo-round.png" alt="logo">
+                <h6 class="red-text font-kaushan">Snapburger</h6>
+            </div>
+            <div class="center">
+                <h4 class="font-fira orange-text align-center">Set up a Managerial Account</h4>
+                <div class="tab-indicators">
+                    <span class="indicator grey active"></span>
+                    <span class="indicator grey"></span>
                 </div>
-                <div class="center">
-                    <h4 class="font-fira orange-text align-center">Set up a Managerial Account</h4>
-                    <div class="tab-indicators">
-                        <span class="indicator grey active"></span>
-                        <span class="indicator grey"></span>
-                    </div>
-                    <div class="row">
-                        <div class="col s4 img-upload">
-                            <div class="hover">
-                                <!--<input type="file" tabindex="-1" style="display:none;" id="managerialImgInput" accept="image/*">-->
-                                <img src="img/manager.png" id="managerialImg" alt="">
-                            </div>
+                <div class="row">
+                    <div class="col s4 img-upload">
+                        <div class="hover">
+                            <!--<input type="file" tabindex="-1" style="display:none;" id="managerialImgInput" accept="image/*">-->
+                            <img src="img/manager.png" id="managerialImg" alt="">
                         </div>
-                        <div class="col s8">
-                            <div class="row">
-                                <form action="#" id="createManagerialForm">
-                                    <div class="input-field col s12">
-                                        <i class="material-icons prefix">account_circle</i>
-                                        <input placeholder="Name(s)" ng-model="createManagerialFormInputName" type="text" class="validate">
-                                    </div>
-                                    <div class="input-field col s12">
-                                        <i class="material-icons prefix">lock</i>
-                                        <input placeholder="Password" type="password" ng-model="createManagerialFormPassword" class="validate">
-                                    </div>
-                                    <p>
-                                        <label>
+                    </div>
+                    <div class="col s8">
+                        <div class="row">
+                            <form action="#" id="createManagerialForm">
+                                <div class="input-field col s12">
+                                    <i class="material-icons prefix">account_circle</i>
+                                    <input placeholder="Name(s)" ng-model="createManagerialFormInputName" type="text" class="validate">
+                                </div>
+                                <div class="input-field col s12">
+                                    <i class="material-icons prefix">lock</i>
+                                    <input placeholder="Password" type="password" ng-model="createManagerialFormPassword" class="validate">
+                                </div>
+                                <p>
+                                    <label>
                                         <input type="checkbox" class="filled-in" checked="checked" disabled />
                                             <span>I own/manage this organization.</span>
                                         </label>
-                                    </p>
-                                    <button id="createMgrBtn1" type="button" ng-disabled="!createManagerialFormPassword || !createManagerialFormInputName" class="btn bg-theme-rev waves-effect waves light"><i class="material-icons right" ng-click="createManagerFxn(true)">arrow_forward</i>Proceed</button>
-                                    <button id="createMgrBtn2" type="button" ng-disabled="!createManagerialFormPassword || !createManagerialFormInputName" class="btn bg-theme waves-effect waves light"><i class="material-icons right">arrow_forward</i>Create</button>
-                                </form>
-                            </div>
+                                </p>
+                                <button id="createMgrBtn1" type="button" ng-disabled="!createManagerialFormPassword || !createManagerialFormInputName" class="btn bg-theme-rev waves-effect waves light"><i class="material-icons right" ng-click="createManagerFxn(true)">arrow_forward</i>Proceed</button>
+                                <button id="createMgrBtn2" type="button" ng-disabled="!createManagerialFormPassword || !createManagerialFormInputName" class="btn bg-theme waves-effect waves light"><i class="material-icons right">arrow_forward</i>Create</button>
+                            </form>
                         </div>
                     </div>
-
                 </div>
-                <button id="closeLoginBtn" class="btn white black-text cancel waves-effect waves-default right">Cancel</button>
-            </section>
+
+            </div>
+            <button id="closeLoginBtn" class="btn white black-text cancel waves-effect waves-default right">Cancel</button>
+        </section>
         <!--loading icon to fetch database -->
         <section id="dataDbCheck">
             <div class="center">
-            <h3 align="center" class="orange-text font-amar"><img class="left" style="width:55px;height:55px" src="img/logo-round.png" alt=""><span>SnapBurger</span></h3>
-            <img style="width:75px;height:75px;" src="img/Cloud%20Storage.png" alt="">
-            <h4 class="teal-text">Checking for back up...</h4>
-               <img style="width:25px;height:25px;" src="img/Synchronize.png" class="spin" alt="">
-               <p id="DBcheckstatusText">Please make sure you have a good internet connection.</p>
+                <h3 align="center" class="orange-text font-amar"><img class="left" style="width:55px;height:55px" src="img/logo-round.png" alt=""><span>SnapBurger</span></h3>
+                <img style="width:75px;height:75px;" src="img/Cloud%20Storage.png" alt="">
+                <h4 class="teal-text">Checking for back up...</h4>
+                <img style="width:25px;height:25px;" src="img/Synchronize.png" class="spin" alt="">
+                <p id="DBcheckstatusText">Please make sure you have a good internet connection.</p>
             </div>
         </section>
         <!-- login page-->
@@ -85,7 +85,7 @@
                 <form action="action" id="loginForm" class="">
                     <img src="img/logo-round.png" alt="">
                     <div class="row" id="appLoader">
-                       <div id="loginInputs" style="visibility:hidden;">
+                        <div id="loginInputs" style="visibility:hidden;">
                             <div class="input-field col s12">
                                 <i class="material-icons prefix">account_circle</i>
                                 <input placeholder="User name" ng-model="usernameLogin" type="text" class="validate">
@@ -97,7 +97,7 @@
                             <button ng-disabled="users.length == 0" class="bg-theme btn waves-effect waves-light" type="submit" name="action">Login
                             <i class="material-icons right">arrow_forward</i>
                             </button>
-                       </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -147,9 +147,9 @@
         <header>
             <nav class="navbar z-depth-1 bg-theme-pink">
                 <a draggable="false" href="javascript:void(0)" data-target="slide-out" class="show-on-medium-and-down sidenav-trigger white-text"><i class="material-icons">menu</i></a>
-                <a draggable="false" href="javascript:void(0)" class="logo-link white-text"><img src="img/logo-round.png" alt="logo"> <span>Snaburger</span></a>
+                <a draggable="false" href="javascript:void(0)" class="logo-link white-text"><img src="img/logo-round.png" alt="logo"> <span>Snapburger</span></a>
 
-                <form id="nav-form">
+                <!--<form id="nav-form">
                     <i class="material-icons search">search</i>
                     <div class="input-field">
                       <input type="search" placeholder="Search..." id="autocomplete-search" class="autocomplete">
@@ -160,7 +160,7 @@
                 </form>
                 <ul class="nav-list-right">
                     <li onclick="showSearchBar(true)"><a title="Search" draggable="false" href="javascript:void(0)" class="white-text"><i class="material-icons">search</i> </a></li>
-                </ul>
+                </ul>-->
             </nav>
         </header>
         <main id="main">
@@ -168,9 +168,9 @@
         </main>
         <!--  notifications-->
         <div class="notify grey darken-4 waves-light" id="success">
-          <div class="head">
-           <img src="img/notify-success.png" alt="success">
-          </div>
+            <div class="head">
+                <img src="img/notify-success.png" alt="success">
+            </div>
             <div class="body">
                 <h6 class="title green-text"></h6>
                 <span class="msg"></span>
@@ -179,9 +179,9 @@
             </div>
         </div>
         <div class="notify grey darken-4 waves-light" id="error">
-          <div class="head">
-           <img src="img/notify-failed.png" alt="failed">
-          </div>
+            <div class="head">
+                <img src="img/notify-failed.png" alt="failed">
+            </div>
             <div class="body">
                 <h6 class="title red-text"></h6>
                 <span class="msg"></span>
@@ -189,27 +189,42 @@
                 <button class="close right btn-flat"><i class="material-icons left">clear</i>close</button>
             </div>
         </div>
+        <!--notification sounds -->
+        <audio id="alertNotificationSound" src="assets/alert.wav"></audio>
         <!-- Modals -->
-        <div id="withdrawMoney" class="modal pink-text">
-           <form id="createRedrawalForm">
-            <div class="modal-content">
-              <h5 align="center"><i class="material-icons small">account_balance_wallet</i>REDRAW MONEY</h5>
-              <div class="input-field col s6">
-                <input ng-model="redrawReason" id="reason_for_redraw" type="text" class="validate">
-                <span class="helper-text" data-error="Invalid value"></span>
-                <label for="reason_for_redraw" class="active">Reason for Redraw:</label>
-               </div>
-               <h5>Amount: {{redrawAmount | currency:"FCFA ":0}}</h5>
-               <div class="input-field col s6">
-                <input id="amount" type="number" ng-model="redrawAmount" class="validate">
-                <label for="amount" class="active">Amount:</label>
-                <span class="helper-text" data-error="Invalid value"></span>
-               </div>
-            </div>
-            <div class="modal-footer pink darken-2">
-              <button type="button" class="modal-close waves-effect waves-green btn-flat white-text">Cancel</button>
-              <button type="submit" class="waves-effect waves-green btn-flat white-text">Redraw</button>
-            </div>
+        <div id="withdrawMoney" class="modal modal-fixed-footer pink-text">
+            <form id="createRedrawalForm">
+                <div class="modal-content">
+                    <h5 align="center"><i class="material-icons small">account_balance_wallet</i>REDRAW MONEY</h5>
+                    <div class="input-field">
+                        <select class="browser-default" id="redrawCategory" ng-model="redrawCategory">
+                           <option value="" disabled>Select category</option>
+                            <option value="Fast Food">Fast Food</option>
+                            <option value="Bar">Bar</option>
+                            <option value="Ice cream">Ice cream</option>
+                            <option value="Shisha">Shisha</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="input-field">
+                       <textarea ng-model="redrawReason" id="reason_for_redraw" class="materialize-textarea"></textarea>
+                        <label for="reason_for_redraw" class="active">Reason for Redraw:</label>
+                    </div>
+                    <div class="input-field">
+                        <input ng-model="redrawReciever" id="redrawReciever" type="text" class="validate">
+                        <label for="redrawReciever" class="active">Withdraw reciever:</label>
+                    </div>
+                    <h5>Amount: {{redrawAmount | currency:"FCFA ":0}}</h5>
+                    <div class="input-field">
+                        <input id="amount" type="number" ng-model="redrawAmount" class="validate">
+                        <label for="amount" class="active">Amount:</label>
+                        <span class="helper-text" data-error="Invalid value"></span>
+                    </div>
+                </div>
+                <div class="modal-footer pink darken-2">
+                    <button type="button" class="modal-close waves-effect waves-green btn-flat white-text">Cancel</button>
+                    <button type="submit" class="waves-effect waves-green btn-flat white-text">Redraw</button>
+                </div>
             </form>
         </div>
         <!-- FAB-->
@@ -230,7 +245,8 @@
         </div>
     </section>
     <script>
-    document.getElementById('copyright_p').innerHTML = `&copy;${new Date().getFullYear()} A production of Silverslopescm. All rights reserved`;
+        document.getElementById('copyright_p').innerHTML = `&copy;${new Date().getFullYear()} A production of Silverslopescm. All rights reserved`;
+
     </script>
     <script src="js/chart.js"></script>
     <script src="js/waitMe.min.js"></script>

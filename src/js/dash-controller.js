@@ -8,18 +8,13 @@ app.controller("dashCtr", ($scope,$filter) => {
         $scope.db.orders.toArray()
             .then((data)=>{
                 $scope.todaysCompletedOrders = [];
+                $scope.todaysCompletedOrdersTotals = 0;
                 $scope.orders = data;
                 $scope.orders.forEach(elems=>{
-                    if($scope.currentUser.is_mgr){
-                        if(elems.date.toDateString() == today){
-                            $scope.todaysCompletedOrders.push(elems)
-                        }
-                    }else if(!$scope.currentUser.is_mgr){
-                        if(elems.date.toDateString() == today && elems.staff ==$scope.currentUser.name){
-                            $scope.todaysCompletedOrders.push(elems)
-                        }
+                    if(elems.date.toDateString() == today){
+                        $scope.todaysCompletedOrders.push(elems);
+                        $scope.todaysCompletedOrdersTotals += Number(elems.totalPrice);
                     }
-                    
                 })
                 $scope.$apply();
             })
@@ -39,14 +34,14 @@ app.controller("dashCtr", ($scope,$filter) => {
     var elems = document.querySelectorAll('.datepicker');
     //input current date into date picker input by default
     jQuery('#orderDate').val(formatDate());
-    jQuery('.scrollContainer').on('mousewheel', function (e) {
+    /*jQuery('.scrollContainer').on('mousewheel', function (e) {
         if (e.deltaY < 0) {
             jQuery(this).scrollLeft(jQuery(this).scrollLeft()+40);
         } else {
             jQuery(this).scrollLeft(jQuery(this).scrollLeft()-40);
         }
         e.preventDefault();
-    });
+    });*/
     //add order numbers buttons
     $scope.addOrderNumber = (e,i)=>{
         if(jQuery(e.target).is('i')){

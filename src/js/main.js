@@ -1,4 +1,4 @@
-const {remote} = require('electron')
+const {remote,shell} = require('electron')
   const {Menu, MenuItem} = remote
 //menu-context
 const menu = new Menu()
@@ -32,6 +32,7 @@ const menu = new Menu()
     {
       label: 'View',
       submenu: [
+        {role:'reload'},
         {role: 'toggledevtools'},
         {type: 'separator'},
         {role: 'resetzoom'},
@@ -96,13 +97,14 @@ const menu = new Menu()
       role: 'help',
       submenu: [
         {
-          label: 'Learn More',
-          click () {console.log("undo") }
-        },
-        {
             label:'About software',
             click() {
                 document.querySelector('#settingsLink').click();
+            }
+        },{
+            label:'Open developer\'s site',
+            click(){
+                shell.openExternal('https://silverslopecm.ml');
             }
         }
       ]
@@ -195,13 +197,10 @@ jQuery('#appLoader').waitMe({
     bg : 'rgba(255,255,255,1)',
     color : '#b71c1c',
     maxSize : '',
-    waitTime : 2500,
+    waitTime : -1,
     textPos : 'vertical',
     fontSize : '',
-    source : '',
-    onClose : function() {
-        jQuery('#loginInputs').css({visibility:"visible"})
-    }
+    source : ''
     });
                     
 //to cosesidenav when links are clicked
@@ -251,8 +250,9 @@ class Alerts{
             this.errorMsg.slideUp();
             clearTimeout(this.timeoutError)
         });
+        this.alertSound = document.querySelector('#alertNotificationSound');
     }
-    notify({msg,type,title},time = 4000){
+    notify({msg,type,title},time = 4000,sound = false){
         if(typeof title !== 'string'){
             title = 'Notification';
         }
@@ -273,6 +273,9 @@ class Alerts{
                     this.successMsg.slideUp()   
                 }
             },time)
+        }
+        if(sound == true){
+            this.alertSound.play();
         }
     }
 }
@@ -331,11 +334,7 @@ function formatDate(string = ''){
     return `${day}/${month}/${year}`;
 }
 function searchOrderItems(e){
-    var val = jQuery(e.target).val(),items = jQuery('#orderItems .item'),
-    no_result = jQuery('#no-resultsOrder');
-    no_result.hide();
-    //variable to change if result is found
-    var found = false;
+    var val = jQuery(e.target).val(),items = jQuery('#orderItems .item');
     val = val.toLowerCase();
     items.each((i,el)=>{
         jQuery(el).hide()
@@ -344,22 +343,15 @@ function searchOrderItems(e){
         item_status = jQuery(el).children('div.header').children('.dark').children('dl').children('dd.item-status').html().toLowerCase()
         //search..
         if(item_name.indexOf(val) == -1 && item_category.indexOf(val) == -1 && item_status.indexOf(val) == -1){
-            found = false;
         }
         else if(item_name.indexOf(val)> -1){
             jQuery(el).show();
-            found = true;
         }else if(item_category.indexOf(val)> -1){
             jQuery(el).show();
-            found = true;
         }else if(item_status.indexOf(val)> -1){
             jQuery(el).show();
-            found = true;
         }
     })
-    if(found == false){
-        no_result.show();
-    }
 }
 
 //$AV_ASW
@@ -451,4 +443,5 @@ async function isStoragePersisted() {
     return "never";
   }
   tryPersistWithoutPromtingUser().then(yes=>console.log(yes));
+  
   

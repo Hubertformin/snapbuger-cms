@@ -5,7 +5,7 @@
     1* `Try to use save databes on submit and refetch data`
 ===================================================
 -->
-<div class="routePage" ng-controller="itemsCtr">
+<div class="routePage" id="itemsCtr" ng-controller="itemsCtr">
     <!-- Select table number -->
     <div class="box">
         <div class="header">
@@ -18,185 +18,197 @@
         </div>
     </div>
     <!--Categories box -->
-    <div class="box">
-        <div class="header bg-theme">
-            <h2 class="white-text">
-                Categories<br><small>Manage categories (Click to edit)</small>
-            </h2>
-        </div>
-        <div class="body">
-            <ul ng-show="currentUser.is_mgr" class="collapsible">
-                <li>
-                    <div class="collapsible-header"><i class="material-icons">add</i>Create Category</div>
-                    <div class="collapsible-body">
-                        <div class="row">
-                            <form action="#" id="createCategoryForm" class="col s12" name="categoriesForm">
-                                <div class="row">
-                                    <div class="input-field col s6">
-                                        <input data-error="Invalid Name" id="category_name" type="text" ng-model="category_name" name="category_name" class="validate" placeholder="Name">
-                                    </div>
-                                    <div class="input-field col s6">
-                                        <label style="transform: translateY(-21px);" for="category_status">Status</label>
-                                        <select class="browser-default" name="category_status" class="validate" ng-model="category_status" id="category_status">
-                                            <option value="available">Available</option>
-                                            <option value="unavailable">Unavailable</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <span class="categories_error red-text"></span>
-                                <button type="submit" style="float:right" class="waves-effect waves-light btn bg-theme-rev">Add</button>
-                            </form>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-            <div class="searchTable">
-                <span><strong>Total items: {{products.categories.length}}</strong></span>
-                <input type="search" onkeyup="searchTable(event,'#categoriesTable')" name="" placeholder="Search Table.." id="">
-            </div>
-            <table class="huberts-tables mdl-data-table" style="width:100%">
-                <thead>
-                    <tr>
-                        <th class="small">#</th>
-                        <th>Category name</th>
-                        <th>status</th>
-                        <th class="small" ng-show="currentUser.is_mgr"><i class="material-icons">build</i></th>
-                    </tr>
-                </thead>
-            </table>
-            <div class="huberts-table-div">
-                <div ng-show="products.categories.length == 0" class="no-data">
-                    <p>No categories, Create categories to view</p>
+    <ul class="collapsible rounded">
+        <li class="active">
+            <div class="collapsible-header head">
+                <div class="header bg-theme">
+                    <h2 class="white-text">
+                        Categories<br><small>Manage categories (Click to edit)</small>
+                    </h2>
                 </div>
-                <table id="categoriesTable" class="huberts-tables mdl-data-table" style="width:100%">
-                    <tbody>
-                        <tr ng-repeat="x in products.categories track by $index">
-                            <td class="small">{{$index+1}}</td>
-                            <td>{{x.name}}</td>
-                            <td>{{x.status}}</td>
-                            <td class="small" ng-show="currentUser.is_mgr"><i ng-click="deleteCategories($index)" class="material-icons">delete</i></td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
-            <table class="huberts-tables">
-                <tfoot>
-                    <tr>
-                        <th>#</th>
-                        <th>Category name</th>
-                        <th>status</th>
-                        <th class="small" ng-show="currentUser.is_mgr"></th>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-    </div>
-    <!--Item box -->
-    <div class="box">
-        <div class="header bg-theme">
-            <h2 class="white-text">
-                Items <br><small>Manage products (Click to edit)</small>
-            </h2>
-        </div>
-        <div class="body">
-            <ul ng-show="currentUser.is_mgr" class="collapsible">
-                <li>
-                    <div class="collapsible-header"><i class="material-icons">add</i>Create Item</div>
-                    <div class="collapsible-body">
-                        <div class="row">
-                            <form action="#" id="createItemForm" class="col s12" name="itemForm">
+            <div class="collapsible-body rounded">
+                <div class="body">
+                    <ul ng-show="currentUser.is_mgr" class="collapsible">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">add</i>Create Category</div>
+                            <div class="collapsible-body">
                                 <div class="row">
-                                    <div class="input-field col s6">
-                                        <input data-error="Invalid Name" id="item_name" type="text" placeholder="Name" name="item_name" ng-model="item_name" class="validate">
-                                    </div>
-                                    <div class="input-field col s6">
-                                        <label style="transform: translateY(-21px);" for="item_status">Status</label>
-                                        <select class="browser-default" name="item_status" ng-model="item_status" class="validate" id="item_status">
+                                    <form action="#" id="createCategoryForm" class="col s12" name="categoriesForm">
+                                        <div class="row">
+                                            <div class="input-field col s6">
+                                                <input data-error="Invalid Name" id="category_name" type="text" ng-model="category_name" name="category_name" class="validate" placeholder="Name">
+                                            </div>
+                                            <div class="input-field col s6">
+                                                <label style="transform: translateY(-21px);" for="category_status">Status</label>
+                                                <select class="browser-default" name="category_status" class="validate" ng-model="category_status" id="category_status">
                                             <option value="available">Available</option>
                                             <option value="unavailable">Unavailable</option>
                                         </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col s6">
-                                        <div class="row">
-                                            <div class="col s2 orange" style="transform: translateY(10px);text-align: center;color:#fff;padding:6px 10px;">FCFA</div>
-                                            <div class="col s10">
-                                                <div class="input-field" style="transform: translateY(-15px);">
-                                                    <input data-error="Invalid Rate" id="item_rate" type="number" name="item_rate" ng-model="item_rate" class="validate"  placeholder="Rate">
-                                                    <span class="helper-text" data-error="Invalid value" data-success="right"></span>
-                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col s6">
-                                        <select name="item_category" ng-model="item_category" id="#" class="browser-default">
+                                        <span class="categories_error red-text"></span>
+                                        <button type="submit" style="float:right" class="waves-effect waves-light btn bg-theme-rev">Add</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="searchTable">
+                        <span><strong>Total items: {{products.categories.length}}</strong></span>
+                        <input type="search" onkeyup="searchTable(event,'#categoriesTable')" name="" placeholder="Search Table.." id="">
+                    </div>
+                    <table class="huberts-tables mdl-data-table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th class="small">#</th>
+                                <th>Category name</th>
+                                <th>status</th>
+                                <th class="small" ng-show="currentUser.is_mgr"><i class="material-icons">build</i></th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="huberts-table-div">
+                        <div ng-show="products.categories.length == 0" class="no-data">
+                            <p>No categories, Create categories to view</p>
+                        </div>
+                        <table id="categoriesTable" class="huberts-tables mdl-data-table" style="width:100%">
+                            <tbody>
+                                <tr ng-repeat="x in products.categories track by $index">
+                                    <td class="small">{{$index+1}}</td>
+                                    <td>{{x.name}}</td>
+                                    <td>{{x.status}}</td>
+                                    <td class="small" ng-show="currentUser.is_mgr"><i ng-click="deleteCategories($index)" class="material-icons">delete</i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <table class="huberts-tables">
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>Category name</th>
+                                <th>status</th>
+                                <th class="small" ng-show="currentUser.is_mgr"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <!--Item box -->
+    <ul class="collapsible rounded">
+        <li class="active">
+            <div class="collapsible-header head">
+                <div class="header bg-theme">
+                    <h2 class="white-text">
+                        Items <br><small>Manage products (Click to edit)</small>
+                    </h2>
+                </div>
+            </div>
+            <div class="collapsible-body rounded">
+                <div class="body">
+                    <ul ng-show="currentUser.is_mgr" class="collapsible">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">add</i>Create Item</div>
+                            <div class="collapsible-body">
+                                <div class="row">
+                                    <form action="#" id="createItemForm" class="col s12" name="itemForm">
+                                        <div class="row">
+                                            <div class="input-field col s6">
+                                                <input data-error="Invalid Name" id="item_name" type="text" placeholder="Name" name="item_name" ng-model="item_name" class="validate">
+                                            </div>
+                                            <div class="input-field col s6">
+                                                <label style="transform: translateY(-21px);" for="item_status">Status</label>
+                                                <select class="browser-default" name="item_status" ng-model="item_status" class="validate" id="item_status">
+                                            <option value="available">Available</option>
+                                            <option value="unavailable">Unavailable</option>
+                                        </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col s6">
+                                                <div class="row">
+                                                    <div class="col s2 orange" style="transform: translateY(10px);text-align: center;color:#fff;padding:6px 10px;">FCFA</div>
+                                                    <div class="col s10">
+                                                        <div class="input-field" style="transform: translateY(-15px);">
+                                                            <input data-error="Invalid Rate" id="item_rate" type="number" name="item_rate" ng-model="item_rate" class="validate" placeholder="Rate">
+                                                            <span class="helper-text" data-error="Invalid value" data-success="right"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col s6">
+                                                <select name="item_category" ng-model="item_category" id="#" class="browser-default">
                                                 <option value="" selected disabled>Select category</option>
                                                 <option ng-disabled="!x.action" ng-repeat="x in products.categories track by $index" value="{{x.name}}">{{x.name}}</option>
                                             </select>
-                                    </div>
+                                            </div>
+                                        </div>
+                                        <span class="item_error red-text"></span>
+                                        <button type="submit" style="float:right" class="waves-effect waves-light btn bg-theme-rev">Add</button>
+                                    </form>
                                 </div>
-                                <span class="item_error red-text"></span>
-                                <button type="submit" style="float:right" class="waves-effect waves-light btn bg-theme-rev">Add</button>
-                            </form>
-                        </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="searchTable">
+                        <span><strong>Total items: {{products.items.length}}</strong></span>
+                        <input type="search" onkeyup="searchInputTable(event,'#itemsTable')" name="" placeholder="Search Table.." id="">
                     </div>
-                </li>
-            </ul>
-            <div class="searchTable">
-                <span><strong>Total items: {{products.items.length}}</strong></span>
-                <input type="search" onkeyup="searchInputTable(event,'#itemsTable')" name="" placeholder="Search Table.." id="">
-            </div>
-            <table class="huberts-tables mdl-data-table" style="width:100%">
-                <thead>
-                    <tr>
-                        <th class="small">#</th>
-                        <th>Item name</th>
-                        <th>Rate(FCFA)</th>
-                        <th>Category</th>
-                        <th>Status</th>
-                        <th class="small" ng-show="currentUser.is_mgr"><i class="material-icons">build</i></th>
-                    </tr>
-                </thead>
-            </table>
-            <div class="huberts-table-div">
-                <div ng-show="products.items.length == 0" class="no-data">
-                    <p>No items in this table, Create Items to view</p>
-                </div>
-                <table id="itemsTable" class="huberts-tables mdl-data-table" style="width:100%">
-                    <tbody>
-                        <tr ng-repeat="x in products.items track by $index">
-                            <td class="small">{{$index+1}}</td>
-                            <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" type="text" ng-model="x.name"></td>
-                            <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" type="number" ng-model="x.rate"></td>
-                            <td>
-                                <select ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" class="browser-default" ng-model="x.category">
+                    <table class="huberts-tables mdl-data-table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th class="small">#</th>
+                                <th>Item name</th>
+                                <th>Rate(FCFA)</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th class="small" ng-show="currentUser.is_mgr"><i class="material-icons">build</i></th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="huberts-table-div">
+                        <div ng-show="products.items.length == 0" class="no-data">
+                            <p>No items in this table, Create Items to view</p>
+                        </div>
+                        <table id="itemsTable" class="huberts-tables mdl-data-table" style="width:100%">
+                            <tbody>
+                                <tr ng-repeat="x in products.items track by $index">
+                                    <td class="small">{{$index+1}}</td>
+                                    <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" type="text" ng-model="x.name"></td>
+                                    <td><input ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" type="number" ng-model="x.rate"></td>
+                                    <td>
+                                        <select ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" class="browser-default" ng-model="x.category">
                                 <option ng-disabled="!o.action" ng-repeat="o in products.categories track by $index" value="{{o.name}}">{{o.name}}</option>
                             </select>
-                            </td>
-                            <td>
-                                <select ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" ng-model="x.status" class="browser-default">
+                                    </td>
+                                    <td>
+                                        <select ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" ng-model="x.status" class="browser-default">
                             <option value="available">Available</option>
                             <option value="unavailable">Unavailable</option>
                         </select>
-                            </td>
-                            <td class="small" ng-show="currentUser.is_mgr"><i ng-click="deleteItems($index)" class="material-icons">delete</i></td>
-                        </tr>
-                    </tbody>
-                </table>
+                                    </td>
+                                    <td class="small" ng-show="currentUser.is_mgr"><i ng-click="deleteItems($index)" class="material-icons">delete</i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <table class="huberts-tables" style="width:100%">
+                        <tfoot>
+                            <th>#</th>
+                            <th>Item name</th>
+                            <th>Rate</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th class="small" ng-show="currentUser.is_mgr"></th>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
-            <table class="huberts-tables" style="width:100%">
-                <tfoot>
-                    <th>#</th>
-                    <th>Item name</th>
-                    <th>Rate</th>
-                    <th>Category</th>
-                    <th>Status</th>
-                    <th class="small" ng-show="currentUser.is_mgr"></th>
-                </tfoot>
-            </table>
-        </div>
-    </div>
+        </li>
+    </ul>
 
 
 

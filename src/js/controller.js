@@ -1,7 +1,6 @@
 //rwquire electrom modules here
 const {
-    ipcRenderer,
-    shell
+    ipcRenderer
 } = require('electron');
 const os = require('os');
 //loading printer module
@@ -35,6 +34,7 @@ app.config(($routeProvider) => {
 
 app.controller("mainCtr", ($scope,$filter) => {
     //listening to worker
+    $scope.alerted = null;
     worker.onmessage = (e) => {
         switch (e.data) {
             case 'end-orders':
@@ -45,6 +45,39 @@ app.controller("mainCtr", ($scope,$filter) => {
                 $scope.end_orders = false;
                 $scope.$apply();
                 break;
+            default:
+            try{
+                var end_alert = JSON.parse(e.data),min;
+                if(end_alert.type == "end-orders-alert"){
+                    min = end_alert.min;
+                    if($scope.alerted !== null){
+                        if(min !== $scope.alerted){
+                            //alert
+                            $scope.alerted = min;
+                            notifications.notify({
+                                type:"error",
+                                title:`Orders ending in ${min} mins`,
+                                msg:`Orders ending in ${min} minutes be sure to save all`
+                            },4000,true)
+                        }
+                    }else{
+                        //alert
+                        $scope.alerted = min;
+                        console.log($scope.alerted)
+                        notifications.notify({
+                            type:"error",
+                            title:`Orders ending in ${min} mins`,
+                            msg:`Orders ending in ${min} minutes be sure to save all`
+                        },4000,true);
+
+                    }
+                }
+                $scope.$apply();
+            }
+            catch(e){
+                break;
+            }
+            break;
         }
     }
     /*
@@ -74,7 +107,7 @@ app.controller("mainCtr", ($scope,$filter) => {
         items: "++id,&name,rate,category,status,action",
         orders: "++id,&inv,date,*items,totalPrice,tableNum,totalQuantity,staff",
         settings: "&id,tableNumber,time_range,auto_update,back_up,performance_report,app_id",
-        withdrawals:"++id,&inv,reason,amount,date,staff",
+        withdrawals:"++id,&inv,category,reason,receiver,amount,date,staff",
         tracker:"++id,type,tableName,data,date,status"
     })
     //by default wahen there is no data,i.e when the database is just created, we add this to settings
@@ -134,6 +167,8 @@ app.controller("mainCtr", ($scope,$filter) => {
         })
         .then(() => {
             //code to write when fetching of database succedeed!
+            jQuery('#appLoader').waitMe("hide");
+            jQuery('#loginInputs').css({visibility:"visible"})
             //jQuery('#loader').remove();
             if($scope.users.length == 0 && $scope.products.categories.length == 0
                 && $scope.orders.length == 0 && $scope.products.items.length == 0
@@ -474,7 +509,7 @@ app.controller("mainCtr", ($scope,$filter) => {
         {type: 'text', value: `Total: ${$filter('currency')(data.totalPrice, "FCFA ", 0)}`, style: `margin:25px 0 0 0;font-size: 17px;font-weight:bold`},
         {
             type: 'qrcode',
-            value: data.name,
+            value: data.inv,
             height: 64,
             width: 64,
             style: `text-align:center;width:64px;margin: 20px 0 0 0;float:right`
@@ -494,7 +529,40 @@ app.controller("mainCtr", ($scope,$filter) => {
             notifications.notify({title:"Print error",msg:"Error printing",type:"error"});
         }
     }).catch(err=>{
-        console.error(err+'Failed');
+        notifications.notify({title:"Print error",msg:"-Make sure printer is connected to PC<br>-Check if printer drivers are up-to-date",type:"error"});
+    })
+   }
+   //fucntion to print withwrals
+   $scope.printWithdrawals = (data)=>{
+       const date = `${data.date.getDate()}/${data.date.getMonth()+1}/${data.date.getFullYear()} ,${data.date.getHours()}:${data.date.getMinutes()}`;
+       var print_data = [
+        {type: 'bodyInit', css: {"margin": "0 0 0 0", "width": '250px'}},
+         {type: 'text', value: 'Withdrawal receipt', style: `font-size: 18px;text-align:center;font-weight:bold;`},
+         {type: 'text', value: data.inv, style: `font-size: 17px;text-align:center;font-weight:bold;`},
+         {type: 'text', value: date, style: `font-size: 14px;text-align:center;`},
+         {type: 'text', value: `Category: ${data.category}`, style: `font-size: 16px;`},
+         {type: 'text', value: `Reason: ${data.reason}`, style: `font-size: 16px;`}
+     ]
+     print_data  = print_data.concat([
+        {type: 'text', value: `Total: ${$filter('currency')(data.amount, "FCFA ", 0)}`, style: `margin:25px 0 0 0;font-size: 17px;font-weight:bold`},
+        {type: 'text', value: `Issued by: ${data.staff}`, style: `font-size: 16px;`},
+        {type: 'text', value: `Received by: ${data.receiver}`, style: `font-size: 16px;`},
+        {type: 'text', value: '@snapburger17', style: `text-align:center;font-size: 12px`}
+     ])
+     //printing....
+    print.print58m( {
+       data: print_data,
+        preview:false,
+        deviceName: 'XP-80C',
+        timeoutPerLine: 400
+    }).then((data)=>{
+        if(data){
+            notifications.notify({msg:"Added to printing queue",type:"ok"});
+        }else{
+            notifications.notify({title:"Print error",msg:"Error printing",type:"error"});
+        }
+    }).catch(err=>{
+        notifications.notify({title:"Print error",msg:"-Make sure printer is connected to PC<br>-Check if printer drivers are up-to-date",type:"error"});
     })
    }
    //client side for app
@@ -505,16 +573,32 @@ app.controller("mainCtr", ($scope,$filter) => {
        if(typeof $scope.redrawReason !== 'string' ||$scope.redrawReason == ''){
             notifications.notify({
                 type:"error",
-                title:"Invalid value",
-                msg:"Please insert a valid reason",
+                title:"Reason required",
+                msg:"A reason for this withdrawal is required",
             })
             return;
         }
         if(typeof $scope.redrawAmount !== 'number' ||$scope.redrawAmount == ''){
             notifications.notify({
                 type:"error",
-                title:"Invalid value",
+                title:"A Valid amount is required",
                 msg:"Please insert a valid Amount",
+            })
+            return;
+        }
+        if(typeof $scope.redrawCategory !== 'string' || $scope.redrawCategory == ''){
+            notifications.notify({
+                type:"error",
+                title:"Category required",
+                msg:'Please select a category'
+            })
+            return;
+       }
+       if(typeof $scope.redrawReciever !== 'string' || $scope.redrawReciever == ''){
+            notifications.notify({
+                type:"error",
+                title:"Reciever required",
+                msg:'Please insert a reciever'
             })
             return;
         }
@@ -522,7 +606,7 @@ app.controller("mainCtr", ($scope,$filter) => {
            //data:withdrawals:"++id,inv,reason,amount,date",
            $scope.createNewWithdrawal = ()=>{
                 const invc = `SBR${Math.floor(Math.random() * (9999 - 1000) ) + 1000}`;
-                var data = {inv:invc,reason:$scope.redrawReason,amount:$scope.redrawAmount,date:new Date(),staff:$scope.currentUser.name}
+                var data = {inv:invc,category:$scope.redrawCategory,reason:$scope.redrawReason,receiver:$scope.redrawReciever,amount:$scope.redrawAmount,date:new Date(),staff:$scope.currentUser.name}
                 $scope.db.transaction('rw',$scope.db.withdrawals,()=>{
                      $scope.db.withdrawals.add(data)
                      //refresh data
@@ -533,6 +617,7 @@ app.controller("mainCtr", ($scope,$filter) => {
                      })
                 })
                 .then(()=>{
+                    $scope.printWithdrawals(data);
                      notifications.notify({
                          type:"ok",
                          title:"Withrawal registered!",

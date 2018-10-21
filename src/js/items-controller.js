@@ -31,7 +31,7 @@ app.controller("itemsCtr", ($scope) => {
     jQuery('#createCategoryForm').on('submit', (e) => {
         e.preventDefault();
         if (typeof $scope.category_name !== 'string' || $scope.category_name == ''){
-            notifications.notify({title:"Invalid values",msg:"Please insert a name",type:"error"});
+            notifications.notify({title:"Category name required!",msg:"Please insert a valid category name",type:"error"});
             return false;
         }
         let action = true;
@@ -123,7 +123,7 @@ app.controller("itemsCtr", ($scope) => {
         e.preventDefault();
         if(typeof $scope.item_name !== 'string' && typeof $scope.item_rate !== 'number' && typeof $scope.item_category !== 'string') {
             notifications.notify({
-                title:"Invalid values",
+                title:"Empty values!",
                 msg: "Please fill in the form",
                 type: "error"
             });
@@ -131,15 +131,15 @@ app.controller("itemsCtr", ($scope) => {
         }
         if(typeof $scope.item_name !== 'string' || $scope.item_name == ''){
             notifications.notify({
-                title:"Invalid value",
-                msg: "Please add a name",
+                title:"Item name required!",
+                msg: "Please add a valid item name",
                 type: "error"
             });
             return;
         }
         if(typeof $scope.item_rate !== 'number'){
             notifications.notify({
-                title:"Invalid value",
+                title:"Item rate required!",
                 msg: "Please add price of the item",
                 type: "error"
             });
@@ -147,7 +147,7 @@ app.controller("itemsCtr", ($scope) => {
         }
         if(typeof $scope.item_category !== 'string' || $scope.item_category == ''){
             notifications.notify({
-                title:"Invalid values",
+                title:"Item category required!",
                 msg: "Please select a category.",
                 type: "error"
             });

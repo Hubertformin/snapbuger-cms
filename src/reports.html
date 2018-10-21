@@ -40,6 +40,7 @@
                                 <th>Qty</th>
                                 <th>Staff</th>
                                 <th>Time</th>
+                                <th></th>
                             </thead>
                         </table>
                         <div class="table-div">
@@ -55,7 +56,8 @@
                                         <td>{{x.totalPrice | currency:"":0}}</td>
                                         <td>{{x.totalQuantity}}</td>
                                         <td>{{x.staff}}</td>
-                                        <td><small>{{toTime(x.date)}}</small></td>
+                                        <td>{{Time(x.date)}}</td>
+                                        <td class="small"><i ng-click="deleteOrder($index)" class="material-icons">delete</i></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -119,19 +121,25 @@
                 </div>
                   <table>
                       <th>Inv</th>
+                      <th>Category</th>
                       <th>Reason</th>
+                      <th>Receiver</th>
                       <th>Amount</th>
                       <th>Date</th>
                       <th>Staff</th>
+                      <th></th>
                   </table>
                    <div class="huberts-table-div">
                     <table id="withdrawalsTable" class="huberts-tables">
                         <tr ng-repeat="w in withdrawals" data-date="{{cleaner(w.date)}}">
                             <td>{{w.inv}}</td>
+                            <td>{{w.category}}</td>
                             <td>{{w.reason}}</td>
+                            <td>{{w.receiver}}</td>
                             <td>{{w.amount | currency:"FCFA ":0}}</td>
                             <td>{{cleaner(w.date)}}</td>
                             <td>{{w.staff}}</td>
+                            <td class="small"><i ng-click="deleteWithdrawals($index)" class="material-icons">delete</i></td>
                         </tr>
                     </table>
                    </div>
@@ -273,7 +281,7 @@
                         <div class="row pie">
                             <div class="col s4">
                                 <div ng-repeat="i in barData.x" class="list-item-percent brb">
-                                    <h6 class="teal-text">{{i}}</h6>
+                                    <h6 class="teal-text">{{i}} <span class="blue-grey-text right">{{barData.y[$index]}}</span></h6>
                                     <div class="progress">
                                         <div class="determinate bg-theme" style="width:{{roundUp((barData.y[$index]/logTotalQty) *100)}}%"></div>
                                     </div>
