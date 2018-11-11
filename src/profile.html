@@ -6,7 +6,7 @@
                 <div class="dark-wrapper">
                 </div>
                 <div class="center">
-                    <img src="{{profile_pic}}" id="Image" alt="profile">
+                    <img src="img/user-grey.png" id="Image" alt="profile">
                     <p class="white-text">
                         <span>{{currentUser.name}}</span><br>
                         <span>{{currentUser.position}}</span>
@@ -17,7 +17,7 @@
         <div class="col s8">
             <form action="" class="z-depth-2" name="form">
                <!--Input img -->
-               <input type="file" tabindex="-1" accept="image/*" id="profileImg" style="display:none;">
+<!--               <input type="file" tabindex="-1" accept="image/*" id="profileImg" style="display:none;">-->
                <!--the rest -->
                 <div class="input-field">
                     <input id="first_name" type="text" class="validate" ng-model="currentUser.name">
@@ -28,15 +28,15 @@
                     <label class="active" for="password">Password</label>
                 </div>
                 <div class="input-field">
-                    <input type="text" id="position" ng-model="currentUser.position">
+                    <input type="text" id="position" disabled ng-model="currentUser.position">
                     <label class="active" for="position">Position</label>
                 </div>
                 <div class="input-field">
-                    <input type="text" id="salary" ng-model="currentUser.salary">
+                    <p>{{currentUser.salary | currency:"FCFA ":2}}</p>
                     <label class="active" for="salary">Salary</label>
                 </div>
                 <div class="input-field">
-                    <p id="startDate">{{toDate(currentUser.startDate)}}</p>
+                    <p id="startDate">{{currentUser.startDate}}</p>
                     <label class="active" for="startDate">Start Date</label>
                 </div>
                 <button id="updateUser" type="button" class="bg-theme btn"><i class="material-icons right">done</i>Update</button>

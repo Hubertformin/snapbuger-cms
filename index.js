@@ -1,17 +1,25 @@
-const {app, BrowserWindow, ipcMain,Notification, Tray, Menu} = require('electron')
+const setupEvents = require('./src/js/installer/installer')
+ if (setupEvents.handleSquirrelEvent()) {
+    // squirrel event handled and app will exit in 1000ms, so don't do anything else
+    return;
+ }
+
+const {app, BrowserWindow, ipcMain, Tray, Menu, Notification} = require('electron');
 
   // Keep a global reference of the window object, if you don't, the window will
   // be closed automatically when the JavaScript object is garbage collected.
   let win
 
   function createWindow () {
+    //getting full witdth and heigth
+    const {width,height} = require('electron').screen.getPrimaryDisplay().workAreaSize
     // Create the browser window.
     win = new BrowserWindow({
       show:false,
-      backgroundColor:'#2e2c29',
-      width: 1000,
+      backgroundColor:'#333',
+      width:width,
       title:'SnapBurger CMS',
-      height: 700,
+      height:height,
       minWidth:950,
       minHeight:600,
       icon: './src/img/logo-round.png',
@@ -19,12 +27,14 @@ const {app, BrowserWindow, ipcMain,Notification, Tray, Menu} = require('electron
         nodeIntegrationInWorker: true
       }
     })
-
     // and load the index.html of the app.
     win.loadFile('src/index.html')
 
     // Open the DevTools.
-    win.webContents.openDevTools()
+    //win.webContents.openDevTools()
+    //maximise windows when openned
+    //win.maximize()
+    
     
     //when the widow is ready to display
     win.once('ready-to-show', () => {
@@ -44,18 +54,6 @@ const {app, BrowserWindow, ipcMain,Notification, Tray, Menu} = require('electron
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   app.on('ready', createWindow)
-  /*let tray = null
-  app.on('ready', () => {
-    tray = new Tray('./src/img/logo-round.png')
-    const contextMenu = Menu.buildFromTemplate([
-      {label: 'Item1', type: 'radio'},
-      {label: 'Item2', type: 'radio'},
-      {label: 'Item3', type: 'radio', checked: true},
-      {label: 'Item4', type: 'radio'}
-    ])
-    tray.setToolTip('SnapBurger')
-    tray.setContextMenu(contextMenu)
-  })*/
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {

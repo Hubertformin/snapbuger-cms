@@ -7,18 +7,25 @@
   "scripts": {
     "start": "electron .",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=logo.icns --prune=true --out=release-builds",
-    "package-win": "electron-packager . SnapBurger-CMS --overwrite --asar=true --platform=win32 --arch=ia32 --icon=logo.ico --prune=true --out=release-builds --version-string.CompanyName=\"Silverslopescm \" --version-string.FileDescription=\"Snap Burger CMS software\" --version-string.ProductName=\"SnapBurger-CMS\""
+    "package-win": "electron-packager . SnapBurger-CMS --overwrite --asar=true --platform=win32 --arch=ia32 --icon=logo.ico --prune=true --out=release-builds --version-string.CompanyName=\"Silverslopescm \" --version-string.FileDescription=\"Snap Burger CMS software\" --version-string.ProductName=\"SnapBurger-CMS\"",
+    "create-installer-win": "node src/js/create-wininstaller.js"
   },
   "author": "Hubert Formin",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "dexie": "^2.0.4",
+    "dexie-observable": "^1.0.0-beta.4",
     "electron": "^2.0.9",
     "electron-thermal-printer": "0.0.5",
+    "express": "^4.16.3",
+    "file-saverjs": "^1.3.6",
     "jquery": "^3.3.1",
-    "tableexport": "^5.0.2"
+    "web-push": "^3.3.3"
   },
   "devDependencies": {
-    "electron-packager": "^12.1.2"
+    "electron-installer-windows": "^1.1.0",
+    "electron-packager": "^12.1.2",
+    "electron-winstaller": "^2.7.0"
   }
 }

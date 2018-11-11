@@ -3,23 +3,18 @@ app.controller("dashCtr", ($scope,$filter) => {
     jQuery('.sideNavLink').removeClass('active');
     jQuery('#dashboardLink').addClass('active');
     //====================== FETCH AND COMPUTE =======================
-    const today = new Date().toDateString();$scope.todaysCompletedOrders = [];
+    const today = new Date().toDateString();;
     $scope.fetchAndComputeOrders = () => {
         $scope.db.orders.toArray()
             .then((data)=>{
                 $scope.todaysCompletedOrders = [];
+                $scope.todaysCompletedOrdersTotals = 0;
                 $scope.orders = data;
                 $scope.orders.forEach(elems=>{
-                    if($scope.currentUser.is_mgr){
-                        if(elems.date.toDateString() == today){
-                            $scope.todaysCompletedOrders.push(elems)
-                        }
-                    }else if(!$scope.currentUser.is_mgr){
-                        if(elems.date.toDateString() == today && elems.staff ==$scope.currentUser.name){
-                            $scope.todaysCompletedOrders.push(elems)
-                        }
+                    if(elems.date.toDateString() == today){
+                        $scope.todaysCompletedOrders.push(elems);
+                        $scope.todaysCompletedOrdersTotals += Number(elems.totalPrice);
                     }
-                    
                 })
                 $scope.$apply();
             })
@@ -37,22 +32,16 @@ app.controller("dashCtr", ($scope,$filter) => {
      let currentDate = new Date();
     var thisYear = currentDate.getFullYear();
     var elems = document.querySelectorAll('.datepicker');
-    var instances = M.Datepicker.init(elems, {
-        format: 'dd/mm/yyyy',
-        minDate: currentDate,
-        defaultDate: currentDate,
-        yearRange: [thisYear, thisYear + 2]
-    });
     //input current date into date picker input by default
     jQuery('#orderDate').val(formatDate());
-    jQuery('.scrollContainer').on('mousewheel', function (e) {
+    /*jQuery('.scrollContainer').on('mousewheel', function (e) {
         if (e.deltaY < 0) {
             jQuery(this).scrollLeft(jQuery(this).scrollLeft()+40);
         } else {
             jQuery(this).scrollLeft(jQuery(this).scrollLeft()-40);
         }
         e.preventDefault();
-    });
+    });*/
     //add order numbers buttons
     $scope.addOrderNumber = (e,i)=>{
         if(jQuery(e.target).is('i')){
@@ -140,10 +129,10 @@ app.controller("dashCtr", ($scope,$filter) => {
 
     ///Finally creating order, first by setting the default table number to 1
     $scope.orderTableNumber = '1';
-    $scope.orderInv = `SB${Math.floor(Math.random() * 999) + 1000}`;
+    $scope.orderInv = `SBO${Math.floor(Math.random() * (9999 - 1000) ) + 1000}`;
     $scope.createOrder = ()=>{
         if($scope.currentOrder.items.length == 0){
-            notifications.notify({type:"error",msg:"Please select items"})
+            notifications.notify({title:"No Items selected",type:"error",msg:"Please select items to proceed"})
             return false;
         }
         const staff = JSON.parse(sessionStorage.getItem('user'))
@@ -157,7 +146,7 @@ app.controller("dashCtr", ($scope,$filter) => {
         $scope.db.orders.add(current)
         .then(()=>{
                 $scope.fetchAndComputeOrders();
-                $scope.orderInv = `SB${Math.floor(Math.random() * 999) + 1000}`;
+                $scope.orderInv = `SBO${Math.floor(Math.random() * (9999 - 1000) ) + 1000}`;
                 $scope.removeItem(null,'deleteAll');
                 jQuery('input.qty').val(1);
                 $scope.$apply();
@@ -194,23 +183,15 @@ app.controller("dashCtr", ($scope,$filter) => {
                 });
         })
         .catch(err=>{
-            console.log(err)
+            $scope.orderInv = `SBO${Math.floor(Math.random() * (9999 - 1000) ) + 1000}`;
+            $scope.createOrder()
+            //console.log(err)
         })
           //reseting order custom form
           //$scope.orderInv = "";
           //$scope.removeItem('deleteAll') 
         //console.log($scope.todaysOrders);
     }
-    //test to see orders.
-    $scope.db.orders.hook('creating', function (primKey, obj, transaction) {
-        // You may do additional database operations using given transaction object.
-        // You may also modify given obj
-        console.log(obj)
-        console.log(transaction)
-        // You may set this.onsuccess = function (primKey){}. Called when autoincremented key is known.
-        // You may set this.onerror = callback if create operation fails.
-        // If returning any value other than undefined, the returned value will be used as primary key
-    });
     //prompt print
     $scope.promptPrint = (order)=>{
         if(confirm("Are you sure you want to print this order?")){

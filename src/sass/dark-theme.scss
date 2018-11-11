@@ -142,7 +142,7 @@ select {
         bottom: 0;
         left: 0;
         right: 0;
-        background: #fff;
+        background: #263238;
         z-index:3000;
         h4 {
             transform: translateY(-140%);
@@ -194,7 +194,8 @@ select {
     }
 section#dataDbCheck{
     display: none;
-    background:#fff;
+    background: #263238;
+    color: #f1f1f1!important;
     position:fixed;
     top:0;left:0;right:0;bottom:0;
     z-index:3001;
@@ -209,10 +210,11 @@ section#dataDbCheck{
         position: relative;
     }
     div.waitMe{
+        background-color: #263238!important;
         bottom: -4px;
     }
     position: fixed;
-    background:#fff;
+    background:#263238;
     top: 0;
     left: 0;
     right: 0;
@@ -239,14 +241,15 @@ section#dataDbCheck{
     bottom: 0;
     right: 0;
     left: 0;
-    background: #fff;
+    background:#263238;
     z-index: 6;
 }
 
 body {
     position: relative; //background-image: url('../img/back6.jpg');
     overflow-y: scroll;
-    background: #fff;
+    background: #263238;
+    //color: #f1f1f1!important;
 }
 
 //nav and search
@@ -267,7 +270,14 @@ main {
 #slide-out {
     transition: all 0.2s ease;
     overflow: hidden;
+    background-color: #263238!important;
     li{
+        a{
+            color: #f1f1f1!important;
+            i.material-icons{
+                color: #f1f1f1!important;
+            }
+        }
         &.min{
             position: absolute;
             cursor: pointer;

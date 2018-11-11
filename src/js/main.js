@@ -1,4 +1,208 @@
+const {remote,shell} = require('electron')
+  const {Menu, MenuItem} = remote
+//menu-context
+const menu = new Menu()
+  menu.append(new MenuItem({label: 'MenuItem1', click() { console.log('item 1 clicked') }}))
+  menu.append(new MenuItem({type: 'separator'}))
+  menu.append(new MenuItem({label: 'MenuItem2', type: 'checkbox', checked: true}))
+  //graph menu
+  const graphMenu = new Menu()
+  graphMenu.append(new MenuItem({label: 'Refresh', click() { console.log('item 1 clicked') }}))
+  graphMenu.append(new MenuItem({label: 'autoload', type: 'checkbox', checked: true}))
+  
+  /*window.addEventListener('contextmenu', (e) => {
+    e.preventDefault()
+    menu.popup({window: remote.getCurrentWindow()})
+  }, false)*/
+  const template = [
+      {
+      label: 'Edit',
+      submenu: [
+        {role: 'undo'},
+        {role: 'redo'},
+        {type: 'separator'},
+        {role: 'cut'},
+        {role: 'copy'},
+        {role: 'paste'},
+        {role: 'pasteandmatchstyle'},
+        {role: 'delete'},
+        {role: 'selectall'}
+      ]
+    },
+    {
+      label: 'View',
+      submenu: [
+        {role:'reload'},
+        {role: 'toggledevtools'},
+        {type: 'separator'},
+        {role: 'resetzoom'},
+        {role: 'zoomin'},
+        {role: 'zoomout'},
+        {type: 'separator'},
+        {role: 'togglefullscreen'}
+      ]
+    },{
+        label:'Navigate',
+        submenu:[
+            {
+                label:'Dasboard',
+                accelerator:'CommandOrControl+Shift+d',
+                click(){document.querySelector('#dashboardLink').click();}
+            },{
+                label:'Products',
+                accelerator:'CommandOrControl+Shift+p',
+                click(){document.querySelector('#productsLink').click();}
+            },{
+                label:'Settings',
+                accelerator:'CommandOrControl+Shift+s',
+                click(){document.querySelector('#settingsLink').click();}
+            },{type:'separator'},
+            {
+                label:'Reports',
+                enabled:false,
+                accelerator:'Alt+Shift+r',
+                click(){document.querySelector('#reportsLink').click();}
+            },{
+                label:'Staff',
+                enabled:false,
+                accelerator:'Alt+Shift+w',
+                click(){document.querySelector('#staffLink').click();}
+            }
+        ]
+    },{
+        label:'Action',
+        submenu:[
+            {
+                label:'Create Order',
+                click(){document.querySelector('#dashboardLink').click();}
+            },{
+                label:'Create withdrawal',
+                accelerator:'CommandOrControl+Shift+w',
+                click(){document.querySelector('#withdrawalModalTrigger').click()}
+            },{
+                label:"Sync",
+                accelerator:'Alt+Shift+s',
+                enabled:false
+            }
+        ]
+    },
+    {
+      role: 'window',
+      submenu: [
+        {role: 'minimize'},
+        {role: 'close'}
+      ]
+    },
+    {
+      role: 'help',
+      submenu: [
+        {
+            label:'About software',
+            click() {
+                document.querySelector('#settingsLink').click();
+            }
+        },{
+            label:'Open developer\'s site',
+            click(){
+                shell.openExternal('https://silverslopecm.ml');
+            }
+        }
+      ]
+    }
+  ]
+  
+  if (process.platform === 'darwin') {
+    template.unshift({
+      label: app.getName(),
+      submenu: [
+        {role: 'account', submenu: [
+            {
+                label:'Profile',
+                accelerator:'CommandOrControl+P',
+                click(){
+                    document.querySelector('#profileLink').click();
+                }
+            },{
+                label:'Log out',
+                enabled:false,
+                accelerator:'CommandOrControl+L',
+                click(){
+                    document.querySelector('#logOutBtn').click();
+                }
+            }
+        ]},
+        {role: 'about'},
+        {type: 'separator'},
+        {role: 'hide'},
+        {role: 'hideothers'},
+        {role: 'unhide'},
+        {type: 'separator'},
+        {role: 'quit'}
+      ]
+    })
+  
+    // Edit menu
+    template[1].submenu.push(
+      {type: 'separator'},
+      {
+        label: 'Speech',
+        submenu: [
+          {role: 'startspeaking'},
+          {role: 'stopspeaking'}
+        ]
+      }
+    )
+  
+    // Window menu
+    template[5].submenu = [
+      {role: 'close'},
+      {role: 'minimize'},
+      {role: 'zoom'},
+      {type: 'separator'},
+      {role: 'front'}
+    ]
+  }else{
+      template.unshift({
+        label:'File',
+        submenu:[
+            {
+                label:'Profile',
+                accelerator:'CommandOrControl+P',
+                click(){
+                    document.querySelector('#profileLink').click();
+                }
+            },{
+                label:'Log out',
+                enabled:false,
+                accelerator:'CommandOrControl+L',
+                click(){
+                    document.querySelector('#logOutBtn').click();
+                }
+            },{role:'quit'}
+        ]
+    })
+  }
+  const actionMenu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(actionMenu)
+
+
 M.AutoInit();
+//
+//settinh up a worker
+const worker = new Worker('./js/web-worker.js');
+//lets make logi paage load
+jQuery('#appLoader').waitMe({
+    effect : 'pulse',
+    text : 'Loading...',
+    bg : 'rgba(255,255,255,1)',
+    color : '#b71c1c',
+    maxSize : '',
+    waitTime : -1,
+    textPos : 'vertical',
+    fontSize : '',
+    source : ''
+    });
+                    
 //to cosesidenav when links are clicked
 jQuery('#slide-out').on('click','.sideNavLink',()=>{
     if(jQuery(window).width()<992){
@@ -6,6 +210,25 @@ jQuery('#slide-out').on('click','.sideNavLink',()=>{
         sideNav.close();
     }
 })
+//AUTO-COMPLETE SEARCH FORM
+$('input.autocomplete').autocomplete({
+    data: {
+      "Orders":'./img/Combo_Chart_100px.png',
+      "Products": null,
+      "Settings": null,
+      "Reports": null,
+      "Staff": null,
+      "SBRO": null,
+      "Settings": null,
+      "Settings": null,
+    },
+  });  
+
+//minimize sidnav
+function miniSideNav(){
+    jQuery('#slide-out').toggleClass('minimize');
+    jQuery('#main').toggleClass('maximize');
+}
 //
 function showSearchBar(type){
     if(type){
@@ -19,34 +242,43 @@ class Alerts{
     constructor(){
         this.successMsg= jQuery('#success');
         this.errorMsg= jQuery('#error');
-        this.successMsg.click(()=>{
+        this.successMsg.children('.body').children('.close').click(()=>{
             this.successMsg.slideUp();
+            clearTimeout(this.timeoutSuccess);
         })
-        this.errorMsg.click(()=>{
+        this.errorMsg.children('.body').children('.close').click(()=>{
             this.errorMsg.slideUp();
-            clearTimeout()
-        })
+            clearTimeout(this.timeoutError)
+        });
+        this.alertSound = document.querySelector('#alertNotificationSound');
     }
-    notify({msg,type}){
+    notify({msg,type,title},time = 4000,sound = false){
+        if(typeof title !== 'string'){
+            title = 'Notification';
+        }
         if(type == "error"){
-            this.errorMsg.children('.msg').html(msg)
+            this.errorMsg.children('.body').children('.title').html(title)
+            this.errorMsg.children('.body').children('.msg').html(msg)
              this.errorMsg.slideDown("fast");
-             setTimeout(()=>{
+             this.timeoutError = setTimeout(()=>{
                 this.errorMsg.slideUp();
-             },3600)
+             },time)
             
         }else{
-            this.successMsg.children('.msg').html(msg)
+            this.successMsg.children('.body').children('.title').html(title)
+            this.successMsg.children('.body').children('.msg').html(msg)
             this.successMsg.slideDown("fast")
-            setTimeout(()=>{
+            this.timeoutSuccess = setTimeout(()=>{
                 if(this.successMsg.css('display') !== 'none'){
                     this.successMsg.slideUp()   
                 }
-            },3600)
+            },time)
+        }
+        if(sound == true){
+            this.alertSound.play();
         }
     }
 }
-
 //search table
 function searchInputTable(e,tb){
     var i,j,td,input,
@@ -102,11 +334,7 @@ function formatDate(string = ''){
     return `${day}/${month}/${year}`;
 }
 function searchOrderItems(e){
-    var val = jQuery(e.target).val(),items = jQuery('#orderItems .item'),
-    no_result = jQuery('#no-resultsOrder');
-    no_result.hide();
-    //variable to change if result is found
-    var found = false;
+    var val = jQuery(e.target).val(),items = jQuery('#orderItems .item');
     val = val.toLowerCase();
     items.each((i,el)=>{
         //console.log(jQuery(el).children('div.header').children('dl').children('dt.item-name').html())
@@ -116,26 +344,20 @@ function searchOrderItems(e){
         item_status = jQuery(el).children('div.header').children('.dark').children('dl').children('dd.item-status').html().toLowerCase()
         //search..
         if(item_name.indexOf(val) == -1 && item_category.indexOf(val) == -1 && item_status.indexOf(val) == -1){
-            found = false;
         }
         else if(item_name.indexOf(val)> -1){
             jQuery(el).show();
-            found = true;
         }else if(item_category.indexOf(val)> -1){
             jQuery(el).show();
-            found = true;
         }else if(item_status.indexOf(val)> -1){
             jQuery(el).show();
-            found = true;
         }
     })
-    if(found == false){
-        no_result.show();
-    }
 }
+
 //$AV_ASW
 var elems = document.querySelectorAll('.dropdown-trigger');
-var dropdown = M.Dropdown.init(elems, {coverTrigger:false});
+var dropdown = M.Dropdown.init(elems, {coverTrigger:false}); 
 //=========== Date function===
 class DateFunction{
     constructor(){
@@ -157,37 +379,7 @@ const notifications = new Alerts();
 //time class
 const time = new DateFunction();
 
-//context-menu
-/*document.addEventListener('contextmenu',(e)=>{
-    e.preventDefault();
-    jQuery('#context-menu').fadeIn();
-    var menu = document.querySelector('#context-menu')
-    menu.style.top = mouseY(event)+'px';
-    menu.style.left = mouseX(event)+'px';
-    window.event.returnValue = false;
-},false)
-document.addEventListener('click',()=>{
-    jQuery('#context-menu').fadeOut();
-})
-function mouseX(e){
-    if(e.pageX){
-        return e.pageX;
-    }else if(e.clientX){
-        return e.clientX + (document.documentElement.scrollLeft)?document.documentElement.scrollLeft:document.body.scrollLeft;
-    }else{
-        return null;
-    }
-}
-function mouseY(e){
-    if(e.pageY){
-        return e.pageY;
-    }else if(e.clientY){
-        return e.clientY + (document.documentElement.scrollTop)?document.documentElement.scrollTop:document.body.scrollTop;
-    }else{
-        return null;
-    }
-}*/
-document.querySelector('#managerialImgInput').onchange = (e)=>{
+/*document.querySelector('#managerialImgInput').onchange = (e)=>{
     var img = document.querySelector('#managerialImg'),
     file = e.target.files[0];
     if(file)
@@ -200,4 +392,57 @@ document.querySelector('#managerialImgInput').onchange = (e)=>{
     var url = URL.createObjectURL(file);
     img.src = url;
     
+}*/
+//===================================================================================================================================
+//client side of app
+//register service worker
+/*if('serviceWorker' in navigator){
+    send().catch(err=>console.log(err));
 }
+async function send(){
+    const register = await navigator.serviceWorker.register('./js/service-worker.js');
+}
+    // Then later, request a one-off sync:
+    navigator.serviceWorker.ready.then(function(swRegistration) {
+        return swRegistration.sync.register('myFirstSync');
+    });*/
+//lets persist the database
+async function persist() {
+    return await navigator.storage && navigator.storage.persist &&
+    navigator.storage.persist();
+}
+async function isStoragePersisted() {
+    return await navigator.storage && navigator.storage.persisted &&
+      navigator.storage.persisted();
+  }
+  async function tryPersistWithoutPromtingUser() {
+    if (!navigator.storage || !navigator.storage.persisted) {
+      return "never";
+    }
+    let persisted = await navigator.storage.persisted();
+    if (persisted) {
+      return "persisted";
+    }
+    if (!navigator.permissions || !navigator.permissions.query) {
+      return "prompt"; // It MAY be successful to prompt. Don't know.
+    }
+    const permission = await navigator.permissions.query({
+      name: "persistent-storage"
+    });
+    if (permission.status === "granted") {
+      persisted = await navigator.storage.persist();
+      if (persisted) {
+        return "persisted";
+      } else {
+        console.error("Failed to persist");
+        return;
+      }
+    }
+    if (permission.status === "prompt") {
+      return "prompt";
+    }
+    return "never";
+  }
+  tryPersistWithoutPromtingUser().then(yes=>console.log(yes));
+  
+  

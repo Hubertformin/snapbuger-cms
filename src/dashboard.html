@@ -9,7 +9,7 @@
 -->
     <ul style="border-radius: 29px;" id="OrderCollapse" class="collapsible">
         <li class="active">
-            <div style="border-top-right-radius: 29px;border-top-left-radius: 29px" class="collapsible-header">
+            <div class="collapsible-header head">
                 <div class="header white">
                     <h2 class="orange-text">
                         Create new order (Orders stop at {{settings.time_range.to}}) <br><small>click to create.</small>
@@ -65,9 +65,6 @@
                                 </div>
                             </div>
                             <div id="orderItems" class="col s12 scrollContainer">
-                                <div style="display:none;" id="no-resultsOrder" class="no-results">
-                                    <p>No results</p>
-                                </div>
                                 <div id="emptyItems" ng-show="products.items.length == 0" class="no-results grey lighten-4">
                                     <p>
                                         No Items <small>(Go to <strong>Products > Create Items</strong>)</small>
@@ -114,7 +111,7 @@
     <h5 class="section-heading red-text font-raleway">Activity panel</h5>
     <hr class="ruler">
     <div class="row">
-        <div class="col">
+        <div class="col s4">
             <div class="info-card">
                 <div class="body">
                    <div class="row">
@@ -134,7 +131,7 @@
                 </div>
             </div>
         </div>
-        <div ng-show="currentUser.is_mgr" class="col">
+        <div ng-show="currentUser.is_mgr" class="col s4">
             <div class="info-card">
                 <div class="body">
                    <div class="row">
@@ -154,7 +151,7 @@
                 </div>
             </div>
         </div>
-        <div class="col">
+        <div class="col s4">
             <div class="info-card">
                 <div class="body">
                    <div class="row">
@@ -214,6 +211,13 @@
                         </tbody>
                     </table>
                 </div>
+                <table>
+                    <tfoot>
+                        <th>Total:</th>
+                        <th>Qty: {{todaysCompletedOrders.length | currency:"":0}}</th>
+                        <th>Price: {{todaysCompletedOrdersTotals | currency:"FCFA ":0}}</th>
+                    </tfoot>
+                </table>
             </div>
         </div>
     </div>

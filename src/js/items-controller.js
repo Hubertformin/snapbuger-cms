@@ -22,7 +22,7 @@ app.controller("itemsCtr", ($scope) => {
             //console.log("Done!");
         })
         .catch((err)=>{
-            notifications.notify({msg:`Erorr! ${err}`,type:"error"})
+            notifications.notify({msg:`Unable to update Table Number`,title:"Unknown error",type:"error"})
         })
     }
     //categories table
@@ -30,13 +30,16 @@ app.controller("itemsCtr", ($scope) => {
     //1. Create Categories
     jQuery('#createCategoryForm').on('submit', (e) => {
         e.preventDefault();
-        if ($scope.category_name == '') return false;
+        if (typeof $scope.category_name !== 'string' || $scope.category_name == ''){
+            notifications.notify({title:"Category name required!",msg:"Please insert a valid category name",type:"error"});
+            return false;
+        }
         let action = true;
         if ($scope.category_status != "available") {
             action = false;
         }
         //converting first character to upper case
-        $scope.category_name = $scope.category_name[0].toUpperCase()+$scope.category_name.slice(1);
+        $scope.category_name = $scope.category_name[0].toUpperCase()+$scope.category_name.slice(1).toLowerCase();
         //data
         var data = {name: $scope.category_name,status: $scope.category_status,action: action}
         $scope.db.categories.add(data)
@@ -48,13 +51,21 @@ app.controller("itemsCtr", ($scope) => {
                 $scope.$apply();
                 //console.log($scope.products.categories)
                 notifications.notify({
-                    msg: "Added!",
+                    title:"Complete",
+                    msg: "New category added to list",
                     type: "done"
                 })
             })
             .catch(err=>{
-                notifications.notify({msg:`An error occured: Unable to refetch!`,type:"error"})
+                notifications.notify({title:"Unknown error!",msg:`Unable refresh categories list`,type:"error"})
             })
+        })
+        .catch(err=>{
+            notifications.notify({
+                title:"Unable to Add category to list",
+                msg:"Failed to add category,please make sure the category does not already exist!",
+                type:"error"
+            },9000)
         })
         
         //console.log( $scope.products.categories);
@@ -90,16 +101,17 @@ app.controller("itemsCtr", ($scope) => {
                     $scope.$apply();
                     //console.log($scope.products.categories)
                     notifications.notify({
-                         msg: "Removed!",
+                        title:"Complete",
+                         msg: "Category removed from list",
                          type: "done"
                     })
                  })
                 .catch(err=>{
-                    notifications.notify({msg:`An error occured: Unable to refetch!`,type:"error"})
+                    notifications.notify({title:"Unknow error",msg:`Unable to refresh categories`,type:"error"})
                 })
             })
             .catch(()=>{
-                notifications.notify({msg:`An error occured: Unable to delete!`,type:"error"}) 
+                notifications.notify({title:"Unknow error",msg:`Unable to delete category`,type:"error"}) 
             })
             
         }
@@ -109,12 +121,37 @@ app.controller("itemsCtr", ($scope) => {
     //Create Items
     jQuery('#createItemForm').on('submit', (e) => {
         e.preventDefault();
-        if (typeof $scope.item_name !== 'string' || typeof $scope.item_rate !== 'number' || typeof $scope.item_category !== 'string') {
+        if(typeof $scope.item_name !== 'string' && typeof $scope.item_rate !== 'number' && typeof $scope.item_category !== 'string') {
             notifications.notify({
-                msg: "Invalid values!",
+                title:"Empty values!",
+                msg: "Please fill in the form",
                 type: "error"
             });
-            return false;
+            return;
+        }
+        if(typeof $scope.item_name !== 'string' || $scope.item_name == ''){
+            notifications.notify({
+                title:"Item name required!",
+                msg: "Please add a valid item name",
+                type: "error"
+            });
+            return;
+        }
+        if(typeof $scope.item_rate !== 'number'){
+            notifications.notify({
+                title:"Item rate required!",
+                msg: "Please add price of the item",
+                type: "error"
+            });
+            return;
+        }
+        if(typeof $scope.item_category !== 'string' || $scope.item_category == ''){
+            notifications.notify({
+                title:"Item category required!",
+                msg: "Please select a category.",
+                type: "error"
+            });
+            return;
         }
         //converting first character to upper case
         $scope.item_name = $scope.item_name[0].toUpperCase()+$scope.item_name.slice(1);
@@ -134,13 +171,21 @@ app.controller("itemsCtr", ($scope) => {
                 //reseting variables
                 //nitifications
                 notifications.notify({
-                    msg: "Added!",
+                    title:"Complete",
+                    msg: "New item added to list",
                     type: "done"
                 })
             })
             .catch(()=>{
-                notifications.notify({msg:'An error occured: Unable to refetch!',type:"error"})
+                notifications.notify({title:"Unknow error",msg:' Unable to refresh items list',type:"error"})
             })
+        })
+        .catch(err=>{
+            notifications.notify({
+                type:"error",
+                title:"Unable to add item to list",
+                msg:"Failed to add item to list,please make sure this item does not already exist"
+            },9000)
         })
     })
     //update Itemms
@@ -164,11 +209,14 @@ app.controller("itemsCtr", ($scope) => {
                 //nitifications
             })
             .catch(()=>{
-                notifications.notify({msg:'An error occured: Unable to refetch!',type:"error"})
+                notifications.notify({title:"Unknown error",msg:'Unable to refresh of items list',type:"error"})
             })
         })
         .catch(()=>{
-            notifications.notify({msg:'An error occured: Unable to Update!',type:"error"})
+            notifications.notify({
+                title:"Unknown error",
+                msg:'Unable to update items list,please make sure new item doesn\'t already exist!',
+                type:"error"},9000)
         })
         //console.log($scope.products.items[i]);
     }
@@ -186,17 +234,18 @@ app.controller("itemsCtr", ($scope) => {
                     //reseting variables
                      //nitifications
                     notifications.notify({
-                        msg: 'Deleted!',
+                        title:"Complete",
+                        msg: 'item removed from list',
                          type: "done"
                     })
                 })
                 .catch(()=>{
-                    notifications.notify({msg:'An error occured: Unable to refetch!',type:"error"})
+                    notifications.notify({title:"Unknown error",msg:'Unable to refresh items list',type:"error"})
                 })
                 //
             })
             .catch(()=>{
-                notifications.notify({msg:'An error occured: Unable to Delete!',type:"error"})
+                notifications.notify({title:"Unnown rror",msg:'Unable to Delete item',type:"error"})
             })
             //
         }

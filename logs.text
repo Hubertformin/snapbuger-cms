@@ -13,10 +13,10 @@
 
 
 ==== ISSUES ====
-    - Creating manager doesn't add managers to the managers Tables
-    - Updating profile pic, doesn't update till user restart
-    - check start date when users Login
-    - when order is complete, it doesnt delete all
+    /- Creating manager doesn't add managers to the managers Tables
+    /- Updating profile pic, doesn't update till user restart
+    *- check start date when users Login
+    *- when order is complete, it doesnt delete all
     -setings try catch for to, from dates
-    - Date checker on start
-    - Change user image to array buffer
+    *- Date checker on start
+    /- Change user image to array buffer
