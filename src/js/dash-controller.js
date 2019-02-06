@@ -57,7 +57,7 @@ app.controller("dashCtr", ($scope,$filter) => {
         }
     }
     //=========== add items to selected Items array but first let's define remove item array
-    $scope.removeItem = (e,name)=>{
+    /*$scope.removeItem = (e,name)=>{
         if(name == 'deleteAll'){
             var viewSelectedModal = M.Modal.getInstance(jQuery('#viewSelectedORders'));
             $scope.currentOrder.items = [];
@@ -83,7 +83,7 @@ app.controller("dashCtr", ($scope,$filter) => {
         //jQuery('input.qty').val(1);
         //$scope.currentOrder.items = array
         console.log()
-    }
+    }*/
     $scope.addItem = (e,i) =>{
         var btn = jQuery(e.target), selectedItem = $scope.products.items[i];
         selectedItem.quantity = btn.siblings('.inputDiv').children('input.qty').val();
@@ -125,6 +125,83 @@ app.controller("dashCtr", ($scope,$filter) => {
         return `${hour}:${min}`;
     }
     //========================================================
+    //this sections used to preview items when input is put
+    $scope.showPreviewItems = [];
+    $scope.getPreviewItems = (e)=>{
+        $scope.showPreviewItems = [];
+        const view = $('#previewItems');
+        if(e.currentTarget.value == "") {
+            view.fadeOut("fast");
+        }
+        if(!/[a-zA-Z]/.test(e.currentTarget.value)) return;
+        view.fadeIn("fast");
+        console.log(e.currentTarget.value)
+        var counter = 1;
+        for(let i = 0; i < $scope.products.items.length;i++) {
+            if(counter === 5) break;
+            if($scope.products.items[i].name.toLowerCase().startsWith(e.currentTarget.value.toLowerCase())) {
+                $scope.showPreviewItems.push($scope.products.items[i]);
+            }else if ($scope.products.items[i].category.toLowerCase().startsWith(e.currentTarget.value.toLowerCase())) {
+                $scope.showPreviewItems.push($scope.products.items[i]);
+            }
+            counter += 1;
+        }
+        //no results
+        if(counter == 1) {
+            view.fadeOut("fast");
+        }
+    }
+    //when item from preview is clicked
+    $scope.currItem = {name:'',rate:0,qty:1}
+    $scope.selectItem = (i)=>{
+        $('#prevItemName').val($scope.showPreviewItems[i].name);
+        $('#prevItemRate').val($scope.showPreviewItems[i].rate);
+        $scope.currItem = $scope.showPreviewItems[i];
+        $scope.currItem.quantity = 1;
+        //console.log($scope.currItem);
+        $('#previewItems').fadeOut("fast");
+    }
+    //now adding to car
+    $scope.toCart = () => {
+        //checking for invalid numerals
+        if (Number($('#prevItemQty').val()) < 1 ) {
+            notifications.notify({title:"Invalid quantity",type:"error",msg:"There should be at least 1 quantity!"});
+            return;
+        }
+        //taking new qty
+        $scope.currItem.quantity = Number($('#prevItemQty').val());
+        $scope.currItem.rate = Number($('#prevItemRate').val());
+        if($scope.currItem.name == '' || $scope.currItem.rate == 0) {
+            notifications.notify({title:"Empty cart",type:"error",msg:"Please select item to proceed"});
+            return;
+        };
+        //checking if item already exit
+        for(let i = 0; i < $scope.currentOrder.items.length; i++ ) {
+            if($scope.currentOrder.items[i].id === $scope.currItem.id) {
+                notifications.notify({title:"Item is already added!",type:"error",msg:""});
+                return;
+            }
+        }
+        //adding item to cart
+        $scope.currItem.price = $scope.currItem.quantity * $scope.currItem.rate;
+        $scope.currentOrder.items.push($scope.currItem);
+        //adding the
+        $scope.currentOrder.totalPrice = $scope.currentOrder.totalPrice + Number($scope.currItem.price);
+        $scope.currentOrder.totalQuantity = $scope.currentOrder.totalQuantity + Number($scope.currItem.quantity);
+        //reseting form
+        $('#prevItemName').val('');
+        $('#prevItemRate').val(0);
+        $('#prevItemQty').val(1);
+
+    }
+    //remove items
+    $scope.removeItem = (i)=>{ 
+        //resuming totals
+        $scope.currentOrder.totalPrice -= Number($scope.currentOrder.items[i].price);
+        $scope.currentOrder.totalQuantity -= Number($scope.currentOrder.items[i].quantity);
+        //removing
+        $scope.currentOrder.items.splice(i,1);
+    }
 
 
     ///Finally creating order, first by setting the default table number to 1
@@ -145,10 +222,10 @@ app.controller("dashCtr", ($scope,$filter) => {
         //and now pushing to main --
         $scope.db.orders.add(current)
         .then(()=>{
-                $scope.fetchAndComputeOrders();
+                //$scope.fetchAndComputeOrders();
                 $scope.orderInv = `SBO${Math.floor(Math.random() * (9999 - 1000) ) + 1000}`;
-                $scope.removeItem(null,'deleteAll');
-                jQuery('input.qty').val(1);
+                //$scope.removeItem(null,'deleteAll');
+                //jQuery('input.qty').val(1);
                 $scope.$apply();
                 //console.log($scope.orders)
                 //

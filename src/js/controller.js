@@ -15,6 +15,9 @@ app.config(($routeProvider) => {
         .when("/", {
             templateUrl: "dashboard.html"
         })
+        .when("/today",{
+            templateUrl:"todaysOrders.html"
+        })
         .when("/items", {
             templateUrl: "items.html"
         })
@@ -100,6 +103,8 @@ app.controller("mainCtr", ($scope,$filter) => {
     $scope.todaysCompletedOrders = [];
     //
     var Dexie = require('dexie');
+    //import 'dexie-observable';
+    //require('dexie-observable');
     $scope.db = new Dexie("snapBurgerDb");
     $scope.db.version(1).stores({
         users: "++id,&name,password,position,startDate,salary,status,is_mgr,img_url",
@@ -110,6 +115,8 @@ app.controller("mainCtr", ($scope,$filter) => {
         withdrawals:"++id,&inv,category,reason,receiver,amount,date,staff",
         tracker:"++id,type,tableName,data,date,status"
     })
+    
+      //$scope.db.open();
     //by default wahen there is no data,i.e when the database is just created, we add this to settings
         const identifier = `${os.hostname()}${Math.floor(Math.random() * (100 - 10) ) + 10}`;
         $scope.db.settings.add({
@@ -520,7 +527,7 @@ app.controller("mainCtr", ($scope,$filter) => {
     print.print58m( {
        data: print_data,
         preview:false,
-        deviceName: 'XP-80C',
+        deviceName: 'EPSON TM-T20II Receipt',
         timeoutPerLine: 400
     }).then((data)=>{
         if(data){
@@ -635,47 +642,10 @@ app.controller("mainCtr", ($scope,$filter) => {
    /* 
     ========================    hooks ================
    */
-  //orders
-$scope.db.orders.hook('creating', function (primKey, obj, transaction) {
-    worker.postMessage('update-db-file');
-});
-//withdrawals
-$scope.db.withdrawals.hook('creating', function (primKey, obj, transaction) {
-    worker.postMessage('update-db-file');
-});
 //items
-$scope.db.items.hook('creating', function (primKey, obj, transaction) {
+$scope.db.items.hook('reading', function (primKey, obj, transaction) {
     worker.postMessage('update-db-file');
-});
-$scope.db.items.hook('updating', function (primKey, obj, transaction) {
-    worker.postMessage('update-db-file');
-});
-$scope.db.items.hook('deleting', function (primKey, obj, transaction) {
-    worker.postMessage('update-db-file');
-});
-//categories
-$scope.db.categories.hook('creating', function (primKey, obj, transaction) {
-    worker.postMessage('update-db-file');
-});
-$scope.db.categories.hook('updating', function (primKey, obj, transaction) {
-    worker.postMessage('update-db-file');
-});
-$scope.db.categories.hook('deleting', function (primKey, obj, transaction) {
-    worker.postMessage('update-db-file');
-});
-//users
-$scope.db.users.hook('creating', function (primKey, obj, transaction) {
-    worker.postMessage('update-db-file');
-});
-$scope.db.users.hook('updating', function (primKey, obj, transaction) {
-    worker.postMessage('update-db-file');
-});
-$scope.db.users.hook('deleting', function (primKey, obj, transaction) {
-    worker.postMessage('update-db-file');
-});
-//
-$scope.db.settings.hook('updating', function (primKey, obj, transaction) {
-    worker.postMessage('update-db-file');
+    Status.insertLeft("Refreshing database..")
 });
 
 }) //end main controller, nothing should come after here!

@@ -1,4 +1,8 @@
 app.controller("itemsCtr", ($scope) => {
+    //intit
+    angular.element("body").ready(()=>{
+        $('.tabs').tabs();
+    })
     //first thing, setting the sidenav link to active
     jQuery('.sideNavLink').removeClass('active');
     jQuery('#productsLink').addClass('active');

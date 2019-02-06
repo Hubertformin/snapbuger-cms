@@ -194,7 +194,7 @@ const worker = new Worker('./js/web-worker.js');
 jQuery('#appLoader').waitMe({
     effect : 'pulse',
     text : 'Loading...',
-    bg : 'rgba(255,255,255,1)',
+    bg : 'transparent',
     color : '#b71c1c',
     maxSize : '',
     waitTime : -1,
@@ -288,7 +288,7 @@ function searchInputTable(e,tb){
     tr.forEach((element,index) => {
         td = element.querySelectorAll('td')[1];
         input = td.getElementsByTagName('input')[0].value.toLowerCase();
-        if(input.indexOf(value)>-1){
+        if(input.startsWith(value)>-1){
             element.style.display = "";
         }else{
             element.style.display = "none";
@@ -304,9 +304,9 @@ function searchTable(e,tb){
     tr = table.querySelectorAll('tbody tr');
     tr.forEach((element,index) => {
         td = element.querySelectorAll('td');
-        if(td[1].innerHTML.toLowerCase().indexOf(value)>-1){
+        if(td[1].innerHTML.toLowerCase().startsWith(value)>-1){
             element.style.display = "";
-        }else if(td[2].innerText.toLowerCase().indexOf(value)>-1){
+        }else if(td[2].innerText.toLowerCase().startsWith(value)>-1){
             element.style.display = "";
         }else{
             element.style.display = "none";
@@ -343,13 +343,13 @@ function searchOrderItems(e){
         item_category = jQuery(el).children('div.header').children('.dark').children('dl').children('dd.item-category').html().toLowerCase()
         item_status = jQuery(el).children('div.header').children('.dark').children('dl').children('dd.item-status').html().toLowerCase()
         //search..
-        if(item_name.indexOf(val) == -1 && item_category.indexOf(val) == -1 && item_status.indexOf(val) == -1){
+        if(item_name.startsWith(val) == -1 && item_category.startsWith(val) == -1 && item_status.startsWith(val) == -1){
         }
-        else if(item_name.indexOf(val)> -1){
+        else if(item_name.startsWith(val)> -1){
             jQuery(el).show();
-        }else if(item_category.indexOf(val)> -1){
+        }else if(item_category.startsWith(val)> -1){
             jQuery(el).show();
-        }else if(item_status.indexOf(val)> -1){
+        }else if(item_status.startsWith(val)> -1){
             jQuery(el).show();
         }
     })
@@ -445,4 +445,14 @@ async function isStoragePersisted() {
   }
   tryPersistWithoutPromtingUser().then(yes=>console.log(yes));
   
-  
+  const Status = {
+      left:$('#leftStatus'),
+      right:$('#rightStatus'),
+      insertLeft:(txt) =>{
+        Status.left.html(txt);
+      },
+      insertRight:(txt) => {
+        Status.right.html(txt);
+      }
+  }
+  Status.insertRight(`<i class="material-icons red-text">lock_open</i> Not connected.`);

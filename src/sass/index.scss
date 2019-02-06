@@ -201,6 +201,10 @@ section#dataDbCheck{
 }
 #login {
     display: block;
+    background-image: url("../img/item-bg.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
     img {
         width: 150px;
         height: auto;
@@ -212,15 +216,30 @@ section#dataDbCheck{
         bottom: -4px;
     }
     position: fixed;
-    background:#fff;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     z-index: 2999;
+    div.bg-dark {
+        height: 100%;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+    }    
     form:not(#createManagerialForm) {
         width: 400px;
         padding: 40px 20px;
+        i.material-icons {
+            transform: translate(45px,2px);
+        }
+        input{
+            background: transparent;
+            border:1.5px solid #f44336;
+            color:#f44336;
+            border-radius: 6px;
+            padding: 15px;
+            padding-left: 48px;
+        }
 
     }
     p.copyright {
@@ -245,17 +264,31 @@ section#dataDbCheck{
 
 body {
     position: relative; //background-image: url('../img/back6.jpg');
-    overflow-y: scroll;
     background: #fff;
+    color:#444;
 }
 
 //nav and search
 main {
-    position: relative;
-    width: calc(100%-250px);
-    margin-left: 250px;
-    &.maximize{
-        margin-left:60px;
+    position:fixed;
+    top: 114px;
+    left: 0;
+    right: 0;
+    bottom: 20px;
+    overflow-y: scroll;
+}
+footer{
+    position: fixed;
+    border-top: 1px solid #ddd;
+    background-color: #fff;
+    left: 0;
+    right: 0;
+    height: 20px;
+    bottom: 0;
+    font-size: 12px;
+    i.material-icons {
+        font-size: small;
+        transform: translateY(2px);
     }
 }
 
@@ -472,6 +505,29 @@ nav:not(.nav-extended) {
         }
     }
 }
+//nav image
+.nav-img {
+    float: left;
+    width: 41px;
+    margin: 10px 6px 0 0;
+    height: auto;
+}
+//the link
+.routes_ul{
+    height: 50px;
+    li{
+        a{
+            position: relative;
+            display: block;
+            padding: 15px;
+            &.active{
+                background-color: #fff;
+                color: #f44336;
+                box-shadow: 0px 6px 26px rgba(0, 0, 0, 0.2);
+            }
+        }
+    }
+}
 
 .create-btn-default {
     display: flex;
@@ -544,20 +600,17 @@ nav:not(.nav-extended) {
 /*route page */
 
 .routePage {
-    margin-top: 70px;
+    margin-top:20px;
     padding: 10px 14px;
 }
 
 .box {
     background: #fff;
     min-height: 50px;
-    border-radius: 29px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     position: relative;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
     .header {
-        border-top-left-radius: 29px;
-        border-top-right-radius: 29px;
         color: #555;
         padding: 20px;
         position: relative;
@@ -602,21 +655,18 @@ button.bg-theme:disabled {
     background: #fff;
     &.head{
         padding: 0px!important;
-        border-radius: 29px;
     }
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     position: relative;
     .header {
         width: 100%;
         color: #555;
-        padding: 20px;
+        padding: 10px;
         position: relative;
         border-bottom: 1px solid rgba(204, 204, 204, 0.35);
-        border-top-left-radius: 29px;
-        border-top-right-radius: 29px;
         h2 {
             margin: 0;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: normal;
         }
         .btn-large {
@@ -648,6 +698,50 @@ button.bg-theme:disabled {
         width: 16.66%;
         &.small {
             width: 3%;
+        }
+    }
+}
+//element to add components
+#itemAdder{
+    padding: 0;
+    height: 100px;
+    position: relative;
+    border:1px solid #ddd;
+    .row,.col {height: 100%;padding: 0;}
+    div.header{
+        padding:5px 10px;
+        color: #f44336;
+        width: 100%;
+        margin-bottom:10px;
+        border-bottom: 1px solid #ddd;
+    }
+    div.body{
+        padding:2px 10px;
+        textarea, input{
+            border: 1px solid #ddd;
+            padding: 10px 20px;
+            color: #444;
+            resize: none;
+            &.right{
+                text-align: right;
+            }
+        }
+        input{
+            width: 100%;
+            height: 43.5px;
+        }
+    }
+    .item-name{
+        position: relative;
+        #previewItems{
+            display: none;
+            position: absolute;
+            left: 0;
+            right: 0;
+            min-height: 84px;
+            transform: translateY(-100%);
+            ul li {height: 84px;}
+            .collection-item{cursor: pointer;}
         }
     }
 }
@@ -925,13 +1019,14 @@ table.huberts-tables {
 }
 
 //Dash board!
-.collapsible-body {
-    .row {
+.row {
+    margin-bottom: 0px!important;
+    .col {
         margin-bottom: 0px!important;
-        .col {
-            margin-bottom: 0px!important;
-        }
     }
+}
+.collapsible-body {
+    padding: 10px!important;
     .footer {
         padding: 10px;
     }
@@ -1071,6 +1166,28 @@ table.huberts-tables {
                 margin: auto;
             }
         }
+    }
+    .collection{
+        li.titles {
+            min-height:20px !important;
+            padding: 2px 20px !important;
+            background: #ddd;
+        }
+        li:not(.titles) {
+            padding: 5px 20px;
+            min-height:48px !important;
+            border-bottom: 1px solid #ddd;
+            .col{ 
+                line-height: 40px;
+                font-size: 17px;
+            }
+        }
+        img{
+            height: 35px;
+            width: auto;
+        }
+        .row,.col {height: 100%;}
+        
     }
 }
 
@@ -1269,16 +1386,6 @@ div#reports {
 div.loading-fill{
     position: absolute;
     top: 0;left:0;
-}
-
-//media
-@media only screen and (max-width:992px) {
-    main,
-    header {
-        position: relative;
-        width: 100%!important;
-        margin-left: 0px!important;
-    }
 }
 
 //settings

@@ -7,16 +7,26 @@
     </div>
     <div class="body">
 -->
-    <ul style="border-radius: 29px;" id="OrderCollapse" class="collapsible">
+    <ul id="OrderCollapse" class="collapsible">
         <li class="active">
             <div class="collapsible-header head">
                 <div class="header white">
-                    <h2 class="orange-text">
-                        Create new order (Orders stop at {{settings.time_range.to}}) <br><small>click to create.</small>
-                    </h2>
+                    <div class="row">
+                        <div class="col s4">
+                            <button class="btn-flat red-text">
+                                Orders stop at {{settings.time_range.to}}
+                            </button>
+                        </div>
+                        <div class="col s4">
+                            
+                        </div>
+                        <div class="col s4">
+                           
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div style="border-bottom-right-radius:29px;border-bottom-left-radius:29px;position:relative" class="collapsible-body white">
+            <div style="position:relative" class="collapsible-body white">
                 <!--Time up wrapper incase orders ends -->
                 <div ng-show="end_orders" class="white-wrapper orders-wrap">
                     <div class="center">
@@ -33,44 +43,59 @@
                                 <input ng-model="orderInv" id="orderInv" type="text" class="validate" disabled />
                                 <label for="orderName" class="active">Invoice Number</label>
                             </div>
+                            <div class="input-field col s4 center-align">
+                                <button class="btn-flat red-border red-text">
+                                    <strong>Total Qty: <span>{{currentOrder.totalQuantity}}</span></strong>,
+                                    <strong>Total Price: <span>{{currentOrder.totalPrice | currency : "FCFA ":0}}</span></strong>
+                                </button>
+                            </div>
                             <div class="input-field col s4">
                                 <i class="material-icons prefix">date_range</i>
                                 <input id="orderDate" type="text" disabled/>
                                 <label class="active" for="orderDate">Order Date</label>
                             </div>
-                            <div class="input-field col s4">
-                                <i class="material-icons prefix">airline_seat_legroom_extra</i>
-                                <select ng-model="orderTableNumber" class="browser-default prefixed">
-                                    <option ng-repeat="n in [].constructor(settings.tableNumber) track by $index" value="{{$index+1}}">Table {{$index+1}}</option>
-                                </select>
-                                <label class="active" for="orderDate">Select Table</label>
-                            </div>
                         </div>
-                        <small>Select Items</small>
-                        <hr>
+                        <!-- This is the section -->
                         <div class="row">
-                            <div class="col s12">
-                                <div class="col s3 selected-items">
-                                    <button data-target="viewSelectedORders" ng-disabled="currentOrder.items.length == 0" class="btn btn-block waves-effect waves-default orange modal-trigger">Items ({{currentOrder.items.length}})</button>
-                                </div>
-                                <div class="col s5">
-                                    <div class="orderPriceDetails red white-text">
-                                        <strong>Total Qty: <span>{{currentOrder.totalQuantity}}</span></strong>,
-                                        <strong>Total Price: <span>{{currentOrder.totalPrice | currency : "FCFA ":0}}</span></strong>
-                                    </div>
-                                </div>
-                                <div class="searchBox input-field col s4">
-                                    <i class="material-icons">search</i>
-                                    <input onkeyup="searchOrderItems(event)" placeholder="Search.." class="browser-default" id="search" type="search" results=5 autosave=some_unique_value>
-                                </div>
-                            </div>
-                            <div id="orderItems" class="col s12 scrollContainer">
+                            <div id="orderItems" class="col s12 scrollContainer" style="height:50vh;padding: 0;">
                                 <div id="emptyItems" ng-show="products.items.length == 0" class="no-results grey lighten-4">
                                     <p>
-                                        No Items <small>(Go to <strong>Products > Create Items</strong>)</small>
+                                        No Items <small>(Go to <strong>Items > Create Items</strong>)</small>
                                     </p>
                                 </div>
-                                <div ng-repeat="x in products.items track by $index" class="item z-depth-2">
+                                <div id="emptyCurrentItems" ng-show="currentOrder.items.length == 0" class="no-results grey lighten-4">
+                                        <p>
+                                            Type items by name to show add
+                                        </p>
+                                </div>
+                                <ul class="collection center-align">
+                                        <li class="titles">
+                                            <div class="row">
+                                                <div class="col s1"></div>
+                                                <div class="col s5">Name</div>
+                                                <div class="col s2">Quantity</div>
+                                                <div class="col s3">Price</div>
+                                                <div class="col s1"></div>
+                                            </div>
+                                        </li>
+                                    <li class="collection-item" ng-repeat="x in currentOrder.items track by $index">
+                                        <div class="row">
+                                            <div class="col s1">
+                                                <img src="img/logo-round.png" class="circle">
+                                            </div>
+                                            <div class="col s5">
+                                                <span class="title red-text">{{x.name}}</span>
+                                            </div>
+                                            <div class="col s2"><span>{{x.quantity}}</span></div>
+                                            <div class="col s3 green-text"><span>{{x.price | currency:"FCFA ":0}}</span></div>
+                                            <div class="col s1 red-text" style="cursor:pointer;"><i ng-click="removeItem($index)" class="material-icons">delete</i></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <ul>
+                                    <li ng-repeat="x in products.items track by $index"></li>
+                                </ul>
+                                <!-- <div ng-repeat="x in products.items track by $index" class="item z-depth-2">
                                     <div class="header">
                                         <div class="dark">
                                             <dl>
@@ -92,6 +117,47 @@
                                             remove
                                       </button>
                                     </div>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div id="itemAdder" class="col s12">
+                            <div class="row">
+                                <div class="col s7 item-name" style="border-right:1px solid #ddd;">
+                                    <div id="previewItems" class="z-depth-1">
+                                        <ul class="collection">
+                                            <li class="collection-item avatar" ng-repeat="i in showPreviewItems track by $index" ng-click="selectItem($index)">
+                                                <img src="img/logo-round.png" alt="" class="circle">
+                                                <span class="title red-text"><strong>{{i.name}}</strong></span>
+                                                <p>{{i.category}} <br>
+                                                    <small class="green-text">{{i.rate | currency:"FCFA ":0}}</small>
+                                                </p>
+                                                <i class="green-text material-icons secondary-content">offline_pin</i>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="header"><small>Item name</small></div>
+                                    <div class="body">
+                                        <textarea id="prevItemName" ng-keyup="getPreviewItems($event)" placeholder="Type item name..." cols="30" rows="10"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col s2" style="border-right:1px solid #ddd;">
+                                    <div class="header"><small>Price</small></div>
+                                    <div class="body">
+                                        <input type="number" id="prevItemRate" class="right browser-default" placeholder="Price" min="0" value="0" />
+                                    </div>
+                                </div>
+                                <div class="col s2" style="border-right:1px solid #ddd;">
+                                    <div class="header"><small>Quantity</small></div>
+                                    <div class="body">
+                                        <input type="number" id="prevItemQty" class="right browser-default" placeholder="Qty" value="1" min="1" />
+                                    </div>
+                                </div>
+                                <div class="col s1">
+                                    <div class="header"><small>Add</small></div>
+                                    <div class="body" style="text-align:center;">
+                                        <button ng-click="toCart()" class="btn-floating red waves-effect"><i class="material-icons">add_circle_outline</i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -107,122 +173,8 @@
         </li>
     </ul>
     <!--End of main page-->
-    <!--Cards -->
-    <h5 class="section-heading red-text font-raleway">Activity panel</h5>
-    <hr class="ruler">
-    <div class="row">
-        <div class="col s4">
-            <div class="info-card">
-                <div class="body">
-                   <div class="row">
-                       <div class="icon col s3 pink white-text">
-                           <i class="material-icons">shopping_basket</i>
-                       </div>
-                       <div class="icon-body col s9">
-                         <div class="col s9">
-                          <span>Today's orders</span><br>
-                          <small>Orders recorded today</small>
-                         </div>
-                         <div class="col s3">
-                           <h3 class="right pink-text">{{todaysCompletedOrders.length | currency:"":0}}</h3>
-                         </div>
-                       </div>
-                   </div>
-                </div>
-            </div>
-        </div>
-        <div ng-show="currentUser.is_mgr" class="col s4">
-            <div class="info-card">
-                <div class="body">
-                   <div class="row">
-                       <div class="icon col s3 orange white-text">
-                            <i class="material-icons">date_range</i>
-                       </div>
-                       <div class="icon-body col s9">
-                         <div class="col s9">
-                             <span>All Orders</span><br>
-                              <small>Total recorded</small>
-                         </div>
-                         <div class="col s3">
-                            <h3 class="right orange-text">{{orders.length | currency:"":0}}</h3>
-                         </div>
-                       </div>
-                   </div>
-                </div>
-            </div>
-        </div>
-        <div class="col s4">
-            <div class="info-card">
-                <div class="body">
-                   <div class="row">
-                       <div class="icon col s3 blue white-text">
-                            <i class="material-icons">local_dining</i>
-                       </div>
-                       <div class="icon-body col s9">
-                          <div class="col s9">
-                              <span>Menu items</span><br>
-                              <small>All menu items</small>
-                          </div>
-                          <div class="col s3">
-                           <h3 class="right blue-text">{{products.items.length | currency:"":0}}</h3>
-                          </div>
-                       </div>
-                   </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Next section: Table-->
-    <h5 class="section-heading red-text font-raleway">Today's orders</h5>
-    <hr class="ruler">
-    <div class="row">
-        <div class="col s12">
-            <div class="white z-depth-2" style="margin:10px;padding: 25px;">
-                <input class="table-search browser-default" type="search" placeholder="Search..." onkeyup="searchTable(event,'#todayOrdersTable')">
-                <table class="huberts-tables">
-                    <thead>
-                       <th class="small">#</th>
-                        <th>Inv num</th>
-                        <th>Items</th>
-                        <th>Cost</th>
-                        <th>Time</th>
-                        <th class="small">Status</th>
-                        <th class="small">Action</th>
-                    </thead>
-                </table>
-                <div id="dashboard_order_table" class="huberts-table-div">
-                    <table id="todayOrdersTable">
-                        <tbody>
-                            <tr ng-repeat="x in todaysCompletedOrders | orderBy : 'id' : true ">
-                               <td class="small">{{$index+1}}</td>
-                                <td>{{x.inv}}</td>
-                                <td>
-                                    <ul class="browser-default" style="list-style-type:circle;">
-                                        <li ng-repeat="o in x.items">{{o.name}} <i class="green-text badge">{{o.quantity}}</i></li>
-                                    </ul>
-                                </td>
-                                <td>{{x.totalPrice | currency:"FCFA ":0}}</td>
-                                <td>{{Time(x.date)}}</td>
-                                <td class="small" style="text-align:center;"><i class="material-icons green-text">check_circle</i></td>
-                                <td class="small">
-                                    <button class='btn teal waves-effect waves-light' data-target='dropdown1' ng-click="promptPrint(x)"><i class="material-icons">print</i></button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <table>
-                    <tfoot>
-                        <th>Total:</th>
-                        <th>Qty: {{todaysCompletedOrders.length | currency:"":0}}</th>
-                        <th>Price: {{todaysCompletedOrdersTotals | currency:"FCFA ":0}}</th>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-    </div>
     <!--Modals-->
-    <div id="viewSelectedORders" class="modal bottom-sheet">
+    <!-- <div id="viewSelectedORders" class="modal bottom-sheet">
         <div class="modal-content">
             <div class="box">
                 <div class="header bg-theme-rev">
@@ -232,7 +184,7 @@
                     <a class="white-text right modal-close waves-effect waves-orange btn-flat"><i class="material-icons">close</i></a>
                 </div>
                 <div class="body">
-                    <!--
+                
                 <table class="striped highlight centered">
                     <thead>
                         <th>#</th>
@@ -243,7 +195,7 @@
                         <th><i class="material-icons">build</i></th>
                     </thead>
                 </table>
-                -->
+                
                     <div class="table-view">
                         <table class="centered">
                             <thead>
@@ -254,7 +206,7 @@
                                 <th>Price</th>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="x in currentOrder.items">
+                                <tr ng-repeat="x in currentOrder.items track by $index">
                                     <td>{{$index+1}}</td>
                                     <td>{{x.name}}</td>
                                     <td>{{x.quantity}}</td>
@@ -279,5 +231,5 @@
         <div class="modal-footer">
             <a ng-click="removeItem(null,'deleteAll')" class="btn-flat white-text red left">clear all</a>
         </div>
-    </div>
+    </div> -->
 </div>
