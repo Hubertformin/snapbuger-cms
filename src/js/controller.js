@@ -505,29 +505,39 @@ app.controller("mainCtr", ($scope,$filter) => {
        const date = `${data.date.getDate()}/${data.date.getMonth()+1}/${data.date.getFullYear()} ,${data.date.getHours()}:${data.date.getMinutes()}`;
        var print_data = [
         {type: 'bodyInit', css: {"margin": "0 0 0 0", "width": '250px'}},
-         {type: 'text', value: 'Welcome to SnapBurger', style: `font-size: 18px;text-align:center;font-weight:bold;`},
-         {type: 'text', value: 'Bienvenu a SnapBurger', style: `font-size: 17px;text-align:center;font-weight:bold;`},
-         {type: 'text', value: date, style: `font-size: 14px;text-align:center;`}
-     ]
-     data.items.forEach(el=>{
-        print_data.push({type: 'text', value:`- ${el.name}  ${el.quantity} X ${el.rate}`, style: `font-size: 15px;`})
-     })
+         {type: 'text', value: '<h1>SnapBurger</h1>', style: `font-family:kaushan Script;text-align:center;font-weight:bold;`},
+         {type: 'text', value: date, style: `font-size: 14px;text-align:center;`}]
+         //FileSaver.js
+         var th = "";
+         data.items.forEach(el=>{
+             th += `<tr style="border-bottom:1px dotted #999;padding:5px 0;text-align:center;">
+             <td style="padding:7px 2px;">${el.name}</td>
+             <td style="padding:7px 2px;">${el.quantity}</td>
+             <td style="padding:7px 2px;">${$filter('currency')(el.rate, "", 0)}</td>
+             <td style="padding:7px 2px;">${$filter('currency')(el.rate * el.quantity, "", 0)}</td>
+         </tr>`;
+         })
+
      print_data  = print_data.concat([
+        {type: 'text', value: `<table style="width: 100%;display: table;border-collapse: collapse;border-spacing: 0;margin:15px 0;font-family:inconsolata;">
+        <thead>
+           <th>Nom</th>
+           <th>Qty</th>
+           <th>Prix.U</th>
+           <th>Total</th>
+       </thead>
+        <tbody style="border-top:1px solid #999">
+           ${th}
+        </tbody>
+        </table>`, style: `font-size: 14px;text-align:center;`},
         {type: 'text', value: `Total: ${$filter('currency')(data.totalPrice, "FCFA ", 0)}`, style: `margin:25px 0 0 0;font-size: 17px;font-weight:bold`},
-        {
-            type: 'qrcode',
-            value: data.inv,
-            height: 64,
-            width: 64,
-            style: `text-align:center;width:64px;margin: 20px 0 0 0;float:right`
-        },
         {type: 'text', value: '@snapburger17', style: `text-align:center;font-size: 12px`}
      ])
      //printing....
     print.print58m( {
        data: print_data,
         preview:false,
-        deviceName: 'EPSON TM-T20II Receipt',
+        deviceName: 'XP-80C',
         timeoutPerLine: 400
     }).then((data)=>{
         if(data){
@@ -536,8 +546,29 @@ app.controller("mainCtr", ($scope,$filter) => {
             notifications.notify({title:"Print error",msg:"Error printing",type:"error"});
         }
     }).catch(err=>{
+        console.error(err);
         notifications.notify({title:"Print error",msg:"-Make sure printer is connected to PC<br>-Check if printer drivers are up-to-date",type:"error"});
     })
+   }
+   //new print function
+   const printer = require("node-thermal-printer");
+   $scope.printOrders1 = (data)=>{
+    printer.init({
+        type: 'epson',                                     // Printer type: 'star' or 'epson'
+        interface: 'printer:XP-80C',                        // Printer interface
+        characterSet: 'SLOVENIA',                         // Printer character set
+        removeSpecialCharacters: false,                   // Removes special characters - default: false
+        replaceSpecialCharacters: true,                   // Replaces special characters listed in config files - default: true
+        extraSpecialCharacters:{'£':163},                 // Adds additional special characters to those listed in the config files
+        options:{                                         // Additional options
+          timeout: 5000                                   // Connection timeout (ms) [applicable only for network printers] - default: 3000
+        }
+      });
+      printer.print("okay")
+      printer.isPrinterConnected( function(isConnected){ 
+          console.log(isConnected)
+      } )
+
    }
    //fucntion to print withwrals
    $scope.printWithdrawals = (data)=>{
@@ -639,13 +670,96 @@ app.controller("mainCtr", ($scope,$filter) => {
            $scope.createNewWithdrawal();
        }
    })
+
+   /**
+    * @function socket create sockets on serve
+    */
+   const express = require('express');
+   const socket = require('socket.io');
+   //set up server
+   const module = express();
+   const server = module.listen(4000,()=>{
+       console.log("listening to request on port 4000..");
+   })
+   $scope.io = socket(server);
+   
+   Status.insertRight(`<i class="material-icons blue-text">wifi_tethering</i> Host server running.`);
+
+
+   var connected_peers = 0;
+   $scope.io.on("connection",(socket)=>{
+       socket.emit('connected',{status:true});
+       console.log("made server connection",socket.id);
+       Status.insertRight(`<i class="material-icons blue-text">wifi_tethering</i> ${connected_peers +1} peer(s) connected`);
+        //sending before sending in intervals
+        getSendData().then((data)=>{
+            socket.emit("database",data);
+        })
+        setInterval(()=>{
+            getSendData().then((data)=>{
+                socket.emit("database",data);
+            })
+        },60000)
+    })
+    $scope.io.on("disconnect",()=>{
+       console.log("disconnect");
+   })
    /* 
     ========================    hooks ================
    */
 //items
-$scope.db.items.hook('reading', function (primKey, obj, transaction) {
+$scope.db.items.hook('reading', function (obj) {
     worker.postMessage('update-db-file');
-    Status.insertLeft("Refreshing database..")
+    Status.insertLeft(`<i class="material-icons grey-text">info</i> Configurations loaded.`);
+    
+    return obj;
 });
 
+function getSendData() {
+     return new Promise((resolve,reject)=>{
+        var v = {
+            products:{items:"",category:""},
+            sales:"",
+            users:"",
+            withdrawals:""
+        }
+        $scope.db.transaction('rw', $scope.db.users, $scope.db.orders, $scope.db.categories, $scope.db.items,$scope.db.withdrawals, () => {
+            $scope.db.users.toArray()
+            .then((data) => {
+                v.users = data;
+            })
+            //fetched users and now fetching categories
+            var date = new Date(),_days= new Date(Date.now() - (86400000 * 30));
+            $scope.db.categories.toArray()
+            .then((data) => {
+                v.products.categories = data;
+             });
+            //fetcing items
+            $scope.db.items.toArray()
+            .then((data) => {
+                v.products.items = data;
+            })
+            //fetching orders
+            $scope.db.orders.where('date')
+            .between(_days, date, true, true).toArray()
+            .then((data) => {
+                v.sales = data;
+                /*v.sales.sort(function (a, b) {
+                    return (a.id < b.id) ? 1 : ((b.id < a.id) ? -1 : 0);
+                });*/
+            })
+            //fetching withrawals
+            $scope.db.withdrawals.where('date')
+            .between(_days, date, true, true).toArray()
+            .then((data)=>{
+                v.withdrawals = data;
+            })
+        }).then(()=>{
+            //fetched data and now apply
+            resolve(JSON.stringify(v));
+            //$scope.$apply();
+        })
+      
+     })
+}
 }) //end main controller, nothing should come after here!

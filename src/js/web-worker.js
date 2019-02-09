@@ -28,7 +28,7 @@ self.onmessage = (e)=>{
                 .then(msg=>{
                     postMessage('data-restored');
                 }).catch(err=>{
-                    console.log(err);
+                    console.error(err);
                 })
             })
             .catch((err)=>{
@@ -38,10 +38,12 @@ self.onmessage = (e)=>{
             case 'update-db-file':
                 fetchDatabase()
                 .then(data=>{
-                    saveToDBFile(data).then(data=>console.log(data)).catch(err=> console.log(err));
+                    saveToDBFile(data).then(data=>{
+                        //console.log(data)
+                    }).catch(err=> console.log(err));
                 })
-                .catch(()=>{
-                    console.log('error');
+                .catch((err)=>{
+                    console.err(err);
                 })
             break;
     }

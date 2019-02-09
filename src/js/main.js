@@ -455,4 +455,4 @@ async function isStoragePersisted() {
         Status.right.html(txt);
       }
   }
-  Status.insertRight(`<i class="material-icons red-text">lock_open</i> Not connected.`);
+  Status.insertRight(`<i class="material-icons red-text">portable_wifi_off</i> Host server inactive.`);

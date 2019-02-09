@@ -11,6 +11,7 @@ const {app, BrowserWindow, ipcMain, Tray, Menu, Notification} = require('electro
   let win
 
   function createWindow () {
+    const pjson = require("./package.json");
     //getting full witdth and heigth
     const {width,height} = require('electron').screen.getPrimaryDisplay().workAreaSize
     // Create the browser window.
@@ -18,7 +19,7 @@ const {app, BrowserWindow, ipcMain, Tray, Menu, Notification} = require('electro
       show:false,
       backgroundColor:'#333',
       width:width,
-      title:'SnapBurger CMS',
+      title:`SnapBurger CMS -${pjson.version}`,
       height:height,
       minWidth:950,
       minHeight:600,
@@ -28,7 +29,7 @@ const {app, BrowserWindow, ipcMain, Tray, Menu, Notification} = require('electro
       }
     })
     // and load the index.html of the app.
-    win.loadFile('src/index.html')
+    win.loadFile('src/index.html');
 
     // Open the DevTools.
     //win.webContents.openDevTools()

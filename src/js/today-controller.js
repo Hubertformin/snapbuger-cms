@@ -15,7 +15,7 @@ app.controller("todayCtr",($scope)=>{
                 $scope.orders.forEach(elems=>{
                     if(elems.date.toDateString() == today){
                         $scope.todaysCompletedOrders.push(elems);
-                        console.log(elems)
+                        //console.log(elems)
                         $scope.todaysCompletedOrdersTotals += Number(elems.totalPrice);
                     }
                 })
@@ -37,5 +37,11 @@ app.controller("todayCtr",($scope)=>{
         //console.log(dt)
         return `${hour}:${min}`;
     }
-    
+    //promt print
+    //prompt print
+    $scope.promptPrint = (order)=>{
+        if(confirm("Are you sure you want to print this order?")){
+            $scope.printOrders(order);
+        }
+    }
 })

@@ -5,6 +5,16 @@ app.controller("dashCtr", ($scope,$filter) => {
     //====================== FETCH AND COMPUTE =======================
     const today = new Date().toDateString();;
     $scope.fetchAndComputeOrders = () => {
+        //fetched users and now fetching categories
+       $scope.db.categories.toArray()
+       .then((data) => {
+           $scope.products.categories = data;
+        })
+       //fetcing items
+       $scope.db.items.toArray()
+       .then((data) => {
+           $scope.products.items = data;
+       })
         $scope.db.orders.toArray()
             .then((data)=>{
                 $scope.todaysCompletedOrders = [];
@@ -135,21 +145,22 @@ app.controller("dashCtr", ($scope,$filter) => {
         }
         if(!/[a-zA-Z]/.test(e.currentTarget.value)) return;
         view.fadeIn("fast");
-        console.log(e.currentTarget.value)
         var counter = 1;
         for(let i = 0; i < $scope.products.items.length;i++) {
             if(counter === 5) break;
             if($scope.products.items[i].name.toLowerCase().startsWith(e.currentTarget.value.toLowerCase())) {
                 $scope.showPreviewItems.push($scope.products.items[i]);
+                counter += 1;
             }else if ($scope.products.items[i].category.toLowerCase().startsWith(e.currentTarget.value.toLowerCase())) {
                 $scope.showPreviewItems.push($scope.products.items[i]);
+                counter += 1;
             }
-            counter += 1;
         }
         //no results
         if(counter == 1) {
             view.fadeOut("fast");
         }
+        //console.log($scope.products.items);
     }
     //when item from preview is clicked
     $scope.currItem = {name:'',rate:0,qty:1}
@@ -172,7 +183,7 @@ app.controller("dashCtr", ($scope,$filter) => {
         $scope.currItem.quantity = Number($('#prevItemQty').val());
         $scope.currItem.rate = Number($('#prevItemRate').val());
         if($scope.currItem.name == '' || $scope.currItem.rate == 0) {
-            notifications.notify({title:"Empty cart",type:"error",msg:"Please select item to proceed"});
+            notifications.notify({title:"No selected item!",type:"error",msg:"Please select item to proceed"});
             return;
         };
         //checking if item already exit
@@ -224,6 +235,7 @@ app.controller("dashCtr", ($scope,$filter) => {
         .then(()=>{
                 //$scope.fetchAndComputeOrders();
                 $scope.orderInv = `SBO${Math.floor(Math.random() * (9999 - 1000) ) + 1000}`;
+                $scope.currentOrder.items = [];
                 //$scope.removeItem(null,'deleteAll');
                 //jQuery('input.qty').val(1);
                 $scope.$apply();
@@ -269,12 +281,7 @@ app.controller("dashCtr", ($scope,$filter) => {
           //$scope.removeItem('deleteAll') 
         //console.log($scope.todaysOrders);
     }
-    //prompt print
-    $scope.promptPrint = (order)=>{
-        if(confirm("Are you sure you want to print this order?")){
-            $scope.printOrders(order);
-        }
-    }
+    //
     async function showEstimatedQuota() {
         if (navigator.storage && navigator.storage.estimate) {
           const estimation = await navigator.storage.estimate();
@@ -286,5 +293,8 @@ app.controller("dashCtr", ($scope,$filter) => {
       }
       //showEstimatedQuota();
     
+
+
+      
 
 })
