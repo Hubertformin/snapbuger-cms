@@ -236,6 +236,8 @@ app.controller("dashCtr", ($scope,$filter) => {
                 //$scope.fetchAndComputeOrders();
                 $scope.orderInv = `SBO${Math.floor(Math.random() * (9999 - 1000) ) + 1000}`;
                 $scope.currentOrder.items = [];
+                $scope.currentOrder.totalQuantity = 0;
+                $scope.currentOrder.totalPrice = 0;
                 //$scope.removeItem(null,'deleteAll');
                 //jQuery('input.qty').val(1);
                 $scope.$apply();

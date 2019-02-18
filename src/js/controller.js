@@ -36,6 +36,13 @@ app.config(($routeProvider) => {
 })
 
 app.controller("mainCtr", ($scope, $filter) => {
+    //push date
+    if(localStorage.getItem("PUSH_DATE") !== null) {
+        $scope.PUSH_DATE_INTERVAL = localStorage.getItem("PUSH_DATE");
+    }else {
+        $scope.PUSH_DATE_INTERVAL = "30";
+        localStorage.setItem("PUSH_DATE","30");
+    }
     //listening to worker
     $scope.alerted = null;
     worker.onmessage = (e) => {
@@ -162,13 +169,9 @@ app.controller("mainCtr", ($scope, $filter) => {
                 $scope.products.items = data;
             })
         //fetching orders
-        $scope.db.orders.toArray()
-            .then((data) => {
-                $scope.orders = data;
-                $scope.orders.sort(function (a, b) {
-                    return (a.id < b.id) ? 1 : ((b.id < a.id) ? -1 : 0);
-                });
-            })
+        $scope.db.orders.get(1,(data)=>{
+            $scope.orders.push(data);
+        })
         //fetching withrawals
         $scope.db.withdrawals.toArray()
             .then((data) => {
@@ -568,23 +571,28 @@ app.controller("mainCtr", ($scope, $filter) => {
         print_data = print_data.concat([
             {
                 type: 'text',
-                value: `<table style="width: 100%;display: table;border-collapse: collapse;border-spacing: 0;margin:15px 0;font-family:inconsolata;">
+                value: `<div style="min-height:250px;"><table style="width: 100%;display: table;border-collapse: collapse;border-spacing: 0;margin:15px 0;font-family:inconsolata;">
         <thead>
            <th>Nom</th>
-           <th>Qty</th>
-           <th>Prix.U</th>
+           <th>Qte</th>
+           <th>Prix</th>
            <th>Total</th>
        </thead>
         <tbody style="border-top:1px solid #999">
            ${th}
         </tbody>
-        </table>`,
+        </table></div>`,
                 style: `font-size: 14px;text-align:center;`
             },
             {
                 type: 'text',
                 value: `Total: ${$filter('currency')(data.totalPrice, "FCFA ", 0)}`,
-                style: `margin:25px 0 0 0;font-size: 17px;font-family:inconsolata;;font-weight:bold`
+                style: `margin:25px 0 0 0;text-align:center;border-top:1px solid #999;font-size: 17px;font-family:inconsolata;font-weight:bold`
+            },
+            {
+                type: 'text',
+                value: 'Merci pour votre fidélité',
+                style: `text-align:center;font-size: 14px;font-family:inconsolata;`
             },
             {
                 type: 'text',
@@ -595,7 +603,7 @@ app.controller("mainCtr", ($scope, $filter) => {
         //printing....
         print.print58m({
             data: print_data,
-            preview: false,
+            preview:false,
             deviceName: 'XP-80C',
             timeoutPerLine: 400
         }).then((data) => {
@@ -817,6 +825,13 @@ app.controller("mainCtr", ($scope, $filter) => {
     $scope.io.on("disconnect", () => {
         console.log("disconnect");
     })
+
+
+    $scope.setPushDate = ()=>{
+        console.log()
+        $scope.PUSH_DATE_INTERVAL = jQuery('#push_select').val();
+        localStorage.setItem("PUSH_DATE",$scope.PUSH_DATE_INTERVAL);
+    }
     /*
      ========================    hooks ================
     */
@@ -832,12 +847,12 @@ app.controller("mainCtr", ($scope, $filter) => {
         return new Promise((resolve, reject) => {
             var v = {
                 products: {
-                    items: "",
-                    category: ""
+                    items: [],
+                    category: []
                 },
-                sales: "",
-                users: "",
-                withdrawals: ""
+                sales: [],
+                users: [],
+                withdrawals: []
             }
             $scope.db.transaction('rw', $scope.db.users, $scope.db.orders, $scope.db.categories, $scope.db.items, $scope.db.withdrawals, () => {
                 $scope.db.users.toArray()
@@ -845,8 +860,8 @@ app.controller("mainCtr", ($scope, $filter) => {
                         v.users = data;
                     })
                 //fetched users and now fetching categories
-                var date = new Date(),
-                    _days = new Date(Date.now() - (86400000 * 30));
+                /*var date = new Date(),
+                    _days = new Date(Date.now() - (86400000 * Number($scope.PUSH_DATE_INTERVAL)));*/
                 $scope.db.categories.toArray()
                     .then((data) => {
                         v.products.categories = data;
@@ -857,19 +872,56 @@ app.controller("mainCtr", ($scope, $filter) => {
                         v.products.items = data;
                     })
                 //fetching orders
-                $scope.db.orders.where('date')
-                    .between(_days, date, true, true).toArray()
+                $scope.db.orders.toArray()
                     .then((data) => {
-                        v.sales = data;
+                        //v.sales = data;
                         /*v.sales.sort(function (a, b) {
                             return (a.id < b.id) ? 1 : ((b.id < a.id) ? -1 : 0);
                         });*/
+                        var uniqueDateOrders = [];
+                        //data.reverse();
+                        for(var i = 0;i<data.length;i++){
+                            //$scope.orders[i].date = toDate($scope.orders[i].date)
+                            if(i>0 && data[i-1].date.toDateString() === data[i].date.toDateString()){
+                              continue;
+                            }
+                            uniqueDateOrders.push(data[i].date.toDateString())
+                        }
+                        //192.168.100.54
+                        //console.log($scope.PUSH_DATE_INTERVAL)
+                        uniqueDateOrders = (uniqueDateOrders.length > $scope.PUSH_DATE_INTERVAL)?uniqueDateOrders.slice(uniqueDateOrders.length - $scope.PUSH_DATE_INTERVAL,uniqueDateOrders.length - 1):uniqueDateOrders;
+                        for(let i = 0;i < data.length;i++) {
+                            if(uniqueDateOrders.indexOf(data[i].date.toDateString()) > -1){
+                                //console.log(uniqueDateOrders,data[i].date.toDateString())
+                                v.sales.push(data[i]);
+                            }
+                        }
+                        uniqueDateOrders = null;
+                        //console.log(uniqueDateOrders);
+                        //console.log(v.sales)
                     })
                 //fetching withrawals
-                $scope.db.withdrawals.where('date')
-                    .between(_days, date, true, true).toArray()
+                $scope.db.withdrawals.toArray()
                     .then((data) => {
-                        v.withdrawals = data;
+                        var unique = [];
+                        //data.reverse();
+                        for(var i = 0;i<data.length;i++){
+                            //$scope.orders[i].date = toDate($scope.orders[i].date)
+                            if(i>0 && data[i-1].date.toDateString() === data[i].date.toDateString()){
+                              continue;
+                            }
+                            unique.push(data[i].date.toDateString())
+                        }
+                        //192.168.100.54
+                        //console.log(data)
+                        unique = (unique.length > 30)?unique.slice(0,30):unique;
+                        for(let i = 0;i < data.length;i++) {
+                            if(unique.indexOf(data[i].date.toDateString()) > -1){
+                                //console.log(unique,data[i].date.toDateString())
+                                v.withdrawals.push(data[i]);
+                            }
+                        }
+                        //console.log(v.withdrawals)
                     })
             }).then(() => {
                 //fetched data and now apply

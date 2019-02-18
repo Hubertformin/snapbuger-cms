@@ -40,6 +40,7 @@ const {app, BrowserWindow, ipcMain, Tray, Menu, Notification} = require('electro
     //when the widow is ready to display
     win.once('ready-to-show', () => {
       win.show()
+      win.maximize();
     })
 
     // Emitted when the window is closed.

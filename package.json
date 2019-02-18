@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "electron-installer-windows": "^1.1.0",
-    "electron-packager": "^12.1.2",
+    "electron-packager": "^13.0.1",
     "electron-winstaller": "^2.7.0"
   }
 }

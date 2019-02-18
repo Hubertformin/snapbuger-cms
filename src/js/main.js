@@ -288,7 +288,7 @@ function searchInputTable(e,tb){
     tr.forEach((element,index) => {
         td = element.querySelectorAll('td')[1];
         input = td.getElementsByTagName('input')[0].value.toLowerCase();
-        if(input.startsWith(value)>-1){
+        if(input.startsWith(value)){
             element.style.display = "";
         }else{
             element.style.display = "none";
@@ -304,9 +304,9 @@ function searchTable(e,tb){
     tr = table.querySelectorAll('tbody tr');
     tr.forEach((element,index) => {
         td = element.querySelectorAll('td');
-        if(td[1].innerHTML.toLowerCase().startsWith(value)>-1){
+        if(td[1].innerHTML.toLowerCase().startsWith(value)){
             element.style.display = "";
-        }else if(td[2].innerText.toLowerCase().startsWith(value)>-1){
+        }else if(td[2].innerText.toLowerCase().startsWith(value)){
             element.style.display = "";
         }else{
             element.style.display = "none";
@@ -343,13 +343,13 @@ function searchOrderItems(e){
         item_category = jQuery(el).children('div.header').children('.dark').children('dl').children('dd.item-category').html().toLowerCase()
         item_status = jQuery(el).children('div.header').children('.dark').children('dl').children('dd.item-status').html().toLowerCase()
         //search..
-        if(item_name.startsWith(val) == -1 && item_category.startsWith(val) == -1 && item_status.startsWith(val) == -1){
+        if(item_name.startsWith(val) && item_category.startsWith(val) && item_status.startsWith(val)){
         }
-        else if(item_name.startsWith(val)> -1){
+        else if(item_name.startsWith(val)){
             jQuery(el).show();
-        }else if(item_category.startsWith(val)> -1){
+        }else if(item_category.startsWith(val)){
             jQuery(el).show();
-        }else if(item_status.startsWith(val)> -1){
+        }else if(item_status.startsWith(val)){
             jQuery(el).show();
         }
     })

@@ -46,9 +46,7 @@ app.controller('reportsCtr',($scope)=>{
     //fetcing...
     $scope.db.transaction('r',$scope.db.orders,$scope.db.withdrawals,()=>{
         $scope.db.orders.toArray()
-        .then((data)=>{
-            
-            fs.writeFileSync("C:\\Users\\HubertFormin\\Desktop\\Projects\\Electron\\SnapTics\\sales.json",JSON.stringify(data));
+        .then((data)=>{ 
             $scope.uniqueDateOrders = [];
             $scope.orders = data;
             $scope.orders.reverse();
@@ -101,7 +99,6 @@ app.controller('reportsCtr',($scope)=>{
        $scope.db.withdrawals.toArray()
        .then((data)=>{
            $scope.withdrawals = data;
-           fs.writeFileSync("C:\\Users\\HubertFormin\\Desktop\\Projects\\Electron\\SnapTics\\withdrawals.json",JSON.stringify(data));
            $scope.uniqueDateWithdrawals = [];
             $scope.withdrawals.reverse();
             for(var i = 0;i<$scope.withdrawals.length;i++){
