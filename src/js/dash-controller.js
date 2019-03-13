@@ -148,10 +148,10 @@ app.controller("dashCtr", ($scope,$filter) => {
         var counter = 1;
         for(let i = 0; i < $scope.products.items.length;i++) {
             if(counter === 5) break;
-            if($scope.products.items[i].name.toLowerCase().startsWith(e.currentTarget.value.toLowerCase())) {
+            if($scope.products.items[i].name.toLowerCase().indexOf(e.currentTarget.value.toLowerCase()) > -1) {
                 $scope.showPreviewItems.push($scope.products.items[i]);
                 counter += 1;
-            }else if ($scope.products.items[i].category.toLowerCase().startsWith(e.currentTarget.value.toLowerCase())) {
+            }else if ($scope.products.items[i].category.toLowerCase().indexOf(e.currentTarget.value.toLowerCase()) > -1) {
                 $scope.showPreviewItems.push($scope.products.items[i]);
                 counter += 1;
             }
@@ -275,7 +275,7 @@ app.controller("dashCtr", ($scope,$filter) => {
         })
         .catch(err=>{
             $scope.orderInv = `SBO${Math.floor(Math.random() * (9999 - 1000) ) + 1000}`;
-            $scope.createOrder()
+            $scope.createOrder();
             //console.log(err)
         })
           //reseting order custom form

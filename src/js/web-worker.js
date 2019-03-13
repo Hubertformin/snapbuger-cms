@@ -46,6 +46,31 @@ self.onmessage = (e)=>{
                     console.err(err);
                 })
             break;
+            case 'get-daily-reports':
+                getDailyData().then((data)=>{
+                    console.log(1);
+                    postMessage(JSON.stringify({type:'daily-reports',reports:data}));
+                })
+            break;
+            case 'get-reports':
+            var v = {
+                products: {
+                    items: [],
+                    category: []
+                },
+                sales: [],
+                users: [],
+                withdrawals: []
+            }
+            fetchDatabase().then((res)=>{
+                v.users = res[0].data;
+                v.products.category = res[1].data;
+                v.products.items = res[2].data;
+                v.sales = res[3].data;
+                v.withdrawals = res[5].data;
+                postMessage(JSON.stringify({type:'overall-reports',reports:v}));
+            })
+            break;
     }
 }
 const Dexie = require('dexie');
@@ -112,6 +137,7 @@ function fetchDatabase() {
             })
         })
         .then(() => {
+            //DO NOT CHANGE ORDER OF THIS ARRAY, OTHER FUNCTIONS DEPEND ON IT!!!!!!!!!!!!
             var data = [
                 {table: "users",data:users},
                 {table: "categories",data: products.categories},
@@ -368,4 +394,33 @@ function updateDBFromFile(data){
         })
     })
 
+}
+
+//get current data 
+function getDailyData() {
+    return new Promise((resolve,reject)=>{
+        var d = new Date();
+        var v = {
+            sales: [],
+            users: [],
+            withdrawals: []
+        }
+        fetchDatabase()
+            .then(resp=>{
+                v.users = resp[0].data;
+                //getting orders of only today
+                resp[3].data.forEach(el=>{
+                    if(el.date.toDateString() === d.toDateString()) {
+                        v.sales.push(el);
+                    }
+                })
+                //withdrawals
+                resp[5].data.forEach(el=>{
+                    if(el.date.toDateString() === d.toDateString()) {
+                        v.withdrawals.push(el);
+                    }
+                })
+                resolve(v);        
+        }).catch(()=>reject());
+    })
 }

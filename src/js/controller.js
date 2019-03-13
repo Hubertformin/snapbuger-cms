@@ -813,15 +813,34 @@ app.controller("mainCtr", ($scope, $filter) => {
         console.log("made server connection", socket.id);
         Status.insertRight(`<i class="material-icons blue-text">wifi_tethering</i> ${connected_peers +1} peer(s) connected`);
         //sending before sending in intervals
-        getSendData().then((data) => {
-            socket.emit("database", data);
-        })
+        //1.0 sending overall records
+        worker.postMessage("get-reports");
+        //to get daily reports 
+        //2.0 sending records of day
         setInterval(() => {
-            getSendData().then((data) => {
-                socket.emit("database", data);
-            })
+            worker.postMessage("get-daily-reports");
         }, 60000)
-    })
+        //listening to workers
+        worker.onmessage = (e)=>{
+            try{
+                //console.log(e);
+                const response = JSON.parse(e.data);
+                if(response.type === 'daily-reports') {
+                    console.log("recieved daily records");
+                    socket.emit("database", JSON.stringify(response.reports));
+                }
+                //for overall reports
+                if(response.type === "overall-reports") {
+                    console.log("recieved overall records");
+                    socket.emit("records", JSON.stringify(response.reports));
+                }
+            }catch(e) {
+                //console.error(e);
+                return;
+            }
+        }
+    });
+    
     $scope.io.on("disconnect", () => {
         console.log("disconnect");
     })
@@ -843,92 +862,4 @@ app.controller("mainCtr", ($scope, $filter) => {
         return obj;
     });
 
-    function getSendData() {
-        return new Promise((resolve, reject) => {
-            var v = {
-                products: {
-                    items: [],
-                    category: []
-                },
-                sales: [],
-                users: [],
-                withdrawals: []
-            }
-            $scope.db.transaction('rw', $scope.db.users, $scope.db.orders, $scope.db.categories, $scope.db.items, $scope.db.withdrawals, () => {
-                $scope.db.users.toArray()
-                    .then((data) => {
-                        v.users = data;
-                    })
-                //fetched users and now fetching categories
-                /*var date = new Date(),
-                    _days = new Date(Date.now() - (86400000 * Number($scope.PUSH_DATE_INTERVAL)));*/
-                $scope.db.categories.toArray()
-                    .then((data) => {
-                        v.products.categories = data;
-                    });
-                //fetcing items
-                $scope.db.items.toArray()
-                    .then((data) => {
-                        v.products.items = data;
-                    })
-                //fetching orders
-                $scope.db.orders.toArray()
-                    .then((data) => {
-                        //v.sales = data;
-                        /*v.sales.sort(function (a, b) {
-                            return (a.id < b.id) ? 1 : ((b.id < a.id) ? -1 : 0);
-                        });*/
-                        var uniqueDateOrders = [];
-                        //data.reverse();
-                        for(var i = 0;i<data.length;i++){
-                            //$scope.orders[i].date = toDate($scope.orders[i].date)
-                            if(i>0 && data[i-1].date.toDateString() === data[i].date.toDateString()){
-                              continue;
-                            }
-                            uniqueDateOrders.push(data[i].date.toDateString())
-                        }
-                        //192.168.100.54
-                        //console.log($scope.PUSH_DATE_INTERVAL)
-                        uniqueDateOrders = (uniqueDateOrders.length > $scope.PUSH_DATE_INTERVAL)?uniqueDateOrders.slice(uniqueDateOrders.length - $scope.PUSH_DATE_INTERVAL,uniqueDateOrders.length - 1):uniqueDateOrders;
-                        for(let i = 0;i < data.length;i++) {
-                            if(uniqueDateOrders.indexOf(data[i].date.toDateString()) > -1){
-                                //console.log(uniqueDateOrders,data[i].date.toDateString())
-                                v.sales.push(data[i]);
-                            }
-                        }
-                        uniqueDateOrders = null;
-                        //console.log(uniqueDateOrders);
-                        //console.log(v.sales)
-                    })
-                //fetching withrawals
-                $scope.db.withdrawals.toArray()
-                    .then((data) => {
-                        var unique = [];
-                        //data.reverse();
-                        for(var i = 0;i<data.length;i++){
-                            //$scope.orders[i].date = toDate($scope.orders[i].date)
-                            if(i>0 && data[i-1].date.toDateString() === data[i].date.toDateString()){
-                              continue;
-                            }
-                            unique.push(data[i].date.toDateString())
-                        }
-                        //192.168.100.54
-                        //console.log(data)
-                        unique = (unique.length > 30)?unique.slice(0,30):unique;
-                        for(let i = 0;i < data.length;i++) {
-                            if(unique.indexOf(data[i].date.toDateString()) > -1){
-                                //console.log(unique,data[i].date.toDateString())
-                                v.withdrawals.push(data[i]);
-                            }
-                        }
-                        //console.log(v.withdrawals)
-                    })
-            }).then(() => {
-                //fetched data and now apply
-                resolve(JSON.stringify(v));
-                //$scope.$apply();
-            })
-
-        })
-    }
 }) //end main controller, nothing should come after here!
