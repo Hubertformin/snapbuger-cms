@@ -1,7 +1,7 @@
 {
   "name": "SnapBurger",
   "productName": "SnapBurger CMS",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Food store manager",
   "main": "index.js",
   "scripts": {

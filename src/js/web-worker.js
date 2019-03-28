@@ -48,7 +48,6 @@ self.onmessage = (e)=>{
             break;
             case 'get-daily-reports':
                 getDailyData().then((data)=>{
-                    console.log(1);
                     postMessage(JSON.stringify({type:'daily-reports',reports:data}));
                 })
             break;

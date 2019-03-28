@@ -44,9 +44,7 @@ app.controller("staffCtr", ($scope) => {
     var elems = document.querySelectorAll('.datepicker');
     M.Datepicker.init(elems, {
         format: 'dd/mm/yyyy',
-        minDate: currentDate,
-        defaultDate: currentDate,
-        yearRange: [thisYear, thisYear + 2]
+        defaultDate: currentDate
     });
     //==================== FUNCTIONS =============
     //
@@ -64,10 +62,7 @@ app.controller("staffCtr", ($scope) => {
         var inputDate = jQuery('#startDate').val();
         //and exception might occur in user inputs number with multiple dots
         try{
-            if (typeof $scope.staff_name == 'undefined' ||
-            typeof $scope.staff_password == 'undefined' ||
-            typeof $scope.staff_position == 'undefined' ||
-            inputDate == '' || typeof $scope.staff_salary == 'undefined') {
+            if (typeof $scope.staff_name == 'undefined') {
             notifications.notify({
                 title:"Invalid values",
                 type: "error",
@@ -87,39 +82,7 @@ app.controller("staffCtr", ($scope) => {
             })
             return;
         }
-        //individually checking values
-        if(typeof $scope.staff_password !== 'string' || $scope.staff_password == ''){
-            notifications.notify({
-                title:"Invalid value",
-                type: "error",
-                msg: "Please insert a password"
-            })
-            return;
-        }
-        if(typeof $scope.staff_position !== 'string' || $scope.staff_position == ''){
-            notifications.notify({
-                title:"Invalid value",
-                type: "error",
-                msg: "Please insert user's position"
-            })
-            return;
-        }
-        if(typeof inputDate !== 'string' || inputDate == ''){
-            notifications.notify({
-                title:"Invalid value",
-                type: "error",
-                msg: "Please select start date"
-            })
-            return;
-        }
-        if(typeof $scope.staff_salary !== 'number' || $scope.staff_salary == ''){
-            notifications.notify({
-                title:"Invalid value",
-                type: "error",
-                msg: "Please insert a valid salary"
-            })
-            return;
-        }
+        
         //lets check if username exist
         /*for(var i=0;i<$scope.users.length;i++){
             if($scope.users[i].name.toLowerCase() === $scope.staff_name.toLowerCase()){

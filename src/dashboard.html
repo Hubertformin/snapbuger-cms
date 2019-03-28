@@ -10,10 +10,10 @@
     <ul id="OrderCollapse" class="collapsible">
         <li class="active">
             <div class="collapsible-header head">
-                <div class="header white">
+                <div class="header orange lighten-1">
                     <div class="row">
                         <div class="col s4">
-                            <button class="btn-flat red-text">
+                            <button class="btn-flat">
                                 Orders stop at {{settings.time_range.to}}
                             </button>
                         </div>
@@ -58,7 +58,7 @@
                         <!-- This is the section -->
                         <div class="row">
                             <div id="orderItems" class="col s12 scrollContainer" style="height:49vh;padding: 0;">
-                                <div id="emptyItems" ng-show="products.items.length == 0" class="no-results grey lighten-4">
+                                <div id="emptyItems" ng-show="ITEMS_COUNT == 0" class="no-results grey lighten-4">
                                     <p>
                                         No Items <small>(Go to <strong>Items > Create Items</strong>)</small>
                                     </p>
@@ -125,6 +125,7 @@
                                 <div class="col s7 item-name" style="border-right:1px solid #ddd;">
                                     <div id="previewItems" class="z-depth-1">
                                         <ul class="collection">
+                                            <li class="collection-item" id="previewItemsLoader"></li>
                                             <li class="collection-item avatar" ng-repeat="i in showPreviewItems track by $index" ng-click="selectItem($index)">
                                                 <img src="img/logo-round.png" alt="" class="circle">
                                                 <span class="title red-text"><strong>{{i.name}}</strong></span>
@@ -164,7 +165,7 @@
                         <div class="col s12 footer">
                             <div class="col s5 offset-s7">
                                 <button ng-show="orderPrint" class="btn waves-effect waves-light brown darken-4"><i class="material-icons left">print</i>Print</button>
-                                <button ng-click="createOrder()" ng-disabled="currentOrder.items.length == 0" class="btn waves-effect waves-light green darken-1 right"><i class="material-icons left">done</i>Complete</button>
+                                <button ng-click="showSaveOrder()" ng-disabled="currentOrder.items.length == 0" class="btn waves-effect waves-light green darken-1 right"><i class="material-icons left">done</i>Complete</button>
                             </div>
                         </div>
                     </form>
@@ -174,6 +175,29 @@
     </ul>
     <!--End of main page-->
     <!--Modals-->
+    <!-- Print reciept modal -->
+    <div id="printModal">
+        <div class="content">
+            <div class="body">
+                <h4 class="green-text" style="margin:0;"><i class="material-icons" style="font-size:7.5rem;">check_circle</i></h4>
+                <h5 class="green-text">New Order</h5>
+                <p>Select recipient and click on save or save & print</p>
+                <div class="input-field">
+                    <select ng-model="order_waiter" style="border-color:#333;margin-bottom:2rem" class="browser-default" title="Select waiter/Waitress">
+                        <option value="">Select recipient</option>
+                        <option ng-repeat="user in users track by $index" value="{{user.name}}">{{user.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="footer">
+                <button ng-click="showSaveOrder(false)" class="btn red" style="position:absolute;left:40px;">Cancel</button>
+                <button ng-click="createOrder(false)" class="btn orange" ng-disabled="order_waiter == ''" style="margin-right:.25rem;">Save</button>
+                <button ng-click="createOrder(true)" class="btn green" ng-disabled="order_waiter == ''">Save & Print</button>
+            </div>
+        </div>
+    </div>
+
+
     <!-- <div id="viewSelectedORders" class="modal bottom-sheet">
         <div class="modal-content">
             <div class="box">

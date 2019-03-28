@@ -16,7 +16,6 @@
     <script src="js/materialize.js"></script>
     <script src="js/angular.js"></script>
     <script src="js/angular_route.js"></script>
-    <script src="js/jquery.mousewheel.min.js"></script>
 </head>
 
 <body>
@@ -104,52 +103,24 @@
             <p id="copyright_p" class="copyright"></p>
             </div>
         </section>
-        <!-- side nav-->
-        <!--<ul id="slide-out" class="sidenav sidenav-fixed">
-            <li>
-                <div class="user-view">
-                    <div class="background">
-                        <div class="dark-wrapper"></div>
-                        <img title="{{currentUser.name}}" src="img/office.jpg" alt="">
-                    </div>
-                    <div class="row">
-                        <div class="img-div col s6">
-                            <a draggable="false" href="#!profile"><img class="circle" src="img/user-grey.png"></a>
-                        </div>
-                        <div class="col s6 text-div" style="transform: translateY(-14px)">
-                            <a draggable="false" href="javascript:void(0)" class="name-link"><span class="name white-text">{{currentUser.name}}</span></a>
-                    
-                            <ul id="user_dropdown" class='dropdown-content'>
-                                <li ng-show="currentUser.is_mgr"><a id="profileLink" draggable="false" href="#!profile" class="sideNavLink"><i class="material-icons">person</i>Profile</a></li>
-                                <li ng-show="currentUser.is_mgr" class="divider" tabindex="-1"></li>
-                                <li><a draggable="false" id="logOutBtn" ng-click="logOut()" href="javascript:void(0)"><i class="material-icons">power_settings_new</i>Log out</a></li>
-                            </ul>
-                            <a draggable="false" href="javascript:void(0)" class="email-link"><span class="white-text email">@SnapBurger17</span></a>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li title="Dashboard"><a draggable="false" class="sideNavLink" id="dashboardLink" href="#/!"><i class="material-icons">dvr</i><span>Dashboard</span></a></li>
-            <li title="Products"><a draggable="false" href="#!items" class="sideNavLink" id="productsLink"><i class="material-icons">dns</i><span>Products</span></a></li>
-            <li title="Settings"><a draggable="false" href="#!settings" class="sideNavLink" id="settingsLink"><i class="material-icons">settings</i><span>Settings</span></a></li>
-            <div ng-show="currentUser.is_mgr">
-                <li>
-                    <div class="divider"></div>
-                </li>
-                <li title="Admin panel"><a draggable="false" class="sideNavLink subheader">Admin</a></li>
-                <li title="Reports"><a ng-hide="orders.length == 0" draggable="false" class="sideNavLink" href="#!reports" id="reportsLink"><i class="material-icons">insert_chart</i><span>Reports</span></a></li>
-                <li title="Staff"><a draggable="false" class="sideNavLink" href="#!emp" id="staffLink"><i class="material-icons">people</i><span>Staff</span></a></li>
-            </div>
-            <li class="min" onclick="miniSideNav()"><i class="material-icons">clear_all</i></li>
-        </ul>-->
         <!-- Main nav -->
-        <nav class="nav-extended">
+        <nav class="nav-extended z-depth-1" id="title-bar">
             <div class="nav-wrapper">
-              <a href="#" class="brand-logo"><img src="img/logo-round.png" class="nav-img"> SnapBurger</a>
-              <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+              <a href="javascript:void(0)" class="brand-logo"><img src="img/logo-round.png" class="nav-img"> SnapBurger <small class="powered">powered by <span>nudle</span></small></a>
+              <a href="javascript:void(0)" data-target="sideNav" class="sidenav-trigger""><i class="material-icons">menu</i></a>
+              <!-- routes links -->
+              <!-- <ul class="routes_ul"></ul> -->
+              <!--  -->
               <ul id="nav-mobile" class="right hide-on-med-and-down">
+                  
+                <li class="route_links"><a id="dashboardLink" class="sideNavLink" href="#!">Sales</a></li>
+                <li class="route_links"><a href="#!items" id="productsLink" class="sideNavLink">Items</a></li>
+                <li class="route_links"><a href="#!today" id="todaysLink" class="sideNavLink">Daily sales</a></li>
+                <li ng-show="currentUser.is_mgr" class="route_links"><a href="#!reports" class="sideNavLink" id="reportsLink">Reports</a></li>
+                <li ng-show="currentUser.is_mgr" class="route_links"><a href="#!emp" class="sideNavLink" id="staffLink">Employees</a></li>
+              
                 <li><a href="javascript:void(0)">
-                    <button style="border:1px solid #ddd;border-radius: 20px;" class="btn-flat white-text">
+                    <button class="btn-flat rounded-btn">
                         <i style="height:unset;line-height:unset;" class="material-icons left">account_circle</i> {{currentUser.name}}
                     </button>
                 </a></li>
@@ -157,15 +128,9 @@
                 <li><a href="javascript:void(0)" ng-click="logOut()" title="Log out"><i class="material-icons">exit_to_app</i></a></li>
               </ul>
             </div>
-            <div class="nav-content">
-              <ul class="routes_ul">
-                <li class=""><a id="dashboardLink" class="sideNavLink" href="#!">Sales</a></li>
-                <li class=""><a href="#!items" id="productsLink" class="sideNavLink">Items</a></li>
-                <li class=""><a href="#!today" id="todaysLink" class="sideNavLink">Daily sales</a></li>
-                <li ng-show="currentUser.is_mgr" class=""><a href="#!reports" class="sideNavLink" id="reportsLink">Reports</a></li>
-                <li ng-show="currentUser.is_mgr" class=""><a href="#!emp" class="sideNavLink" id="staffLink">Employees</a></li>
-              </ul>
-            </div>
+            <!-- <div class="nav-content">
+              
+            </div> -->
           </nav>
         <!-- main section -->
         <!-- <header>

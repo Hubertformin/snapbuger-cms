@@ -159,23 +159,24 @@ app.controller("mainCtr", ($scope, $filter) => {
                 });
             });
         //fetched users and now fetching categories
-        $scope.db.categories.toArray()
-            .then((data) => {
-                $scope.products.categories = data;
+        $scope.db.categories.count()
+            .then((count) => {
+                $scope.CATEGORIES_COUNT = count;
             })
         //fetcing items
-        $scope.db.items.toArray()
-            .then((data) => {
-                $scope.products.items = data;
+        $scope.db.items.count()
+            .then((count) => {
+                $scope.ITEMS_COUNT = count;
             })
         //fetching orders
-        $scope.db.orders.get(1,(data)=>{
-            $scope.orders.push(data);
-        })
+        $scope.db.orders.count()
+            .then((count)=> {
+                $scope.ORDERS_COUNT = count;
+            })
         //fetching withrawals
-        $scope.db.withdrawals.toArray()
-            .then((data) => {
-                $scope.withdrawals = data;
+        $scope.db.withdrawals.count()
+            .then((count) => {
+                $scope.WITHDRAWALS_COUNT = count;
             })
         //fetched data and now apply
         $scope.$apply();
@@ -191,9 +192,9 @@ app.controller("mainCtr", ($scope, $filter) => {
                 visibility: "visible"
             })
             //jQuery('#loader').remove();
-            if ($scope.users.length == 0 && $scope.products.categories.length == 0 &&
-                $scope.orders.length == 0 && $scope.products.items.length == 0 &&
-                $scope.withdrawals.length == 0) {
+            if ($scope.users.length == 0 && $scope.ITEMS_COUNT == 0 &&
+                $scope.ORDERS_COUNT == 0 && $scope.CATEGORIES_COUNT == 0 &&
+                $scope.WITHDRAWALS_COUNT == 0) {
                 worker.postMessage('check-for-backup');
                 jQuery('section#dataDbCheck').show();
                 worker.onmessage = (e) => {
@@ -826,12 +827,14 @@ app.controller("mainCtr", ($scope, $filter) => {
                 //console.log(e);
                 const response = JSON.parse(e.data);
                 if(response.type === 'daily-reports') {
-                    console.log("recieved daily records");
+                    console.log("Recieved daily records");
+                    console.log("Broadcasting daily records...");
                     socket.emit("database", JSON.stringify(response.reports));
                 }
                 //for overall reports
                 if(response.type === "overall-reports") {
-                    console.log("recieved overall records");
+                    console.log("Recieved overall records");
+                    console.log("Broadcasting overall records...");
                     socket.emit("records", JSON.stringify(response.reports));
                 }
             }catch(e) {

@@ -1,4 +1,109 @@
 app.controller("itemsCtr", ($scope) => {
+    //fetching records from db
+    $scope.db.transaction('rw',$scope.db.items, $scope.db.categories, ()=> {
+        //fetched users and now fetching categories
+        $scope.db.categories.toArray()
+            .then((data) => {
+                $scope.products.categories = data;
+            })
+        //fetcing items
+        $scope.db.items.limit(20).toArray()
+            .then((data) => {
+                $scope.products.items = data;
+            })
+    })
+    .then(()=>{
+        $scope.$apply();
+    })
+
+    //load items on scroll 
+    /*jQuery('#table_loader').waitMe({
+        effect:'win8_linear',
+        text:'',
+        bg:'#fff',
+        color:'#333'
+    })*/
+    $scope.ITEMS_INDEX = 1;
+
+    jQuery('#items_container').on('scroll',(e)=>{
+        const element = document.querySelector('#items_container'),
+        scrollDistance = element.scrollHeight - element.scrollTop;
+
+        //if user scrolled to top
+        if (jQuery(e.target).scrollTop() === 0) {
+            
+            $scope.db.items.where("id").below($scope.products.items[0].id).desc().limit(20).toArray()
+                .then((data)=>{
+                    if (data.length !== 0) {
+                        //adding item
+                        $scope.products.items = data.reverse().concat($scope.products.items);
+                        //checking if items exceed current display length
+                        const _length = $scope.products.items.length + data.length;
+
+                        if(_length > 20) {
+                            //removing 20 items so div can scroll
+                            //console.log($scope.products.items)
+                            $scope.products.items = $scope.products.items.slice(0,20); 
+                            //console.log($scope.products.items)
+                            $scope.ITEMS_INDEX -= data.length;
+                            element.scrollTop = 35;
+                        }
+                        
+                    }
+                    $scope.$apply();
+                })
+        }
+
+
+
+        //if users scroll to bottom
+
+        if(scrollDistance === element.clientHeight) {
+            //console.log("end of scroll!");
+            //console.log($scope.products.items[$scope.products.items.length - 1].id)
+            //fetching items
+            $scope.db.items.where("id").above($scope.products.items[$scope.products.items.length - 1].id).limit(20).toArray()
+                .then((data)=>{
+                    
+                    if (data.length !== 0) {
+                        //checking if length of items exceeding expected which is 20
+                        if($scope.products.items.length + data.length >= 35) {
+                            //removing 15 items so div can scroll
+                            $scope.products.items = $scope.products.items.slice(15); 
+                            $scope.ITEMS_INDEX += 15;
+                        }
+                        //adding data to sting
+                        $scope.products.items = $scope.products.items.concat(data);
+                    }
+
+                    $scope.$apply();
+                })
+        }
+    })
+    //search for items
+    $scope.searchItems = (e)=>{
+        const value = e.target.value.toLowerCase();
+        
+        if (value !== "") {
+            
+             //search database
+            $scope.db.items.where("name").startsWithIgnoreCase(value).limit(20).toArray()
+            .then((data)=>{
+                $scope.products.items = data;
+                $scope.$apply();
+            })
+
+        } else {
+            //give back state
+            //fetcing items
+            $scope.db.items.limit(20).toArray()
+            .then((data) => {
+                $scope.products.items = data;
+                $scope.$apply();
+            })
+        }
+    }
+
     //intit
     angular.element("body").ready(()=>{
         $('.tabs').tabs();
@@ -12,6 +117,8 @@ app.controller("itemsCtr", ($scope) => {
     //initializing collapse
     var elems = document.querySelectorAll('.collapsible');
     var instances = M.Collapsible.init(elems);
+
+
     //=============== Table Number =========================
     $scope.updateTableNumber = ()=>{
         if(typeof $scope.settings.tableNumber !== 'number'){
@@ -165,30 +272,22 @@ app.controller("itemsCtr", ($scope) => {
         //Add to database
         $scope.db.items.add(data)
         .then(()=>{
-            $scope.db.items.toArray()
-            .then(data=>{
-                $scope.products.items = data;
-                $scope.item_name = '';
-                $scope.item_rate = '';
-                $scope.$apply();
-                //console.log($scope.products.items)
-                //reseting variables
-                //nitifications
-                notifications.notify({
-                    title:"Complete",
-                    msg: "New item added to list",
-                    type: "done"
-                })
-            })
-            .catch(()=>{
-                notifications.notify({title:"Unknow error",msg:' Unable to refresh items list',type:"error"})
+            $scope.item_name = '';
+            $scope.item_rate = '';
+            $scope.ITEMS_COUNT += 1;
+            $scope.$apply();
+            //notifications
+            notifications.notify({
+                title:"Complete",
+                msg: "New item added to list",
+                type: "done"
             })
         })
         .catch(err=>{
             notifications.notify({
                 type:"error",
                 title:"Unable to add item to list",
-                msg:"Failed to add item to list,please make sure this item does not already exist"
+                msg:"Make sure this item does not already exist"
             },9000)
         })
     })
@@ -202,24 +301,12 @@ app.controller("itemsCtr", ($scope) => {
         //updating database
         $scope.db.items.put($scope.products.items[i])
         .then(()=>{
-            $scope.db.items.toArray()
-            .then(data=>{
-                $scope.products.items = data;
-                $scope.item_name = '';
-                $scope.item_rate = '';
-                $scope.$apply();
-                //console.log($scope.products.items)
-                //reseting variables
-                //nitifications
-            })
-            .catch(()=>{
-                notifications.notify({title:"Unknown error",msg:'Unable to refresh of items list',type:"error"})
-            })
+            //console.log("updated!");
         })
         .catch(()=>{
             notifications.notify({
                 title:"Unknown error",
-                msg:'Unable to update items list,please make sure new item doesn\'t already exist!',
+                msg:'Unable to update item,please make sure the updated record doesn\'t already exist!',
                 type:"error"},9000)
         })
         //console.log($scope.products.items[i]);

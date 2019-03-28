@@ -48,6 +48,14 @@
   position: relative;
 }
 
+#previewItemsLoader {
+  display: none;
+  text-align: center;
+  padding-top: 5%;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
 .bg-theme {
   background: -webkit-gradient(linear, left top, right top, from(#f44336), to(#ff9800)) !important;
   background: linear-gradient(to right, #f44336, #ff9800) !important;
@@ -301,7 +309,18 @@ section#dataDbCheck {
   z-index: 6;
 }
 
+.font-source-sans, body, nav#title-bar .brand-logo {
+  font-family: Source Sans Pro, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+}
+
 body {
+  height: 100%;
+  width: 100%;
   position: relative;
   background: #fff;
   color: #444;
@@ -309,7 +328,7 @@ body {
 
 main {
   position: fixed;
-  top: 114px;
+  top: 65px;
   left: 0;
   right: 0;
   bottom: 20px;
@@ -449,6 +468,57 @@ footer i.material-icons {
   color: #fff;
 }
 
+nav#title-bar {
+  background: -webkit-gradient(linear, left top, right top, from(#ef5350), to(#ffa726));
+  background: linear-gradient(to right, #ef5350, #ffa726);
+}
+
+nav#title-bar .nav-img {
+  float: left;
+  width: 41px;
+  margin: 10px 6px 0 0;
+  height: auto;
+}
+
+nav#title-bar .brand-logo {
+  color: #444 !important;
+  font-size: 1.5rem;
+}
+
+nav#title-bar .brand-logo .powered {
+  font-size: 0.75rem;
+}
+
+nav#title-bar .brand-logo .powered span {
+  font-weight: 900;
+}
+
+nav#title-bar li a {
+  color: #444 !important;
+}
+
+nav#title-bar li a:hover {
+  background-color: unset !important;
+}
+
+nav#title-bar li .rounded-btn {
+  border: 1px solid #d32f2f;
+  border-radius: 20px;
+}
+
+nav#title-bar li.route_links a {
+  position: relative;
+}
+
+nav#title-bar li.route_links a.active::after {
+  position: absolute;
+  content: "";
+  bottom: 17%;
+  left: 0;
+  right: 0;
+  border: 2px solid #d32f2f;
+}
+
 nav:not(.nav-extended) {
   position: fixed;
   top: 0;
@@ -578,30 +648,6 @@ nav:not(.nav-extended) ul .dropdown-body a {
 
 nav:not(.nav-extended) ul .dropdown:hover .dropdown-body {
   display: block;
-}
-
-.nav-img {
-  float: left;
-  width: 41px;
-  margin: 10px 6px 0 0;
-  height: auto;
-}
-
-.routes_ul {
-  height: 50px;
-}
-
-.routes_ul li a {
-  position: relative;
-  display: block;
-  padding: 15px;
-}
-
-.routes_ul li a.active {
-  background-color: #fff;
-  color: #f44336;
-  -webkit-box-shadow: 0px 6px 26px rgba(0, 0, 0, 0.2);
-          box-shadow: 0px 6px 26px rgba(0, 0, 0, 0.2);
 }
 
 .create-btn-default {
@@ -1136,6 +1182,39 @@ table.huberts-tables tfoot {
 
 #viewSelectedORders .modal-content .body table tfoot th {
   text-align: center;
+}
+
+#printModal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1999;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#printModal div.content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  background-color: #fff;
+  border-radius: 6px;
+  width: 35%;
+  padding: 20px 40px;
+}
+
+#printModal div.body {
+  height: 80%;
+  text-align: center;
+}
+
+#printModal div.footer {
+  height: 20%;
+  text-align: right;
 }
 
 .datepicker-date-display {

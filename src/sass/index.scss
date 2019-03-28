@@ -37,6 +37,14 @@
     position: relative;
 }
 
+#previewItemsLoader{
+    display: none;
+    text-align: center;
+    padding-top: 5%;
+    font-weight: 700;
+    font-size: 1.2rem
+}
+
 //theme background
 .bg-theme {
     background: linear-gradient(to right, #f44336, #ff9800)!important;
@@ -262,16 +270,27 @@ section#dataDbCheck{
     z-index: 6;
 }
 
+.font-source-sans {
+    font-family: Source Sans Pro, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  }
+
+html{
+    height: 100%;
+    width: 100%;
+}
 body {
+    height: 100%;
+    width: 100%;
     position: relative; //background-image: url('../img/back6.jpg');
     background: #fff;
     color:#444;
+    @extend .font-source-sans;
 }
 
 //nav and search
 main {
     position:fixed;
-    top: 114px;
+    top: 65px;
     left: 0;
     right: 0;
     bottom: 20px;
@@ -394,6 +413,57 @@ footer{
     }
 }
 
+nav#title-bar{
+    background: linear-gradient(to right, #ef5350, #ffa726);
+    //nav image
+    .nav-img {
+        float: left;
+        width: 41px;
+        margin: 10px 6px 0 0;
+        height: auto;
+    }
+    .brand-logo{
+        color: #444 !important;
+        font-size: 1.5rem;
+        @extend .font-source-sans;
+        .powered{
+            font-size: 0.75rem;
+            span{
+                font-weight: 900;
+            }
+        }
+    }
+    li{
+        a {
+            color: #444 !important;
+            &:hover{
+                background-color: unset !important;
+            }
+        }
+        .rounded-btn{
+            border:1px solid #d32f2f;
+            border-radius: 20px;
+        }
+        &.route_links{
+            a{
+                position: relative;
+                &.active{
+                    &::after{
+                        position: absolute;
+                        content: "";
+                        bottom:17%;
+                        left: 0;
+                        right: 0;
+                        border: 2px solid #d32f2f;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
 nav:not(.nav-extended) {
     position: fixed;
     top: 0;
@@ -505,29 +575,7 @@ nav:not(.nav-extended) {
         }
     }
 }
-//nav image
-.nav-img {
-    float: left;
-    width: 41px;
-    margin: 10px 6px 0 0;
-    height: auto;
-}
-//the link
-.routes_ul{
-    height: 50px;
-    li{
-        a{
-            position: relative;
-            display: block;
-            padding: 15px;
-            &.active{
-                background-color: #fff;
-                color: #f44336;
-                box-shadow: 0px 6px 26px rgba(0, 0, 0, 0.2);
-            }
-        }
-    }
-}
+
 
 .create-btn-default {
     display: flex;
@@ -1002,6 +1050,36 @@ table.huberts-tables {
     }
 }
 
+//print orders modal
+#printModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1999;
+    background: rgba(0, 0, 0, 0.5);
+    div.content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform:translate(-50%, -50%);
+        background-color: #fff;
+        border-radius: 6px;
+        width: 35%;
+        padding:20px 40px;
+    }
+    div.body {
+        height: 80%;
+        text-align: center;
+    }
+    div.footer {
+        height: 20%;
+        text-align: right;
+    }
+}
+
 //datepickers
 .datepicker-date-display {
     display: none!important;
@@ -1446,3 +1524,6 @@ ul.versions {
         transform: rotate(360deg);
     }
 }
+
+
+@import "reports";

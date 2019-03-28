@@ -2,20 +2,24 @@ app.controller("dashCtr", ($scope,$filter) => {
     //first thing, setting the sidenav link to active
     jQuery('.sideNavLink').removeClass('active');
     jQuery('#dashboardLink').addClass('active');
+    
     //====================== FETCH AND COMPUTE =======================
-    const today = new Date().toDateString();;
+    const today = new Date().toDateString();
+
+    $scope.order_waiter = "";
+
     $scope.fetchAndComputeOrders = () => {
         //fetched users and now fetching categories
-       $scope.db.categories.toArray()
+       /*$scope.db.categories.toArray()
        .then((data) => {
            $scope.products.categories = data;
-        })
+        })*/
        //fetcing items
-       $scope.db.items.toArray()
+       /*$scope.db.items.toArray()
        .then((data) => {
            $scope.products.items = data;
-       })
-        $scope.db.orders.toArray()
+       })*/
+        /*$scope.db.orders.toArray()
             .then((data)=>{
                 $scope.todaysCompletedOrders = [];
                 $scope.todaysCompletedOrdersTotals = 0;
@@ -27,7 +31,7 @@ app.controller("dashCtr", ($scope,$filter) => {
                     }
                 })
                 $scope.$apply();
-            })
+            })*/
     }
     $scope.fetchAndComputeOrders();
     //modals
@@ -137,16 +141,57 @@ app.controller("dashCtr", ($scope,$filter) => {
     //========================================================
     //this sections used to preview items when input is put
     $scope.showPreviewItems = [];
+
     $scope.getPreviewItems = (e)=>{
+        //loader
+        jQuery('#previewItemsLoader').waitMe({
+            effect : 'bounce',
+            text : '',                
+            bg : 'rgba(255,255,255,1)',
+            color : '#ef5350 ',
+        });
+        
         $scope.showPreviewItems = [];
+        
         const view = $('#previewItems');
+        
+        jQuery('#previewItemsLoader').fadeIn("fast");
+        
         if(e.currentTarget.value == "") {
             view.fadeOut("fast");
         }
+        
         if(!/[a-zA-Z]/.test(e.currentTarget.value)) return;
+        
         view.fadeIn("fast");
-        var counter = 1;
-        for(let i = 0; i < $scope.products.items.length;i++) {
+        
+        $scope.db.items.where("name").startsWithIgnoreCase(e.currentTarget.value.toLowerCase()).limit(6).toArray()
+        .then((data)=>{
+            if(data.length !== 0) {
+
+                $scope.showPreviewItems = data;
+                jQuery('#previewItemsLoader').fadeOut("fast");
+                $scope.$apply();
+            
+            } else {
+                $scope.db.items.where("category").startsWithIgnoreCase(e.currentTarget.value.toLowerCase()).limit(6).toArray()
+                .then((data)=>{
+                    if (data.length !== 0) {
+                        
+                        $scope.showPreviewItems = data;
+                        jQuery('#previewItemsLoader').fadeOut("fast");
+
+                    } else {
+                        jQuery('#previewItemsLoader').html("No items found.")
+                        jQuery('#previewItemsLoader').waitMe("hide");
+                    }
+                    $scope.$apply();
+                })
+            }
+        
+            
+        })
+        /*for(let i = 0; i < $scope.products.items.length;i++) {
             if(counter === 5) break;
             if($scope.products.items[i].name.toLowerCase().indexOf(e.currentTarget.value.toLowerCase()) > -1) {
                 $scope.showPreviewItems.push($scope.products.items[i]);
@@ -159,7 +204,7 @@ app.controller("dashCtr", ($scope,$filter) => {
         //no results
         if(counter == 1) {
             view.fadeOut("fast");
-        }
+        }*/
         //console.log($scope.products.items);
     }
     //when item from preview is clicked
@@ -217,8 +262,12 @@ app.controller("dashCtr", ($scope,$filter) => {
 
     ///Finally creating order, first by setting the default table number to 1
     $scope.orderTableNumber = '1';
-    $scope.orderInv = `SBO${Math.floor(Math.random() * (9999 - 1000) ) + 1000}`;
-    $scope.createOrder = ()=>{
+    $scope.orderInv = `SBO${Math.floor(Math.random() * (99999 - 10000) ) + 10000}`;
+
+    /**
+     * @function createOrder
+     */
+    $scope.createOrder = (print)=>{
         if($scope.currentOrder.items.length == 0){
             notifications.notify({title:"No Items selected",type:"error",msg:"Please select items to proceed"})
             return false;
@@ -229,21 +278,43 @@ app.controller("dashCtr", ($scope,$filter) => {
         $scope.currentOrder.date = new Date();
         $scope.currentOrder.tableNum = $scope.orderTableNumber;
         $scope.currentOrder.staff = staff.name;
+        $scope.currentOrder.waiter = $scope.order_waiter;
         const current = $scope.currentOrder;
         //and now pushing to main --
         $scope.db.orders.add(current)
         .then(()=>{
                 //$scope.fetchAndComputeOrders();
-                $scope.orderInv = `SBO${Math.floor(Math.random() * (9999 - 1000) ) + 1000}`;
+                $scope.orderInv = `SBO${Math.floor(Math.random() * (99999 - 10000) ) + 10000}`;
                 $scope.currentOrder.items = [];
                 $scope.currentOrder.totalQuantity = 0;
                 $scope.currentOrder.totalPrice = 0;
+                $scope.currentOrder.waiter = "";
+                $scope.order_waiter = "";
                 //$scope.removeItem(null,'deleteAll');
                 //jQuery('input.qty').val(1);
                 $scope.$apply();
-                //console.log($scope.orders)
-                //
-                swal({
+                
+                 //hide modal
+                 jQuery("#printModal").fadeOut("fast");
+                //print if print was specified
+                if (print) {
+                    //printing orders
+                    $scope.db.orders.get(current.id)
+                    .then(data=>{
+                        swal("Order saved","added to printer queue","success");
+                        $scope.printOrders(data);
+                        //deleting current id because next order would still have that id
+                        //and dexie would return an exception.
+                        delete current.id;
+                        //deleting current id because next order would still have that id
+                        //and dexie would return an exception.
+                    })
+                } else {
+                    swal("Order saved", "proccess completed","success");
+                    delete current.id;
+                    return false;
+                }
+                /*swal({
                     title: "Order completed!",
                     text: "Added to orders queue",
                     icon: "success",
@@ -252,31 +323,13 @@ app.controller("dashCtr", ($scope,$filter) => {
                 })
                 .then((click) => {
                     
-                    if (click) {
-                        //printing orders
-                        $scope.db.orders.get(current.id)
-                        .then(data=>{
-                            console.log(data);
-                            $scope.printOrders(data);
-                            //deleting current id because next order would still have that id
-                            //and dexie would return an exception.
-                            delete current.id;
-                        })
-                        
-                        //$scope.printOrders();
-                        //deleting current id because next order would still have that id
-                        //and dexie would return an exception.
-                        //console.log(current)
-                    } else {
-                        delete current.id;
-                        return false;
-                    }
-                });
+                    
+                });*/
         })
         .catch(err=>{
-            $scope.orderInv = `SBO${Math.floor(Math.random() * (9999 - 1000) ) + 1000}`;
-            $scope.createOrder();
-            //console.log(err)
+            $scope.orderInv = `SBO${Math.floor(Math.random() * (99999 - 10000) ) + 10000}`;
+            $scope.createOrder(print);
+            console.log(err);
         })
           //reseting order custom form
           //$scope.orderInv = "";
@@ -284,6 +337,9 @@ app.controller("dashCtr", ($scope,$filter) => {
         //console.log($scope.todaysOrders);
     }
     //
+
+
+
     async function showEstimatedQuota() {
         if (navigator.storage && navigator.storage.estimate) {
           const estimation = await navigator.storage.estimate();
@@ -296,6 +352,18 @@ app.controller("dashCtr", ($scope,$filter) => {
       //showEstimatedQuota();
     
 
+      /**
+       * @function saveOders
+       * @params {orders}
+       */
+      $scope.showSaveOrder = (show = true) => {
+          if(show) {
+            jQuery("#printModal").fadeIn("fast");
+          } else {
+              $scope.order_waiter = "";
+            jQuery("#printModal").fadeOut("fast");
+          }
+      }
 
       
 
