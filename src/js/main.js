@@ -298,7 +298,7 @@ function searchInputTable(e,tb){
     
 }
 function searchTable(e,tb){
-    var i,j,td,input,
+    let i,j,td,input,
     value = e.target.value.toLowerCase(),
     table = document.querySelector(tb),
     tr = table.querySelectorAll('tbody tr');
@@ -333,6 +333,7 @@ function formatDate(string = ''){
     }
     return `${day}/${month}/${year}`;
 }
+
 function searchOrderItems(e){
     var val = jQuery(e.target).val(),items = jQuery('#orderItems .item');
     val = val.toLowerCase();

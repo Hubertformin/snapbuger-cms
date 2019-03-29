@@ -1,0 +1,57 @@
+section#body {
+    height: 100%;
+}
+#reports{
+#body {
+    height: 100%;
+}
+.page-header{
+    border-bottom:1px solid #ddd;
+    height: 9%;
+    div.row{
+        height: 100%;
+        width: 100%;
+        padding:6px 10px;
+    }
+    select {
+        display: inline-block;
+        width: auto;
+        height: 2.5rem;
+        border-color: #444444;
+    }
+}
+.page-body {
+    height: 91%;
+  position: relative;
+
+    #reports-body {
+        .body-pager{
+          position: relative;
+            height: 100%;
+            width: 100%;
+        }
+    }
+}
+
+    .h-full {
+        height: 100%;
+    }
+
+.categories-data{
+    height: 100%;
+    overflow-y: scroll;
+    border:1px solid #ddd;
+}
+
+.overlay{
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #fff;
+  z-index: 5;
+}
+
+}

@@ -1,4 +1,152 @@
-<div id="reports" class="routePage white" ng-controller="reportsCtr" style="margin-top:68px;padding:0px;">
+<div id="reports" class="routePage white" ng-controller="reportsCtr" style="padding:0px;margin:0;">
+<div class="page-header">
+    <div class="row">
+        <div class="col s3">
+            <ul class="tabs">
+                <li class="tab col s6"><a class="active" href="#home">Dashboard</a></li>
+                <!--<li class="tab col s6"><a href="#orders">Orders</a></li>-->
+            </ul>
+        </div>
+        <div class="col s6 center-align">
+            <button class="btn-flat red-border red-text">Showing reports of <strong>{{REPORTS.date_range}}</strong></button>
+        </div>
+        <div class="col s3 right-align">
+                <span>Select date</span>
+                <select title="Select Date" class="browser-default" ng-model="FILTER_DATE" ng-change="filterResult()">
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="custom">Custom</option>
+                </select>
+                <!--select date-->
+            <button ng-click="openDateModal()" class="btn-flat"><i class="material-icons">date_range</i></button>
+        </div>
+    </div>
+</div>
 
+<!-- body where everything happens -->
+<div id="reports-body" class="page-body">
+    <!--overlay-->
+    <div id="no_records" class="overlay">
+        <div class="center">
+            <h3>No records found</h3>
+            <ul>
+                <li>There was no activity on the date interval</li>
+            </ul>
+        </div>
+    </div>
 
+    <div id="home" class="body-pager h-full">
+        <div class="row h-full">
+            <div class="col s3 h-full p-0">
+                <div class="categories-data">
+                    <ul class="collection with-header" style="margin:0;">
+                        <li class="collection-header"><h4 class="red-text">Sales History</h4></li>
+                        <li class="collection-item avatar" ng-repeat="i in REPORTS.categorical | orderBy:'amount':true">
+                            <i class="material-icons circle red">ac_unit</i>
+                            <span class="title red-text" style="font-size: 1.3rem;font-weight: 500;">{{i.name}}</span>
+                            <p><span class="green-text" style="font-weight: 500;">{{i.amount | currency:"FCFA ":0}}</span> <br>
+                                <span>{{i.quantity}} {{(i.quantity === 1)?'item':'items'}} sold</span> <br>
+                                 <small>{{i.date}}</small>
+                            </p>
+                            <!-- <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a> -->
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--cards and reports-->
+            <div class="col s9 p-0 h-full">
+                <div class="row" style="height: 22%;padding-top: 15px;">
+                    <div class="col s4 h-full">
+                        <div class="card m-0 orange lighten-5">
+                            <div class="card-content" style="padding: 11px 25px;">
+                                <span>Sales</span>
+                                <span style="font-weight:400" class="card-title">{{REPORTS.totalAmount | currency:"FCFA ":0}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s4 h-full">
+                        <div class="card m-0 yellow lighten-5">
+                            <div class="card-content" style="padding: 11px 25px;">
+                                <span>Quantity sold</span>
+                                <span style="font-weight:400" class="card-title">{{REPORTS.totalQuantity | currency:"":0}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="height: 78%;">
+                    <div class="right-align" style="height: 12%;padding: 10px;">
+                        <input ng-keyup="searchOrders($event)" style="padding:5px 10px;" title="search orders" type="search" id="" class="browser-default" placeholder="Search orders..">
+                    </div>
+                    <div class="table-div" style="height: 88%;">
+                        <table id="orders_table">
+                            <thead>
+                                <th>Date/Time</th>
+                                <th>Amount</th>
+                                <th style="width:5%">Qty</th>
+                                <th>Recipient</th>
+                                <th>Cashier</th>
+                                <th>items</th>
+                                <th>Inv</th>
+                                <th ng-if="currentUser.is_mgr" style="width:4%"></th>
+                            </thead>
+                            <tbody id="orders_table_body">
+                                <!--<tr ng-repeat="order in REPORTS.orders track by $index">-->
+                                    <!--<td>{{toDate(order.date)}}</td>-->
+                                    <!--<td>{{order.totalPrice}}</td>-->
+                                    <!--<td>{{order.totalQuantity}}</td>-->
+                                    <!--<td>{{(order.waiter === undefined)?'(undefined)':order.waiter}}</td>-->
+                                    <!--<td>{{order.staff}}</td>-->
+                                    <!--<td>-->
+                                        <!--<ul style="list-style-type: circle;">-->
+                                            <!--<li ng-repeat="item in order.items track by $index">{{item.name}} ({{item.quantity}})</li>-->
+                                        <!--</ul>-->
+                                    <!--</td>-->
+                                    <!--<td>{{order.inv}}</td>-->
+                                <!--</tr>-->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+<!--modal-->
+    <!-- Modal Structure -->
+    <div id="date_modal" class="modal" style="max-height: unset;">
+        <div class="modal-content" style="height: 65vh;">
+            <div class="row">
+                <h4 class="red-text">Filter reports</h4>
+                <div class="col s12" style="border-top: 1px solid #ddd;">
+                    <h5 class="red-text">Select date</h5>
+                    <div class="row">
+                        <div class="col s6">
+                            <input id="single_date_instance" title="select date" type="text" class="datepicker" placeholder="Click to select date">
+                        </div>
+                        <div class="col s3">
+                            <button ng-click="filterResult(true, false)" class="btn">Filter</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12" style="padding-top: 15px;margin-top: 10%;border-top: 1px solid #ddd;">
+                    <h5 class="red-text">Select Interval</h5>
+                    <div class="row">
+                        <div class="col s5">
+                            <input id="multiple_date_start" title="select start date" type="text" class="datepicker" placeholder="Click to select start">
+                        </div>
+                        <div class="col s5">
+                            <input id="multiple_date_end" title="select end date" type="text" class="datepicker" placeholder="Click to select end">
+                        </div>
+                        <div class="col s2">
+                            <button ng-click="filterResult(true, true)" class="btn">Filter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:void(0)" class="modal-close waves-effect waves-green btn-flat">close</a>
+        </div>
+    </div>
 </div>

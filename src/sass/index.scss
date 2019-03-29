@@ -2,7 +2,6 @@
 *::selection {
     background-color:#e65100;
     color:#fff;
-    user-drag: none;
     user-select: none;
 }
 
@@ -138,7 +137,6 @@ hr {
 select {
     &.prefixed {
         margin-left: 3rem;
-        width: 92%;
         width: calc(100% - 3rem)
     }
 }
@@ -648,8 +646,9 @@ nav:not(.nav-extended) {
 /*route page */
 
 .routePage {
-    margin-top:20px;
+    margin-top:10px;
     padding: 10px 14px;
+    height: 100%;
 }
 
 .box {
@@ -802,7 +801,7 @@ button.bg-theme:disabled {
 
 .lists {
     border: 1px solid #ddd;
-    background-image: attr(data-url url);
+    //background-image: attr(data-url url);
     background-size: cover;
     background-position: center;
     height: 200px;

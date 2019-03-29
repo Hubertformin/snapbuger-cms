@@ -116,8 +116,8 @@
                 <li class="route_links"><a id="dashboardLink" class="sideNavLink" href="#!">Sales</a></li>
                 <li class="route_links"><a href="#!items" id="productsLink" class="sideNavLink">Items</a></li>
                 <li class="route_links"><a href="#!today" id="todaysLink" class="sideNavLink">Daily sales</a></li>
-                <li ng-show="currentUser.is_mgr" class="route_links"><a href="#!reports" class="sideNavLink" id="reportsLink">Reports</a></li>
-                <li ng-show="currentUser.is_mgr" class="route_links"><a href="#!emp" class="sideNavLink" id="staffLink">Employees</a></li>
+                <li class="route_links"><a href="#!reports" class="sideNavLink" id="reportsLink">Reports</a></li>
+                <li ng-if="currentUser.is_mgr" class="route_links"><a href="#!emp" class="sideNavLink" id="staffLink">Employees</a></li>
               
                 <li><a href="javascript:void(0)">
                     <button class="btn-flat rounded-btn">

@@ -1,9 +1,8 @@
-const fs = require("fs");
 app.controller('reportsCtr',($scope)=>{
     document.querySelector('canvas').addEventListener('contextmenu', (e) => {
-        e.preventDefault()
+        e.preventDefault();
         graphMenu.popup({window: remote.getCurrentWindow()})
-      }, false)
+      }, false);
     //first thing, setting the sidenav link to active
     jQuery('.sideNavLink').removeClass('active');
     jQuery('#reportsLink').addClass('active');
@@ -27,7 +26,7 @@ app.controller('reportsCtr',($scope)=>{
     //and now preview default active tab
     jQuery('.nav-tabs li').on('click',(e)=>{
         if(jQuery(e.target).is('li')){
-            var data = jQuery(e.target).data("target");
+            let data = jQuery(e.target).data("target");
             jQuery('.nav-tabs li').removeClass('active');
             jQuery('.tab-prev').hide("fast");
             jQuery(data).show("fast");
@@ -249,14 +248,14 @@ app.controller('reportsCtr',($scope)=>{
     }
     //search
     $scope.searchOrders = (e)=>{
-        var val = jQuery(e.target).val().toLowerCase();
+        let val = jQuery(e.target).val().toLowerCase();
         jQuery('#collection a').each((i,el)=>{
             el.style.display = "none";
             if(el.innerHTML.toLowerCase().indexOf(val)>-1){
                 el.style.display = "block";
             }
         })
-        var tr = jQuery('#allOrders tr');
+        let tr = jQuery('#allOrders tr');
         tr.each((i,el)=>{
             el.style.display = "none";
             var name = el.getElementsByTagName('td')[0].innerHTML.toLowerCase(),
