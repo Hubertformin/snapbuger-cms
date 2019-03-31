@@ -6,6 +6,8 @@
 /out-tsc
 /php
 /release-builds
+/.nudle.code-workspace
+/prepros-6.config
 
 # dependencies
 /node_modules
