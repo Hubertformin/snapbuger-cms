@@ -65,7 +65,7 @@
                                 </div>
                                 <div id="emptyCurrentItems" ng-show="currentOrder.items.length == 0" class="no-results grey lighten-4">
                                         <p>
-                                            Type items by name to show add
+                                            Type items by name to add
                                         </p>
                                 </div>
                                 <ul class="collection center-align">
@@ -187,6 +187,14 @@
                         <option value="">Select recipient</option>
                         <option ng-repeat="user in users track by $index" value="{{user.name}}">{{user.name}}</option>
                     </select>
+                </div>
+                <div class="input-field">
+                    <p>
+                        <label>
+                            <input type="checkbox" class="filled-in" ng-model="ORDER_COMPARTMENTS" />
+                            <span>Print order compartments</span>
+                        </label>
+                    </p>
                 </div>
             </div>
             <div class="footer">

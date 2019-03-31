@@ -1,20 +1,56 @@
 app.controller("itemsCtr", ($scope) => {
     //fetching records from db
-    $scope.db.transaction('rw',$scope.db.items, $scope.db.categories, ()=> {
+    $scope.db.transaction('rw',$scope.db.items, $scope.db.categories,$scope.db.orderCategory, ()=> {
         //fetched users and now fetching categories
         $scope.db.categories.toArray()
             .then((data) => {
                 $scope.products.categories = data;
+            })
+        $scope.db.orderCategory.toArray()
+            .then((data) => {
+                $scope.products.orderCategory = data;
             })
         //fetcing items
         $scope.db.items.limit(20).toArray()
             .then((data) => {
                 $scope.products.items = data;
             })
+
     })
     .then(()=>{
         $scope.$apply();
-    })
+    }).catch(err => {
+        console.error(err);
+    });
+
+    $scope.resetItemCategory = () => {
+       if (confirm("Are you sure you want to reset order category?")) {
+           //going thtough itemsa and changing
+           $scope.db.transaction('rw',$scope.db.items, () => {
+               $scope.db.items.each((item) => {
+                   if (item.orderCategory === undefined) {
+                       item.orderCategory = "Kitchen";
+
+                       $scope.db.items.put(item);
+                   } else {
+                       return;
+                   }
+               }).then(() => {
+                   console.log("items category reseted!");
+                   //fetcing items
+                   $scope.db.items.limit(20).toArray()
+                       .then((data) => {
+                           $scope.products.items = data;
+                       })
+               })
+           }).then(() => {
+               notifications.notify({msg:"order category reseted!",title:"Complete",type:"success"});
+           }).catch((err) => {
+               console.error(err);
+               notifications.notify({msg:"unable to reset",title:"Failed",type:"error"});
+           });
+       }
+    };
 
     //load items on scroll 
     /*jQuery('#table_loader').waitMe({
@@ -114,6 +150,7 @@ app.controller("itemsCtr", ($scope) => {
     //
     $scope.category_status = "available";
     $scope.item_status = "available";
+    $scope.item_orderCategory = "";
     //initializing collapse
     var elems = document.querySelectorAll('.collapsible');
     var instances = M.Collapsible.init(elems);
@@ -181,26 +218,46 @@ app.controller("itemsCtr", ($scope) => {
         
         //console.log( $scope.products.categories);
     })
-    //update categories
-    /*$scope.updateCategories = (i) => {
-        if ($scope.products.categories[i].status == "available") {
-            $scope.products.categories[i].action = true;
-        } else {
-            $scope.products.categories[i].action = false;
+    jQuery('#createOrderCategoryForm').on('submit', (e) => {
+        e.preventDefault();
+        if (typeof $scope.orderCategory_name !== 'string' || $scope.orderCategory_name === ''){
+            notifications.notify({title:"Category name required!",msg:"Please insert a valid category name",type:"error"});
+            return false;
         }
-        //updating in db
-        $scope.db.categories.put($scope.products.categories[i])
-        $scope.db.categories.toArray()
-        .then((data)=>{
-            $scope.products.categories = data;
-            $scope.$apply();
-            console.log($scope.products.categories)
-            notifications.notify({
-                msg: "Added!",
-                type: "done"
+        //converting first character to upper case
+        $scope.orderCategory_name = $scope.orderCategory_name[0].toUpperCase()+$scope.orderCategory_name.slice(1).toLowerCase();
+        //data
+        let data = {name: $scope.orderCategory_name};
+        $scope.db.orderCategory.add(data)
+        .then(()=>{
+            $scope.db.orderCategory.toArray()
+             .then((data)=>{
+                $scope.products.orderCategory = data;
+                $scope.orderCategory_name = "";
+                $scope.$apply();
+                //console.log($scope.products.categories)
+                notifications.notify({
+                    title:"Complete",
+                    msg: "New order category added to list",
+                    type: "done"
+                })
+            })
+            .catch(err=>{
+                notifications.notify({title:"Unknown error!",msg:`Unable refresh categories list`,type:"error"})
             })
         })
-    }*/
+        .catch(err=>{
+            console.error(err);
+            notifications.notify({
+                title:"Unable to Add category to list",
+                msg:"Failed to add category,please make sure the category does not already exist!",
+                type:"error"
+            },9000)
+        })
+
+        //console.log( $scope.products.categories);
+    })
+    //update categories
     //deleting categories
     $scope.deleteCategories = (i) => {
         if(confirm(`Are you sure you want to delete '${$scope.products.categories[i].name}'?`)){
@@ -227,6 +284,31 @@ app.controller("itemsCtr", ($scope) => {
             
         }
         
+    }
+    $scope.deleteOrderCategories = (id) => {
+        if(confirm(`Are you sure you want to delete?`)){
+            $scope.db.orderCategory.delete(id)
+                .then(()=>{
+                    $scope.db.orderCategory.toArray()
+                        .then((data)=>{
+                            $scope.products.orderCategory = data;
+                            $scope.$apply();
+                            //console.log($scope.products.categories)
+                            notifications.notify({
+                                title:"Complete",
+                                msg: "Category removed from list",
+                                type: "done"
+                            })
+                        })
+                        .catch(err=>{
+                            notifications.notify({title:"Unknow error",msg:`Unable to refresh categories`,type:"error"})
+                        })
+                })
+                .catch(()=>{
+                    notifications.notify({title:"Unknow error",msg:`Unable to delete category`,type:"error"})
+                })
+
+        }
     }
     //===========================ITEMS ==========================================================================
     //Create Items
@@ -264,16 +346,25 @@ app.controller("itemsCtr", ($scope) => {
             });
             return;
         }
+        if(typeof $scope.item_orderCategory !== 'string' || $scope.item_orderCategory == ''){
+            notifications.notify({
+                title:"Item order category required!",
+                msg: "Please select an order category.",
+                type: "error"
+            });
+            return;
+        }
         //converting first character to upper case
         $scope.item_name = $scope.item_name[0].toUpperCase()+$scope.item_name.slice(1);
         //date
-        let data = {name: $scope.item_name,rate: $scope.item_rate,category: $scope.item_category,status: $scope.item_status,action:true}
+        let data = {name: $scope.item_name,rate: $scope.item_rate,category: $scope.item_category,status: true,orderCategory:$scope.item_orderCategory,action:true};
         //$scope.products.items.push()
         //Add to database
         $scope.db.items.add(data)
         .then(()=>{
             $scope.item_name = '';
             $scope.item_rate = '';
+            //$scope.item_orderCategory = "";
             $scope.ITEMS_COUNT += 1;
             $scope.$apply();
             //notifications

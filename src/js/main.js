@@ -356,6 +356,19 @@ function searchOrderItems(e){
     })
 }
 
+function searchList(event) {
+    const val = event.target.value.toLowerCase();
+    //iterate
+    jQuery("#list_body ul").each((index,el) => {
+        if(jQuery(el).children("li").text().toLowerCase().indexOf(val) > -1) {
+            jQuery(el).css({display:"block"});
+        } else {
+            jQuery(el).css({display:"none"});
+        }
+    })
+
+}
+
 //$AV_ASW
 var elems = document.querySelectorAll('.dropdown-trigger');
 var dropdown = M.Dropdown.init(elems, {coverTrigger:false}); 
@@ -454,6 +467,16 @@ async function isStoragePersisted() {
       },
       insertRight:(txt) => {
         Status.right.html(txt);
+      },
+      progress: (val) => {
+        const container = jQuery('#footer_progress_container'), bar = jQuery('#footer_progress');
+        if(val === "end") {
+            container.fadeOut("fast");
+            bar.css({width:"0%"});
+        } else {
+            container.fadeIn("fast");
+            bar.css({width:val+"%"});
+        }
       }
   }
   Status.insertRight(`<i class="material-icons red-text">portable_wifi_off</i> Host server inactive.`);

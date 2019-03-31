@@ -72,8 +72,10 @@
                 <h3 align="center" class="orange-text font-amar"><img class="left" style="width:55px;height:55px" src="img/logo-round.png" alt=""><span>SnapBurger</span></h3>
                 <img style="width:75px;height:75px;" src="img/Cloud%20Storage.png" alt="">
                 <h4 class="teal-text">Checking for back up...</h4>
-                <img style="width:25px;height:25px;" src="img/Synchronize.png" class="spin" alt="">
-                <p id="DBcheckstatusText">Please make sure you have a good internet connection.</p>
+                <div>
+                    <img style="width:25px;height:25px;" src="img/Synchronize.png" class="spin" alt="">
+                </div>
+                <p id="DBcheckstatusText">Please don't quit app during this process.</p>
             </div>
         </section>
         <!-- login page-->
@@ -124,7 +126,14 @@
                         <i style="height:unset;line-height:unset;" class="material-icons left">account_circle</i> {{currentUser.name}}
                     </button>
                 </a></li>
-                <li><a href="#!settings" title="Settings"><i class="material-icons">settings</i></a></li>
+                <li><a href="#!settings" id="settingsLink" title="Settings"><i class="material-icons">settings</i></a></li>
+                <li ng-if="currentUser.is_mgr">
+                    <a ng-if="!SETTINGS.connect_host" href="javascript:void(0)" ng-click="connectToHost(true)" title="connect to host"><i class="material-icons">cast</i></a>
+                    <a ng-if="SETTINGS.connect_host" href="javascript:void(0)" ng-click="connectToHost(false)" title="disconnect from host"><i class="material-icons">cast_connected</i></a>
+                </li>
+                  <li ng-if="currentUser.is_mgr">
+                    <a ng-if="SETTINGS.connect_host" href="javascript:void(0)" ng-click="refreshDB()" title="refresh data"><i class="material-icons">refresh</i></a>
+                  </li>
                 <li><a href="javascript:void(0)" ng-click="logOut()" title="Log out"><i class="material-icons">exit_to_app</i></a></li>
               </ul>
             </div>
@@ -144,10 +153,16 @@
         </main>
         <footer>
             <div class="row">
-                <div class="col s6">
+                <div class="col s3">
                     <span id="leftStatus">Left status</span>
                 </div>
-                <div class="col s6 right-align">
+                <div class="col s3">
+                    <div id="footer_progress_container" class="progress">
+                        <div id="footer_progress" class="determinate" style="width:0%"></div>
+                    </div>
+                </div>
+                <div class="col s3"></div>
+                <div class="col s3 right-align">
                     <span id="rightStatus">Right status</span>
                 </div>
             </div>
@@ -236,8 +251,10 @@
     </script>
     <script src="js/chart.js"></script>
     <script src="js/waitMe.min.js"></script>
-    <script src="js/sweetalert.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/sweetalert.js"></script>
+    <script src="js/socket.io-min.js"></script>
+    <!--controllers-->
     <script src="js/controller.js"></script>
     <script src="js/dash-controller.js"></script>
     <script src="js/today-controller.js"></script>

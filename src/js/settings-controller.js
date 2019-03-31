@@ -1,4 +1,9 @@
 app.controller('settingsCtr',($scope)=>{
+    //getting db
+    $scope.db.settings.get(1, (settings) => {
+        settings.host_url =  (settings.host_url === undefined)?"localhost":settings.host_url;
+        $scope.setting = settings;
+    })
     //first thing, setting the sidenav link to active
     jQuery('.sideNavLink').removeClass('active');
     jQuery('#settingsLink').addClass('active');
@@ -57,5 +62,8 @@ app.controller('settingsCtr',($scope)=>{
         $scope.settings.time_range.to = jQuery('#orders_to').val();
         $scope.updateSettings();
     })
+
+    //console log
+    console.log($scope.settings);
 
 });

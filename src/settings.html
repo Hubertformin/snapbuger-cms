@@ -4,89 +4,147 @@
             Settings
         </div>
         <div class="body">
-        <p class="title">General</p>
-            <div class="row" ng-show="currentUser.is_mgr">
-                <h6 class="settings_tittle">Orders time range:<small class="blue-grey-text"> (Default is from 8:00 to 21:30)</small></h6>
-                <div class="col s6">
-                    <div class="input-field col s6">
-                        <input id="orders_from" type="text" tabindex="-1" class="timepicker">
-                        <label class="active" for="orders_from">From:</label>
-                    </div>
-                    <div class="input-field col s6">
-                        <input id="orders_to" tabindex="-1" type="text" class="timepicker">
-                        <label class="active" for="orders_to">To:</label>
-                    </div>
+            <div class="row" ng-init="view = 'general'">
+                <div class="col s3" >
+                    <ul class="collection" style="border-right: none;border-left: none;display: block;margin-top:9px;">
+                        <li ng-click="view = 'general'" class="collection-item avatar" style="min-height:70px;cursor: pointer;">
+                            <i class="material-icons circle">subtitles</i>
+                            <span class="title" style="font-size: 1.3rem;">General</span>
+                        </li>
+                        <li ng-click="view = 'network'" class="collection-item avatar" style="min-height:70px;cursor: pointer;">
+                            <i class="material-icons circle">network_check</i>
+                            <span class="title" style="font-size: 1.3rem;">Network Sync</span>
+                        </li>
+                        <li ng-click="view = 'about'" class="collection-item avatar" style="min-height:70px;cursor: pointer;">
+                            <i class="material-icons circle">info</i>
+                            <span class="title" style="font-size: 1.3rem;">About</span>
+                        </li>
+                    </ul>
                 </div>
-                <div class="col s3">
-                    <button ng-click="updateSettings('reset-default')" class="btn blue-grey waves-effect waves-default">Reset to default</button>
-                </div>
-                <div class="col s12">
-                        <h6 class="settings_tittle red-text">
-                            Network Synchronization
-                        </h6><hr>
-                    <div class="row">
-                        <div class="col s4">
-                            Set the date interval of data to push to client computers
+                <div class="col s9" style="border-left: 1px solid #ddd;" ng-switch="view">
+
+                    <div ng-switch-when="general" class="row">
+                            <p class="title">General</p>
+                            <h6 class="settings_tittle">Orders time range:<small class="blue-grey-text"> (Default is from 8:00 to 21:30)</small></h6>
+                            <div class="col s6">
+                                <div class="input-field col s6">
+                                    <input id="orders_from" type="text" tabindex="-1" class="timepicker">
+                                    <label class="active" for="orders_from">From:</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input id="orders_to" tabindex="-1" type="text" class="timepicker">
+                                    <label class="active" for="orders_to">To:</label>
+                                </div>
+                            </div>
+                            <div class="col s3">
+                                <button ng-click="updateSettings('reset-default')" class="btn blue-grey waves-effect waves-default">Reset to default</button>
+                            </div>
+                            <div class="col s12">
+                                <h6 class="settings_tittle">
+                                    Updates
+                                    <div class="switch right">
+                                        <label>
+                                            <input ng-change="updateSettings()" type="checkbox" ng-model="settings.auto_update" ng-disabled="!currentUser.is_mgr">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                    <br><small class="blue-grey-text">Automatically check for updates when connected to network</small>
+                                </h6>
+                                <hr>
+                                <h6 class="settings_tittle">
+                                    Back up
+                                    <div class="switch right">
+                                        <label>
+                                            <input ng-change="updateSettings()" type="checkbox" ng-model="settings.back_up" ng-disabled="!currentUser.is_mgr">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                    <br><small class="blue-grey-text">Automatically back up database when connected to network</small>
+                                </h6>
+                                <hr>
+                                <h6 class="settings_tittle">
+                                    Performance reports
+                                    <div class="switch right">
+                                        <label>
+                                            <input ng-change="updateSettings()" type="checkbox" ng-model="settings.performance_report" ng-disabled="!currentUser.is_mgr">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                    <br><small class="blue-grey-text">Periodically send logs to developers (recommended)</small>
+                                </h6>
+                                <hr>
+                            </div>
                         </div>
-                        <div class="col s3">
-                            <select id="push_select" ng-change="setPushDate()" ng-model="PUSH_DATE_INTERVAL" id="" class="browser-default">
-                                <option value="30">30 Days</option>
-                                <option value="60">60 Days</option>
-                                <option value="180">6 Months</option>
-                                <option value="366">1 year</option>
-                                <option value="732">2 years</option>
-                                <option value="1830">5 years</option>
-                            </select>
+
+                    <div ng-switch-when="network" class="row">
+                        <div class="col s12">
+                            <h6 class="settings_tittle pink-text">
+                                Network Synchronization <br>
+                            </h6><hr>
+                            <div class="row">
+                                <div class="col s4">
+                                    Enter host address or url <br>
+                                    <small>This address represents location of principal database.</small>
+                                </div>
+                                <div class="input-field col s3">
+                                    <input type="text" placeholder="Host computer address or url">
+                                </div>
+                                <div class="col s12">
+                                    <h6 class="settings_tittle">
+                                        Host computer
+                                        <div class="switch right">
+                                            <label>
+                                                <input ng-change="updateSettings()" type="checkbox" ng-model="settings.auto_update">
+                                                <span class="lever"></span>
+                                            </label>
+                                        </div>
+                                        <br><small class="blue-grey-text">Allow this computer to broadcast database records to peers.</small>
+                                    </h6>
+                                    <hr>
+                                    <h6 class="settings_tittle">
+                                        Enable broadcast
+                                        <div class="switch right">
+                                            <label>
+                                                <input ng-change="updateSettings()" type="checkbox" ng-model="settings.back_up" />
+                                                <span class="lever"></span>
+                                            </label>
+                                        </div>
+                                        <br><small class="blue-grey-text">Automatically broadcast changes to peers.</small>
+                                    </h6>
+                                    <hr>
+                                    <h6 class="settings_tittle">
+                                        Enable remote printing
+                                        <div class="switch right">
+                                            <label>
+                                                <input ng-change="updateSettings()" type="checkbox" ng-model="settings.performance_report" ng-disabled="!currentUser.is_mgr">
+                                                <span class="lever"></span>
+                                            </label>
+                                        </div>
+                                        <br><small class="blue-grey-text">Enable remote printing.</small>
+                                    </h6>
+                                    <hr>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                     <div ng-switch-when="about" class="row">
+                         <p class="title">About Software</p>
+                         <span>Snap Burger CMS powered by <strong>nudle</strong> </span>
+                         <ul class="versions browser-default">
+                             <li>Version 2.0.2</li>
+                             <li>Licenced under ISC</li>
+                             <li>Registered to <strong>SnapBurger</strong></li>
+                         </ul>
+                         <p class="title">About Developer</p>
+                         <ul>
+                             <li><span><strong>Contributor:</strong> Hubert Formin</span></li>
+                             <li><span><strong>Distributed by:</strong> Silverslopescm</span></li>
+                             <li class="orange-text" ng-click="openExternal({type:'url',msg:'https://silverslopecm.ml'})" style="text-decoration:underline;cursor:pointer;">Visit developers website</li>
+                         </ul>
+                     </div>
                 </div>
             </div>
-            <h6 class="settings_tittle">
-                Updates
-                <div class="switch right">
-                    <label>
-                      <input ng-change="updateSettings()" type="checkbox" ng-model="settings.auto_update" ng-disabled="!currentUser.is_mgr">
-                      <span class="lever"></span>
-                    </label>
-                </div>
-                <br><small class="blue-grey-text">Automatically check for updates when connected to network</small>
-            </h6>
-            <hr>
-            <h6 class="settings_tittle">
-                Back up
-                <div class="switch right">
-                    <label>
-                      <input ng-change="updateSettings()" type="checkbox" ng-model="settings.back_up" ng-disabled="!currentUser.is_mgr">
-                      <span class="lever"></span>
-                    </label>
-                </div>
-                <br><small class="blue-grey-text">Automatically back up database when connected to network</small>
-            </h6>
-            <hr>
-            <h6 class="settings_tittle">
-                Performance reports
-                <div class="switch right">
-                    <label>
-                      <input ng-change="updateSettings()" type="checkbox" ng-model="settings.performance_report" ng-disabled="!currentUser.is_mgr">
-                      <span class="lever"></span>
-                    </label>
-                </div>
-                <br><small class="blue-grey-text">Periodically send logs to developers (recommended)</small>
-            </h6>
-            <hr>
-            <p class="title">About Software</p>
-            <span>Snap Burger CMS(Nudle)</span>
-            <ul class="versions browser-default">
-                <li>Version 1.0.1</li>
-                <li>Full liscence</li>
-                <li>Registered to SnapBurger17</li>
-            </ul>
-            <p class="title">About Developer</p>
-            <ul>
-                <li><span><strong>Contributor:</strong> Hubert Formin</span></li>
-                <li><span><strong>Distributed by:</strong> Silverslopescm</span></li>
-                <li class="orange-text" ng-click="openExternal({type:'url',msg:'https://silverslopecm.ml'})" style="text-decoration:underline;cursor:pointer;">Visit developers website</li>
-            </ul>
         </div>
     </div>
 </div>

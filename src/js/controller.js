@@ -44,6 +44,9 @@ app.controller("mainCtr", ($scope, $filter) => {
         localStorage.setItem("PUSH_DATE","30");
     }
     //listening to worker
+    $scope.SETTINGS = {
+        connect_host:false
+    };
     $scope.alerted = null;
     worker.onmessage = (e) => {
         switch (e.data) {
@@ -103,8 +106,9 @@ app.controller("mainCtr", ($scope, $filter) => {
     $scope.currentUser = {};
     $scope.products = {
         categories: [],
-        items: []
-    }
+        items: [],
+        orderCategories:[]
+    };
     $scope.settings = [];
     $scope.withdrawals = [];
     $scope.todaysCompletedOrders = [];
@@ -121,7 +125,19 @@ app.controller("mainCtr", ($scope, $filter) => {
         settings: "&id,tableNumber,time_range,auto_update,back_up,performance_report,app_id",
         withdrawals: "++id,&inv,category,reason,receiver,amount,date,staff",
         tracker: "++id,type,tableName,data,date,status"
-    })
+    });
+    $scope.db.version(2).stores({
+        items: "++id,&name,rate,category,status,action,orderCategory",
+        orders: "++id,&inv,date,*items,totalPrice,tableNum,totalQuantity,staff,completed",
+        orderCategory:"++id,&name",
+        reportsDate:"&id,startDate, endDate",
+        settings: "&id,tableNumber,time_range,auto_update,back_up,performance_report,app_id, host_url,host, print_extra,language",
+        itemSync:"state",
+    }).upgrade (trans => {
+        return trans.orders.toCollection().modify (item => {
+            item.completed = true;
+        });
+    });
 
     //$scope.db.open();
     //by default wahen there is no data,i.e when the database is just created, we add this to settings
@@ -146,7 +162,7 @@ app.controller("mainCtr", ($scope, $filter) => {
         $scope.db.settings.get(1)
             .then((res) => {
                 $scope.settings = res;
-            })
+            });
         $scope.db.users.toArray()
             .then((data) => {
                 $scope.users = data;
@@ -159,6 +175,11 @@ app.controller("mainCtr", ($scope, $filter) => {
                 });
             });
         //fetched users and now fetching categories
+        $scope.db.orderCategory.each((item) => {
+                $scope.products.orderCategories.push({name:item.name, template:''});
+            }).then(() => {
+        });
+        //CATEGORIES
         $scope.db.categories.count()
             .then((count) => {
                 $scope.CATEGORIES_COUNT = count;
@@ -182,7 +203,7 @@ app.controller("mainCtr", ($scope, $filter) => {
         $scope.$apply();
     }
     //fetching Data
-    $scope.db.transaction('r', $scope.db.users, $scope.db.orders, $scope.db.categories, $scope.db.items, $scope.db.settings, $scope.db.withdrawals, () => {
+    $scope.db.transaction('r', $scope.db.users, $scope.db.orders, $scope.db.categories, $scope.db.items, $scope.db.settings,$scope.db.orderCategory, $scope.db.withdrawals, () => {
             $scope.transactionableFetch();
         })
         .then(() => {
@@ -488,7 +509,7 @@ app.controller("mainCtr", ($scope, $filter) => {
             msg
         });
         ipcRenderer.send('asynchronous-message', send)
-    }
+    };
     //open external
     $scope.openExternal = ({
         type,
@@ -538,9 +559,9 @@ app.controller("mainCtr", ($scope, $filter) => {
     /*
         ====================== PRINTER FUCTION ======================
     */
-    $scope.printOrders = (data) => {
+    $scope.printOrders = (data, extra = false) => {
         const date = `${data.date.getDate()}/${data.date.getMonth()+1}/${data.date.getFullYear()} ,${data.date.getHours()}:${data.date.getMinutes()}`;
-        var print_data = [
+        let print_data = [
             {
                 type: 'bodyInit',
                 css: {
@@ -550,8 +571,12 @@ app.controller("mainCtr", ($scope, $filter) => {
             },
             {
                 type: 'text',
-                value: '<h1>SnapBurger</h1>',
+                value: '<h1 style="margin-bottom: 0;">SnapBurger</h1>',
                 style: `font-family:kaushan Script;text-align:center;font-weight:bold;`
+            },{
+                type: 'text',
+                value:`${data.inv} - ${data.waiter}`,
+                style: `text-align:center;font-size:0.7rem;font-weight:bold;margin: 2%;font-family:inconsolata;`
             },
             {
                 type: 'text',
@@ -559,8 +584,15 @@ app.controller("mainCtr", ($scope, $filter) => {
                 style: `font-size: 14px;text-align:center;font-family:inconsolata;`
             }]
         //FileSaver.js
-        var th = "";
+        let th = "";
         data.items.forEach(el => {
+            $scope.products.orderCategories.map((il) => {
+                if (el.orderCategory === il.name) {
+                    il.template +=  `<tr style="border-bottom:1px dotted #999;padding:5px 0;text-align:center;">
+             <td style="padding:7px 2px;">${el.name}</td>
+             <td style="padding:7px 2px;">${el.quantity}</td></tr>`;
+                }
+            });
             th += `<tr style="border-bottom:1px dotted #999;padding:5px 0;text-align:center;">
              <td style="padding:7px 2px;">${el.name}</td>
              <td style="padding:7px 2px;">${el.quantity}</td>
@@ -600,7 +632,7 @@ app.controller("mainCtr", ($scope, $filter) => {
                 value: '@snapburger17',
                 style: `text-align:center;font-size: 12px`
             }
-     ])
+     ]);
         //printing....
         print.print58m({
             data: print_data,
@@ -627,7 +659,54 @@ app.controller("mainCtr", ($scope, $filter) => {
                 msg: "-Make sure printer is connected to PC<br>-Check if printer drivers are up-to-date",
                 type: "error"
             });
-        })
+        });
+        //iterating tipring categories list
+        if (extra) {
+            for (let i = 0;i < $scope.products.orderCategories.length;i++) {
+                if ($scope.products.orderCategories[i].template !== '') {
+                    const _print = [{
+                        type: 'text',
+                        value: '<h1 style="margin-bottom: 0;">SnapBurger</h1>',
+                        style: `font-family:kaushan Script;text-align:center;font-weight:bold;`
+                    },{
+                        type: 'text',
+                        value:`${data.inv} - ${data.waiter}`,
+                        style: `text-align:center;font-size:0.7rem;font-weight:bold;margin: 2%;font-family:inconsolata;`
+                    },{
+                        type: 'text',
+                        value: `<table><tbody>${$scope.products.orderCategories[i].template}</tbody></table>`,
+                        style: `font-family: inconsolata;text-align:center;`
+                    }]
+                    //printing....
+                    print.print58m({
+                        data: _print,
+                        preview:false,
+                        deviceName: 'XP-80C',
+                        timeoutPerLine: 400
+                    }).then((data) => {
+                        if (data) {
+                            notifications.notify({
+                                msg: "Added to printing queue",
+                                type: "ok"
+                            });
+                        } else {
+                            notifications.notify({
+                                title: "Print error",
+                                msg: "Error printing",
+                                type: "error"
+                            });
+                        }
+                    }).catch(err => {
+                        console.error(err);
+                        notifications.notify({
+                            title: "Print error",
+                            msg: "-Make sure printer is connected to PC<br>-Check if printer drivers are up-to-date",
+                            type: "error"
+                        });
+                    });
+                }
+            }
+        }
     }
     //fucntion to print withwrals
     $scope.printWithdrawals = (data) => {
@@ -789,7 +868,7 @@ app.controller("mainCtr", ($scope, $filter) => {
             }
             $scope.createNewWithdrawal();
         }
-    })
+    });
 
     /**
      * @function socket create sockets on serve
@@ -816,11 +895,11 @@ app.controller("mainCtr", ($scope, $filter) => {
         //sending before sending in intervals
         //1.0 sending overall records
         worker.postMessage("get-reports");
-        //to get daily reports 
+        //to get daily reports
         //2.0 sending records of day
-        setInterval(() => {
+        /*setInterval(() => {
             worker.postMessage("get-daily-reports");
-        }, 60000)
+        }, 60000);*/
         //listening to workers
         worker.onmessage = (e)=>{
             try{
@@ -841,16 +920,39 @@ app.controller("mainCtr", ($scope, $filter) => {
                 //console.error(e);
                 return;
             }
-        }
+        };
+        //listening from client
+        socket.on('get-records', ()=>{
+            worker.postMessage("get-reports");
+        });
+
+        socket.on('process_orders', (data)=>{
+            const order = JSON.parse(data);
+
+            order.data.date = new Date(order.data.date);
+            console.log(order);
+            $scope.db.orders.add(order.data)
+                .then(()=>{
+                    if(order.print) {
+                        $scope.printOrders(order.data);
+                    } else {
+                        console.log(order.data);
+                    }
+                }).catch((err)=>{
+                    console.error(err);
+                notifications.notify({
+                    type: "error",
+                    title: `Failed to save order`,
+                    msg: `Failed to save order from peer computer`
+                }, 4000, true)
+            });
+        });
+
     });
-    
-    $scope.io.on("disconnect", () => {
-        console.log("disconnect");
-    })
+
 
 
     $scope.setPushDate = ()=>{
-        console.log()
         $scope.PUSH_DATE_INTERVAL = jQuery('#push_select').val();
         localStorage.setItem("PUSH_DATE",$scope.PUSH_DATE_INTERVAL);
     }
@@ -858,11 +960,88 @@ app.controller("mainCtr", ($scope, $filter) => {
      ========================    hooks ================
     */
     //items
-    $scope.db.items.hook('reading', function (obj) {
-        worker.postMessage('update-db-file');
-        Status.insertLeft(`<i class="material-icons grey-text">info</i> Configurations loaded.`);
+    //TODO uncomment the back up file from worker in controller js
+    //worker.postMessage('update-db-file');
+    Status.insertLeft(`<i class="material-icons grey-text">info</i> Configurations loaded`);
 
-        return obj;
-    });
+    $scope.client_socket = null;
+
+    $scope.connectToHost = (connect) => {
+        if (connect) {
+            $scope.client_socket = io.connect('http://192.168.100.54:4000');
+            $scope.client_socket.on('connected', ()=>{
+                //$scope.SETTINGS.connect_host = true;
+                console.log("connected.");
+                //starting progress bar
+                Status.progress(2);
+                Status.insertLeft("Connecting to host...");
+            });
+            //
+            $scope.client_socket.on('records', (records) => {
+                console.log("records");
+                const data = JSON.parse(records);
+                const _total_ = data.sales.length + data.products.category.length + data.products.items.length + data.users.length + data.withdrawals.length;
+
+                $scope.db.transaction('rw', $scope.db.users, $scope.db.orders, $scope.db.categories, $scope.db.items, $scope.db.withdrawals,()=>{
+                    $scope.db.categories.clear().then(()=>{
+                        $scope.db.categories.bulkPut(data.products.category).then(()=>{
+                            Status.progress(((data.products.category.length) / (_total_) ) * 100);
+                        });
+                    });
+
+                    $scope.db.items.clear().then(()=>{
+                        $scope.db.items.bulkPut(data.products.items).then(() => {
+                            Status.progress(((data.products.category.length + data.products.items.length ) / (_total_) ) * 100);
+                        })
+                    });
+
+                    $scope.db.orders.clear().then(()=>{
+                        $scope.db.orders.bulkPut(data.sales).then(() => {
+                            Status.progress(((data.products.category.length + data.products.items.length + data.sales.length) / (_total_) ) * 100);
+                        })
+                    });
+
+                    $scope.db.withdrawals.clear().then(() => {
+                        $scope.db.withdrawals.bulkPut(data.withdrawals).then(() => {
+                            Status.progress(((data.products.category.length + data.products.items.length + data.sales.length + data.withdrawals.length) / (_total_) ) * 100);
+                        })
+                    });
+
+                    $scope.db.users.clear().then(()=> {
+                        $scope.db.users.bulkPut(data.users).then(() => {
+                            Status.progress(((data.products.category.length + data.products.items.length + data.sales.length + data.withdrawals.length + data.users.length) / (_total_) ) * 100);
+                        })
+                    })
+                }).then(()=> {
+                    $scope.SETTINGS.connect_host = true;
+                    Status.insertLeft(`<i class="material-icons green-text">check_circle</i> Connected to host.`);
+                    //show disabled message
+                    Status.insertRight(`<i class="material-icons brown-text">portable_wifi_off</i> Host server disabled.`);
+                    Status.progress("end");
+                    $scope.$apply();
+                }).catch((err)=>{
+                    console.error(err);
+                })
+            });
+            //disconnect
+            $scope.client_socket.on('disconnect',()=>{
+                $scope.SETTINGS.connect_host = false;
+                Status.insertRight(`<i class="material-icons blue-text">wifi_tethering</i> Host server running.`);
+                Status.insertRight("Not connected to host.");
+            })
+
+        } else {
+            $scope.SETTINGS.connect_host = false;
+            Status.insertLeft("Not connected to host.");
+            Status.insertRight(`<i class="material-icons blue-text">wifi_tethering</i> Host server running.`);
+        }
+    };
+
+    //refresh db
+    $scope.refreshDB = () => {
+        $scope.client_socket.emit("get-records",true);
+    }
+
+
 
 }) //end main controller, nothing should come after here!

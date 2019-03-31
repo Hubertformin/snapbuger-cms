@@ -78,7 +78,8 @@ const Dexie = require('dexie');
     users = [],
     products = {
         categories: [],
-        items: []
+        items: [],
+        orderCategory:[]
     },
     settings = [],
     withdrawals =  [];
@@ -95,6 +96,14 @@ try {
         withdrawals:"++id,inv,reason,amount,date",
         tracker:"++id,type,tableName,data,date,status"
     })
+    db.version(2).stores({
+        items: "++id,&name,rate,category,status,action,orderCategory",
+        orders: "++id,&inv,date,*items,totalPrice,tableNum,totalQuantity,staff,completed",
+        orderCategory:"++id,&name",
+        reportsDate:"&id,startDate, endDate",
+        settings: "&id,tableNumber,time_range,auto_update,back_up,performance_report,app_id, host_url,host, print_extra,language",
+        itemSync:"state",
+    })
 } catch (e) {
     //
 }
@@ -102,7 +111,7 @@ try {
 //fetching database
 function fetchDatabase() {
     return new Promise((resolve,reject)=>{
-        db.transaction('r', db.users, db.orders, db.categories, db.items, db.settings,db.withdrawals,db.settings, () => {
+        db.transaction('r', db.users, db.orders, db.categories, db.items, db.settings,db.withdrawals,db.settings,db.orderCategory, () => {
             db.settings.get(1)
                 .then((res) => {
                     settings = res;
@@ -129,11 +138,11 @@ function fetchDatabase() {
             db.withdrawals.toArray()
                 .then((data)=>{
                     withdrawals = data;
+                });
+            db.orderCategory.toArray()
+                .then((data) => {
+                    products.orderCategory = data;
                 })
-            db.settings.get(1)
-            .then(data=>{
-                settings = data;
-            })
         })
         .then(() => {
             //DO NOT CHANGE ORDER OF THIS ARRAY, OTHER FUNCTIONS DEPEND ON IT!!!!!!!!!!!!
@@ -143,7 +152,8 @@ function fetchDatabase() {
                 {table: "items",data: products.items},
                 {table: "orders",data: orders},
                 {table: "settings",data: settings},
-                {table: "withdrawals",data: withdrawals}
+                {table: "withdrawals",data: withdrawals},
+                {table:"orderCategory", data: products.orderCategory}
             ]
             //code to write when fetching of database succedeed!
             resolve(data);
@@ -153,6 +163,8 @@ function fetchDatabase() {
         })
     })
 }
+
+//function get pos data
 
 function checkTimeRange() {
     try {
@@ -355,7 +367,7 @@ function readDBFile(){
 //update DB from file 
 function updateDBFromFile(data){
     return new Promise((resolve,reject)=>{
-        db.transaction('rw',db.orders,db.users,db.categories,db.items,db.withdrawals,db.settings,()=>{
+        db.transaction('rw',db.orders,db.users,db.categories,db.items,db.withdrawals,db.settings,db.orderCategory,()=>{
             data.forEach(el=>{
                 switch(el.table){
                     case 'users':
@@ -382,6 +394,9 @@ function updateDBFromFile(data){
                     case 'settings':
                         db.settings.put(el.data);
                     break;
+                    case 'oderCategory':
+                        db.orderCategory.put(el.data);
+                        break;
                 }
             })
         })

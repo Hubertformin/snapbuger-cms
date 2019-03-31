@@ -32,7 +32,7 @@
                         <div class="collapsible-header head">
                             <div class="header bg-theme">
                                 <h2 class="white-text">
-                                    Categories<br><small>Manage categories (Click to edit)</small>
+                                    Categories<br><small>Manage categories (Click to expand)</small>
                                 </h2>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                                 </ul>
                                 <div class="searchTable">
                                     <span><strong>Total items: {{products.categories.length}}</strong></span>
-                                    <input type="search" onkeyup="searchTable(event,'#categoriesTable')" name="" placeholder="Search Table.." id="">
+                                    <input type="search" onkeyup="searchTable(event,'#categoriesTable')" name="" placeholder="Search Table..">
                                 </div>
                                 <table class="huberts-tables mdl-data-table" style="width:100%">
                                     <thead>
@@ -106,6 +106,78 @@
                         </div>
                     </li>
             </ul>
+            <!--order Categories box -->
+            <ul class="collapsible">
+                    <li class="active">
+                        <div class="collapsible-header head">
+                            <div class="header bg-theme">
+                                <h2 class="white-text">
+                                    Order Categories<br><small>Manage order categories (Click to expand)</small>
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="collapsible-body rounded">
+                            <div class="body">
+                                <ul ng-show="currentUser.is_mgr" class="collapsible">
+                                    <li>
+                                        <div class="collapsible-header"><i class="material-icons">add</i>Create Order Category</div>
+                                        <div class="collapsible-body">
+                                            <div class="row">
+                                                <form action="#" id="createOrderCategoryForm" class="col s12" name="categoriesForm">
+                                                    <div class="row">
+                                                        <div class="input-field col s6">
+                                                            <input data-error="Invalid Name" id="o_category_name" type="text" ng-model="orderCategory_name" name="category_name" class="validate" placeholder="Name">
+                                                        </div>
+                                                        <div class="col s6">
+                                                            <button type="submit" class="waves-effect waves-light btn bg-theme-rev">Add</button>
+                                                        </div>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div class="searchTable">
+                                    <span><strong>Total items: {{products.orderCategories.length}}</strong></span>
+                                    <input type="search" onkeyup="searchTable(event,'#orderCategoriesTable')" placeholder="Search Table..">
+                                </div>
+                                <table class="huberts-tables mdl-data-table" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th class="small">#</th>
+                                            <th>Category name</th>
+                                            <th class="small" ng-show="currentUser.is_mgr"><i class="material-icons">build</i></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <div class="huberts-table-div">
+                                    <div ng-show="products.categories.length == 0" class="no-data">
+                                        <p>No order categories, Create orders categories</p>
+                                    </div>
+                                    <table id="orderCategoriesTable" class="huberts-tables mdl-data-table" style="width:100%">
+                                        <tbody>
+                                            <tr ng-repeat="x in products.orderCategory track by $index">
+                                                <td class="small">{{$index+1}}</td>
+                                                <td>{{x.name}}</td>
+                                                <td class="small" ng-show="currentUser.is_mgr"><i ng-click="deleteOrderCategories(x.id)" class="material-icons">delete</i></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <table class="huberts-tables">
+                                    <tfoot>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Category name</th>
+                                            <th class="small" ng-show="currentUser.is_mgr"></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </li>
+            </ul>
         </div>
         <div id="test2" class="col s12">
              <!--Item box -->
@@ -114,7 +186,8 @@
                         <div class="collapsible-header head">
                             <div class="header white">
                                 <h2 class="">
-                                    Items <br><small>Manage products (Click to edit)</small>
+                                    Items <br><small>Manage products (Click to expand)</small>
+                                    <!--<button class="right btn" ng-click="resetItemCategory()">Reset order category</button>-->
                                 </h2>
                             </div>
                         </div>
@@ -131,10 +204,9 @@
                                                             <input data-error="Invalid Name" id="item_name" type="text" placeholder="Name" name="item_name" ng-model="item_name" class="validate">
                                                         </div>
                                                         <div class="input-field col s6">
-                                                            <label style="transform: translateY(-21px);" for="item_status">Status</label>
-                                                            <select class="browser-default" name="item_status" ng-model="item_status" class="validate" id="item_status">
-                                                        <option value="available">Available</option>
-                                                        <option value="unavailable">Unavailable</option>
+                                                            <select title="Order category" class="browser-default" name="item_status" ng-model="item_orderCategory" id="item_status">
+                                                                <option value="">Select order category</option>
+                                                                <option value="{{oc.name}}" ng-repeat="oc in products.orderCategory track by $index">{{oc.name}}</option>
                                                     </select>
                                                         </div>
                                                     </div>
@@ -175,7 +247,7 @@
                                             <th>Item name</th>
                                             <th>Rate(FCFA)</th>
                                             <th>Category</th>
-                                            <th>Status</th>
+                                            <th>Order category</th>
                                             <th class="small" ng-show="currentUser.is_mgr"><i class="material-icons">build</i></th>
                                         </tr>
                                     </thead>
@@ -196,10 +268,9 @@
                                         </select>
                                                 </td>
                                                 <td>
-                                                    <select ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" ng-model="x.status" class="browser-default">
-                                        <option value="available">Available</option>
-                                        <option value="unavailable">Unavailable</option>
-                                    </select>
+                                                    <select ng-disabled="!currentUser.is_mgr" ng-change="updateItems($index)" ng-model="x.orderCategory" class="browser-default">
+                                                        <option value="{{oc.name}}" ng-repeat="oc in products.orderCategory track by $index">{{oc.name}}</option>
+                                                     </select>
                                                 </td>
                                                 <td class="small" ng-show="currentUser.is_mgr"><i ng-click="deleteItems($index)" class="material-icons">delete</i></td>
                                             </tr>

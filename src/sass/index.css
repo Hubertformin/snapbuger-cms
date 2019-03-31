@@ -23,6 +23,10 @@
   padding: 0 !important;
 }
 
+.b-0 {
+  border: 0 !important;
+}
+
 .m-0 {
   margin: 0 !important;
 }
@@ -30,6 +34,10 @@
 .brb {
   border-bottom: 1px solid #ddd;
   padding-bottom: 5px;
+}
+
+#footer_progress_container {
+  display: none;
 }
 
 .position-relative {
@@ -288,7 +296,7 @@ main {
   top: 65px;
   left: 0;
   right: 0;
-  bottom: 20px;
+  bottom: 25px;
   overflow-y: scroll;
 }
 
@@ -298,9 +306,9 @@ footer {
   background-color: #fff;
   left: 0;
   right: 0;
-  height: 20px;
+  height: 25px;
   bottom: 0;
-  font-size: 12px;
+  font-size: 13px;
 }
 footer i.material-icons {
   font-size: small;
@@ -1301,7 +1309,6 @@ div#reports table th.small {
 }
 div#reports table tr td {
   width: 16.6%;
-  padding: 0;
 }
 div#reports table tr td.small {
   width: 3%;
@@ -1506,6 +1513,16 @@ section#body {
   bottom: 0;
   background-color: #fff;
   z-index: 5;
+}
+#reports .preview-overlay {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #fff;
+  z-index: 3;
 }
 
 /*# sourceMappingURL=index.css.map */

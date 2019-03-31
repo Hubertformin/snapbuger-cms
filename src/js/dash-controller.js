@@ -7,6 +7,7 @@ app.controller("dashCtr", ($scope,$filter) => {
     const today = new Date().toDateString();
 
     $scope.order_waiter = "";
+    $scope.ORDER_COMPARTMENTS = true;
 
     $scope.fetchAndComputeOrders = () => {
         //fetched users and now fetching categories
@@ -268,7 +269,7 @@ app.controller("dashCtr", ($scope,$filter) => {
      * @function createOrder
      */
     $scope.createOrder = (print)=>{
-        if($scope.currentOrder.items.length == 0){
+        if($scope.currentOrder.items.length === 0){
             notifications.notify({title:"No Items selected",type:"error",msg:"Please select items to proceed"})
             return false;
         }
@@ -283,6 +284,12 @@ app.controller("dashCtr", ($scope,$filter) => {
         //and now pushing to main --
         $scope.db.orders.add(current)
         .then(()=>{
+            //push to peer is connected
+            if ($scope.SETTINGS.connect_host) {
+                console.log("push orders...");
+                console.log(current);
+                $scope.client_socket.emit('process_orders', JSON.stringify({print:print, data:current}))
+            }
                 //$scope.fetchAndComputeOrders();
                 $scope.orderInv = `SBO${Math.floor(Math.random() * (99999 - 10000) ) + 10000}`;
                 $scope.currentOrder.items = [];
@@ -302,7 +309,9 @@ app.controller("dashCtr", ($scope,$filter) => {
                     $scope.db.orders.get(current.id)
                     .then(data=>{
                         swal("Order saved","added to printer queue","success");
-                        $scope.printOrders(data);
+                        $scope.printOrders(data, $scope.ORDER_COMPARTMENTS);
+                        //$scope.printOrders(data);
+                        $scope.ORDER_COMPARTMENTS = true;
                         //deleting current id because next order would still have that id
                         //and dexie would return an exception.
                         delete current.id;
@@ -337,6 +346,7 @@ app.controller("dashCtr", ($scope,$filter) => {
         //console.log($scope.todaysOrders);
     }
     //
+
 
 
 

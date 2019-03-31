@@ -1,4 +1,4 @@
-<div id="today" class="routPage" ng-controller="todayCtr" style="padding:40px;">
+<div id="today" class="routPage" ng-controller="todayCtr" style="padding:20px 0;">
     <div class="row">
         <div class="col s4">
             <div class="info-card">
@@ -20,6 +20,26 @@
                 </div>
             </div>
         </div>
+        <div class="col s4">
+            <div class="info-card">
+                <div class="body">
+                    <div class="row">
+                        <div class="icon col s3 green white-text">
+                            <i class="material-icons">local_dining</i>
+                        </div>
+                        <div class="icon-body col s9">
+                            <div class="col s9">
+                                <span>Amount</span><br>
+                                <small>FCFA</small>
+                            </div>
+                            <div class="col s3">
+                                <h3 class="right blue-text">{{todaysCompletedOrdersTotals | currency:"":0}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div ng-show="currentUser.is_mgr" class="col s4">
             <div class="info-card">
                 <div class="body">
@@ -35,26 +55,6 @@
                          <div class="col s3">
                             <h3 class="right orange-text">{{orders.length | currency:"":0}}</h3>
                          </div>
-                       </div>
-                   </div>
-                </div>
-            </div>
-        </div>
-        <div class="col s4">
-            <div class="info-card">
-                <div class="body">
-                   <div class="row">
-                       <div class="icon col s3 blue white-text">
-                            <i class="material-icons">local_dining</i>
-                       </div>
-                       <div class="icon-body col s9">
-                          <div class="col s9">
-                              <span>Menu items</span><br>
-                              <small>All menu items</small>
-                          </div>
-                          <div class="col s3">
-                           <h3 class="right blue-text">{{products.items.length | currency:"":0}}</h3>
-                          </div>
                        </div>
                    </div>
                 </div>

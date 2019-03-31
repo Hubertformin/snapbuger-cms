@@ -23,6 +23,7 @@ app.controller('reportsCtr',($scope, $filter)=>{
         totalPrice:0,
         orders:[],
         date_range:"today",
+        users_activity:[]
     };
     //the current filter date
     $scope.FILTER_DATE = "today";
@@ -70,6 +71,7 @@ app.controller('reportsCtr',($scope, $filter)=>{
      * @param {Object} startDate Start date 
      * @param {Object} endDate End date 
      */
+
     function generateReport(startDate, endDate) {
         return new Promise((resolve, reject)=>{
             //refixing dates
@@ -83,7 +85,10 @@ app.controller('reportsCtr',($scope, $filter)=>{
                 totalQuantity:0,
                 orders:[],
                 date_range:"",
-            };
+                users_activity: $scope.users.map((el) => {
+                    return {name: el.name,quantity:0, amount:0, orders:0}
+                })
+            }
 
             $scope.db.transaction('rw',$scope.db.categories, $scope.db.items,$scope.db.orders,()=>{
                 //checking if they're orders in the selected date range
@@ -92,6 +97,7 @@ app.controller('reportsCtr',($scope, $filter)=>{
                         jQuery("#no_records").fadeIn("fast");
                         return;
                     }
+                    $scope.REPORTS.totalOrders = count;
                     jQuery("#no_records").fadeOut("fast");
                     //if not empty
                     jQuery('#orders_table_body').html('');
@@ -116,7 +122,7 @@ app.controller('reportsCtr',($scope, $filter)=>{
 
                     $scope.db.categories.each((category)=>{
 
-                        report_data.categorical.push({name:category.name,amount:0,quantity:0,date:(startDate.toDateString() !== endDate.toDateString())?`${startDate.toDateString()} - ${endDate.toDateString()}`:startDate.toDateString()});
+                        report_data.categorical.push({name:category.name,amount:0,quantity:0,items:[],date:(startDate.toDateString() !== endDate.toDateString())?`${startDate.toDateString()} - ${endDate.toDateString()}`:startDate.toDateString()});
 
                     }).then(()=>{
                         //After getting all categories, loop through orders to get sales
@@ -132,27 +138,47 @@ app.controller('reportsCtr',($scope, $filter)=>{
                             report_data.categorical.map((el) => {
                                 order.items.forEach(item => {
                                     if (el.name === item.category) {
+                                        //trying to reduce thesame items to one
+                                        let e_index = -1;
+                                        for (let i =0; i < el.items.length;i++) {
+                                            if (el.items[i].name === item.name) {
+                                                e_index = i;
+                                            }
+                                        }
+                                        if (e_index > -1) {
+                                            el.items[e_index].quantity += Number(item.quantity);
+                                            el.items[e_index].price += Number(item.price);
+                                        } else {
+                                            el.items.push(item);
+                                        }
+
+                                        //doing common category summations
                                         el.amount += Number(item.price);
                                         el.quantity += Number(item.quantity);
                                     }
                                 });
-                            })
+                            });
+
+                            //interating through users to get data
+                            report_data.users_activity.forEach((el) => {
+                                if (el.name === order.waiter) {
+                                    el.quantity += Number(order.totalQuantity);
+                                    el.amount += Number(order.totalPrice);
+                                    el.orders += 1;
+                                }
+                            });
 
                             //other orders iterable methods...
-                            report_data.orders.push(order);
+                            //report_data.orders.push(order);
                             //generating static template
                             let template = `
-                            <tr>
+                            <tr onclick="showCurrentOrder(event, ${order.id})">
                                 <td>${order.date.toDateString()} <br /> <small>At ${order.date.getHours()}:${order.date.getMinutes()}</small></td>
-                                <td>${$filter('currency')(order.totalPrice,"FCFA ",0)}</td>
+                                <td style="font-weight: 700;" class="green-text">${$filter('currency')(order.totalPrice,"FCFA ",0)}</td>
                                 <td style="width:5%">${order.totalQuantity}</td>
-                                <td>${(order.waiter !== undefined)?order.waiter:"(no recipient)"}</td>
+                                <td style="font-weight: 600;" class="red-text">${(order.waiter !== undefined)?order.waiter:"(no user)"}</td>
                                 <td>${order.staff}</td>
-                                <td><ul>
                         `;
-                            order.items.forEach(item => {
-                                template += `<li>${item.name} (${item.quantity})</li>`
-                            });
                             template += `<td>${order.inv}</td>${($scope.currentUser.is_mgr)?`<td style="width:4%"><i onclick="deleteOrder(event,${order.id})" class="deleteOrderIcon material-icons">delete</i></td>`:''}</ul></td></tr>`;
                             jQuery('#orders_table_body').prepend(jQuery(template));
                             //destroy template var
@@ -250,17 +276,54 @@ app.controller('reportsCtr',($scope, $filter)=>{
 
     //delete order
     $scope.deleteOrder = (e,index) => {
-        $scope.db.orders.delete(Number(index))
-            .then(() => {
-                jQuery(e.target).parents("tr").remove();
-            }).catch((err)=>{
+        if(confirm("Are you sure you want to delete?")) {
+            $scope.db.orders.delete(Number(index))
+                .then(() => {
+                    jQuery(e.target).parents("tr").remove();
+                }).catch((err)=>{
                 console.error(err);
                 notifications.notify({msg:`Unable to delete sale`,title:"Unknown error",type:"error"});
-        })
+            })
+        }
     };
+
+    //show preview of items
+    $scope.showPreviewItems = (index, master = false) => {
+        if (!master) {
+            $scope.showCurrentOrderPane = false;
+            $scope.currentCategoryReport = $scope.REPORTS.categorical[index];
+            jQuery('#preview-items').fadeIn('fast');
+            //console.log($scope.currentCategoryReport)
+        }  else {
+            jQuery('#preview-items').fadeOut('fast');
+        }
+    };
+
+    //show current order
+    $scope.currentOrder = {};
+    $scope.showCurrentOrderPane = false;
+
+    $scope.showCurrentOrder = (e,id) => {
+        if (jQuery(e.target).is('i.deleteOrderIcon')) return;
+        //getting order
+        $scope.db.orders.get(id, (order) => {
+            if (typeof order === undefined) {
+                notifications.notify({title:"Record not found!", msg:"The order doesn't exist in database.",type:"error"});
+                return;
+            }
+            $scope.showCurrentOrderPane = true;
+            $scope.currentOrder = order;
+            $scope.currentOrder.date = order.date.toDateString();
+            $scope.$apply();
+        })
+    }
 
 });
 
 function deleteOrder(event,index) {
     angular.element(jQuery("#reports")).scope().deleteOrder(event,index);
+}
+
+function showCurrentOrder(event,id) {
+    angular.element(jQuery("#reports")).scope().showCurrentOrder(event,id);
 }
