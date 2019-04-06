@@ -1,6 +1,6 @@
-<div id="today" class="routPage" ng-controller="todayCtr" style="padding:20px 0;">
+<div id="today" class="routPage" ng-controller="todayCtr" style="padding:20px 0;" ng-init="view = 'All'">
     <div class="row">
-        <div class="col s4">
+        <!--<div class="col s3">
             <div class="info-card">
                 <div class="body">
                    <div class="row">
@@ -8,9 +8,8 @@
                            <i class="material-icons">shopping_basket</i>
                        </div>
                        <div class="icon-body col s9">
-                         <div class="col s9">
-                          <span>Today's orders</span><br>
-                          <small>Orders recorded today</small>
+                         <div class="label pink-text col s9">
+                          <span>Today's orders</span>
                          </div>
                          <div class="col s3">
                            <h3 class="right pink-text">{{todaysCompletedOrders.length | currency:"":0}}</h3>
@@ -19,7 +18,7 @@
                    </div>
                 </div>
             </div>
-        </div>
+        </div>-->
         <div class="col s4">
             <div class="info-card">
                 <div class="body">
@@ -28,85 +27,241 @@
                             <i class="material-icons">local_dining</i>
                         </div>
                         <div class="icon-body col s9">
-                            <div class="col s9">
-                                <span>Amount</span><br>
-                                <small>FCFA</small>
+                            <div class="label green-text">
+                                <span>All <span class="bob green">{{todaysCompletedOrders.length | currency:"":0}}</span></span>
                             </div>
-                            <div class="col s3">
-                                <h3 class="right blue-text">{{todaysCompletedOrdersTotals | currency:"":0}}</h3>
+                            <div class="col s12" style="padding: 0;">
+                                <h4 class="right green-text amount">{{Amounts.all | currency:"FCFA ":0}}</h4>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div ng-show="currentUser.is_mgr" class="col s4">
+        <div ng-show="!settings.ordersAutoCompletion" class="col s4">
             <div class="info-card">
                 <div class="body">
-                   <div class="row">
-                       <div class="icon col s3 orange white-text">
-                            <i class="material-icons">date_range</i>
-                       </div>
-                       <div class="icon-body col s9">
-                         <div class="col s9">
-                             <span>All Orders</span><br>
-                              <small>Total recorded</small>
-                         </div>
-                         <div class="col s3">
-                            <h3 class="right orange-text">{{orders.length | currency:"":0}}</h3>
-                         </div>
-                       </div>
-                   </div>
+                    <div class="row">
+                        <div class="icon col s3 blue white-text">
+                            <i class="material-icons">check_box</i>
+                        </div>
+                        <div class="icon-body col s9">
+                            <div class="blue-text label">
+                                <span>Completed <span class="bob blue">{{completedOrders.length | currency:"":0}}</span></span>
+                            </div>
+                            <div class="col s12" style="padding: 0;">
+                                <h4 class="right blue-text amount">{{Amounts.completed | currency:"FCFA ":0}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-show="!settings.ordersAutoCompletion" class="col s4">
+            <div class="info-card">
+                <div class="body">
+                    <div class="row">
+                        <div class="icon col s3 red white-text">
+                            <i class="material-icons">indeterminate_check_box</i>
+                        </div>
+                        <div class="icon-body col s9">
+                            <div class="red-text label">
+                                <span>Uncompleted <span class="bob red">{{unCompletedOrders.length | currency:"":0}}</span></span>
+                            </div>
+                            <div class="col s12" style="padding: 0;">
+                                <h4 class="amount right red-text">{{Amounts.unCompleted | currency:"FCFA ":0}}</h4>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Next section: Table-->
     <hr class="ruler">
-    <div class="row">
-        <div class="col s12">
-            <div class="white z-depth-2" style="margin:10px;padding: 25px;">
-                <input class="table-search browser-default" type="search" placeholder="Search..." onkeyup="searchTable(event,'#todayOrdersTable')">
-                <table class="huberts-tables">
-                    <thead>
-                       <th class="small">#</th>
+
+    <div class="row" ng-switch="view">
+        <div ng-show="!settings.ordersAutoCompletion" class="col s2" style="padding: 0;">
+            <ul style="border:none;border-bottom: 1px solid #dddddd;margin: 0;" class="collection with-header">
+                <li style="cursor: pointer;" class="collection-header red-text"><h6>{{view}}</h6></li>
+                <li ng-class="(view == 'All')?'active':''" ng-click="view = 'All'" style="cursor: pointer;" class="collection-item">All</li>
+                <li ng-class="(view == 'Uncompleted')?'active':''" ng-click="view = 'Uncompleted'" style="cursor: pointer;" class="collection-item">Uncompleted</li>
+                <li ng-class="(view == 'Completed')?'active':''" ng-click="view = 'Completed'" style="cursor: pointer;" class="collection-item">completed</li>
+            </ul>
+
+        </div>
+
+        <div ng-switch-when="All" ng-class="(!settings.ordersAutoCompletion)?'s10':'s12'" class="col position-relative" style="border-left: 1px solid #dddddd;margin: 0;padding-left: 0;">
+            <!--overlay-->
+            <div ng-show="todaysCompletedOrders.length === 0" class="overdiv">
+                <div class="center">
+                    <h5>No orders have been recorded.</h5>
+                </div>
+            </div>
+
+            <div class="header" style="height: 55px;border-bottom: 1px solid #dddddd;padding: 5px;">
+                <div class="col s9"></div>
+                <div class="col s3">
+                    <input style="height: 38px; padding:2px 5px;border:1px solid #ddd;width: 100%;border-radius: 6px;" type="text"
+                           class="browser-default" placeholder="Search.." onkeyup="searchTable(event,'#allTable')">
+                </div>
+            </div>
+            <div class="body">
+                <div class="huberts-table-div">
+                    <table class="striped centered" id="allTable">
+                        <thead>
+                        <th ng-if="!settings.ordersAutoCompletion" style="width:5%;">#</th>
                         <th>Inv num</th>
                         <th>Items</th>
                         <th>Cost</th>
                         <th>Time</th>
+                        <th>Waiter</th>
                         <th class="small">Status</th>
-                        <th class="small">Action</th>
-                    </thead>
-                </table>
-                <div id="dashboard_order_table" class="huberts-table-div">
-                    <table id="todayOrdersTable">
+                        <th class="small">Print</th>
+                        </thead>
                         <tbody>
-                            <tr ng-repeat="x in todaysCompletedOrders | orderBy : 'id' : true ">
-                               <td class="small">{{$index+1}}</td>
-                                <td>{{x.inv}}</td>
-                                <td>
-                                    <ul class="browser-default" style="list-style-type:circle;">
-                                        <li ng-repeat="o in x.items">{{o.name}} <i class="green-text badge">{{o.quantity}}</i></li>
-                                    </ul>
-                                </td>
-                                <td>{{x.totalPrice | currency:"FCFA ":0}}</td>
-                                <td>{{Time(x.date)}}</td>
-                                <td class="small" style="text-align:center;"><i class="material-icons green-text">check_circle</i></td>
-                                <td class="small">
-                                    <button class='btn teal waves-effect waves-light' data-target='dropdown1' ng-click="promptPrint(x)"><i class="material-icons">print</i></button>
-                                </td>
-                            </tr>
+                        <tr ng-repeat="x in todaysCompletedOrders | orderBy : 'id' : 'false' " class="lighten-5"
+                            ng-class="(x.completed && !settings.ordersAutoCompletion)?'green':'' || (!x.completed && !settings.ordersAutoCompletion)?'red':''">
+                            <td ng-if="!settings.ordersAutoCompletion" style="width:5%;">
+                                <label>
+                                    <input ng-change="onCompleteOrders(x)" type="checkbox" class="filled-in" ng-model="x.completed" />
+                                    <span></span>
+                                </label>
+                            </td>
+                            <td>{{x.inv}}</td>
+                            <td>
+                                <ul class="browser-default" style="list-style-type:circle;">
+                                    <li ng-repeat="o in x.items">{{o.name}} <i class="green-text badge">{{o.quantity}}</i></li>
+                                </ul>
+                            </td>
+                            <td class="green-text">{{x.totalPrice | currency:"FCFA ":0}}</td>
+                            <td>{{Time(x.date)}}</td>
+                            <td class="red-text"><strong>{{(x.waiter === undefined)?'(no staff)':x.waiter}}</strong></td>
+                            <td ng-if="x.completed || settings.ordersAutoCompletion" class="small" style="text-align:center;"><i class="material-icons green-text">check_circle</i></td>
+                            <td ng-if="!x.completed && !settings.ordersAutoCompletion" class="small" style="text-align:center;"><i class="material-icons red-text">indeterminate_check_box</i></td>
+                            <td class="small">
+                                <button class='btn teal waves-effect waves-light' data-target='dropdown1' ng-click="promptPrint(x)"><i class="material-icons">print</i></button>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
-                <table>
-                    <tfoot>
-                        <th>Total:</th>
-                        <th>Qty: {{todaysCompletedOrders.length | currency:"":0}}</th>
-                        <th>Price: {{todaysCompletedOrdersTotals | currency:"FCFA ":0}}</th>
-                    </tfoot>
-                </table>
             </div>
         </div>
+
+        <div ng-switch-when="Uncompleted" ng-class="(!settings.ordersAutoCompletion)?'s10':'s12'" class="col position-relative" style="border-left:1px solid #dddddd;margin: 0;padding-left: 0;">
+            <!--overlay-->
+            <div ng-show="unCompletedOrders.length === 0" class="overdiv">
+                <div class="center">
+                    <h5>No uncompleted orders.</h5>
+                </div>
+            </div>
+            <div class="header" style="height: 55px;border-bottom: 1px solid #dddddd;padding: 5px;">
+                <div class="col s9"></div>
+                <div class="col s3">
+                    <input style="height: 38px; padding:2px 5px;border:1px solid #ddd;width: 100%;border-radius: 6px;" type="text"
+                           class="browser-default" placeholder="Search.." onkeyup="searchTable(event,'#uncompletedTable')">
+                </div>
+            </div>
+            <div class="body">
+                <div class="huberts-table-div">
+                    <table class="centered" id="uncompletedTable">
+                        <thead>
+                        <th ng-if="!settings.ordersAutoCompletion" style="width:5%;">#</th>
+                        <th>Inv numc</th>
+                        <th>Items</th>
+                        <th>Cost</th>
+                        <th>Time</th>
+                        <th>Waiter</th>
+                        <th class="small">Status</th>
+                        <th class="small">Print</th>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="x in unCompletedOrders | orderBy : 'id' : 'false' " class="lighten-5" ng-class="(!settings.ordersAutoCompletion)?'red':''">
+                            <td ng-if="!settings.ordersAutoCompletion" style="width:5%;">
+                                <label>
+                                    <input ng-change="onCompleteOrders(x)" type="checkbox" class="filled-in" ng-model="x.completed" />
+                                    <span></span>
+                                </label>
+                            </td>
+                            <td>{{x.inv}}</td>
+                            <td>
+                                <ul class="browser-default" style="list-style-type:circle;">
+                                    <li ng-repeat="o in x.items">{{o.name}} <i class="green-text badge">{{o.quantity}}</i></li>
+                                </ul>
+                            </td>
+                            <td class="green-text">{{x.totalPrice | currency:"FCFA ":0}}</td>
+                            <td>{{Time(x.date)}}</td>
+                            <td class="red-text"><strong>{{(x.waiter === undefined)?'(no staff)':x.waiter}}</strong></td>
+                            <td ng-if="x.completed" class="small" style="text-align:center;"><i class="material-icons green-text">check_box</i></td>
+                            <td ng-if="!x.completed" class="small" style="text-align:center;"><i class="material-icons red-text">indeterminate_check_box</i></td>
+                            <td class="small">
+                                <button class='btn teal waves-effect waves-light' data-target='dropdown1' ng-click="promptPrint(x)"><i class="material-icons">print</i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div ng-switch-when="Completed" ng-class="(!settings.ordersAutoCompletion)?'s10':'s12'" class="col position-relative" style="border-left: 1px solid #dddddd;margin: 0;padding-left: 0;">
+            <!--overlay-->
+            <div ng-show="completedOrders.length === 0" class="overdiv">
+                <div class="center">
+                    <h5>No orders have been completed.</h5>
+                </div>
+            </div>
+
+            <div class="header" style="height: 55px;border-bottom: 1px solid #dddddd;padding: 5px;">
+                <div class="col s9"></div>
+                <div class="col s3">
+                    <input style="height: 38px; padding:2px 5px;border:1px solid #ddd;width: 100%;border-radius: 6px;" type="text"
+                           class="browser-default" placeholder="Search.." onkeyup="searchTable(event,'#completedTable')">
+                </div>
+            </div>
+            <div class="body">
+                <div class="huberts-table-div">
+                    <table class="centered" id="completedTable">
+                        <thead>
+                        <th ng-if="!settings.ordersAutoCompletion" style="width:5%;">#</th>
+                        <th>Inv numu</th>
+                        <th>Items</th>
+                        <th>Cost</th>
+                        <th>Time</th>
+                        <th>Waiter</th>
+                        <th class="small">Status</th>
+                        <th class="small">Print</th>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="x in completedOrders | orderBy : 'id' : 'false' " class="lighten-5" ng-class="(!settings.ordersAutoCompletion)?'green':''">
+                            <td ng-if="!settings.ordersAutoCompletion" style="width:5%;">
+                                <label>
+                                    <input ng-change="onCompleteOrders(x)" type="checkbox" class="filled-in" ng-model="x.completed" />
+                                    <span></span>
+                                </label>
+                            </td>
+                            <td>{{x.inv}}</td>
+                            <td>
+                                <ul class="browser-default" style="list-style-type:circle;">
+                                    <li ng-repeat="o in x.items">{{o.name}} <i class="green-text badge">{{o.quantity}}</i></li>
+                                </ul>
+                            </td>
+                            <td class="green-text">{{x.totalPrice | currency:"FCFA ":0}}</td>
+                            <td>{{Time(x.date)}}</td>
+                            <td class="red-text"><strong>{{(x.waiter === undefined)?'(no staff)':x.waiter}}</strong></td>
+                            <td ng-if="x.completed" class="small" style="text-align:center;"><i class="material-icons green-text">check_box</i></td>
+                            <td ng-if="!x.completed" class="small" style="text-align:center;"><i class="material-icons red-text">indeterminate_check_box</i></td>
+                            <td class="small">
+                                <button class='btn teal waves-effect waves-light' data-target='dropdown1' ng-click="promptPrint(x)"><i class="material-icons">print</i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </div>
+
 </div>

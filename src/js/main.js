@@ -242,11 +242,11 @@ class Alerts{
     constructor(){
         this.successMsg= jQuery('#success');
         this.errorMsg= jQuery('#error');
-        this.successMsg.children('.body').children('.close').click(()=>{
+        this.successMsg.click(()=>{
             this.successMsg.slideUp();
             clearTimeout(this.timeoutSuccess);
         })
-        this.errorMsg.children('.body').children('.close').click(()=>{
+        this.errorMsg.click(()=>{
             this.errorMsg.slideUp();
             clearTimeout(this.timeoutError)
         });
@@ -304,14 +304,16 @@ function searchTable(e,tb){
     tr = table.querySelectorAll('tbody tr');
     tr.forEach((element,index) => {
         td = element.querySelectorAll('td');
-        if(td[1].innerHTML.toLowerCase().startsWith(value)){
-            element.style.display = "";
-        }else if(td[2].innerText.toLowerCase().startsWith(value)){
-            element.style.display = "";
-        }else{
+        let not_found = true;
+        td.forEach(el => {
+            if(el.innerHTML.toLowerCase().indexOf(value) > -1){
+                not_found = false;
+                element.style.display = "";
+            }
+        });
+        if (not_found) {
             element.style.display = "none";
         }
-       
     });
     
 }
@@ -478,5 +480,6 @@ async function isStoragePersisted() {
             bar.css({width:val+"%"});
         }
       }
-  }
+  };
+
   Status.insertRight(`<i class="material-icons red-text">portable_wifi_off</i> Host server inactive.`);

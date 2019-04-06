@@ -204,7 +204,7 @@ function checkTimeRange() {
         return false;
     }
 }
-var checkTime = setInterval(checkTimeRange, 2500);
+//var checkTime = setInterval(checkTimeRange, 2500);
 //creating ajax functions,data must be an array
 var ajax = ({url,data,dataType,type})=>{
     return new Promise((resolve,reject)=>{

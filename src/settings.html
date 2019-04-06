@@ -1,44 +1,54 @@
-<div class="routePage" ng-controller="settingsCtr">
-    <div class="box">
+<div class="routePage" ng-controller="settingsCtr" style="padding: 1px;margin-top: 5px;">
+    <div class="box" style="box-shadow: unset;" ng-init="view = 'General'">
         <div class="header white-text bg-theme-pink">
-            Settings
+            Settings > {{view}}
         </div>
         <div class="body">
-            <div class="row" ng-init="view = 'general'">
-                <div class="col s3" >
+            <div class="row">
+                <div class="col s3"  style="border-right: 1px solid #ddd;" >
                     <ul class="collection" style="border-right: none;border-left: none;display: block;margin-top:9px;">
-                        <li ng-click="view = 'general'" class="collection-item avatar" style="min-height:70px;cursor: pointer;">
-                            <i class="material-icons circle">subtitles</i>
-                            <span class="title" style="font-size: 1.3rem;">General</span>
+
+                        <li ng-click="view = 'General'" class="collection-item avatar" style="min-height:70px;cursor: pointer;">
+                            <i class="material-icons circle" ng-class="(view === 'General')?'red':''">subtitles</i>
+                            <span class="title" style="font-size: 1.35rem;display: block;margin-top:5%;" ng-class="(view === 'General')?'red-text':''">General</span>
                         </li>
-                        <li ng-click="view = 'network'" class="collection-item avatar" style="min-height:70px;cursor: pointer;">
-                            <i class="material-icons circle">network_check</i>
-                            <span class="title" style="font-size: 1.3rem;">Network Sync</span>
+
+                        <li ng-click="view = 'Orders'" class="collection-item avatar" style="min-height:70px;cursor: pointer;">
+                            <i class="material-icons circle" ng-class="(view === 'Orders')?'red':''">shopping_cart</i>
+                            <span class="title" style="font-size: 1.35rem;display: block;margin-top:5%;" ng-class="(view === 'Orders')?'red-text':''">Orders</span>
                         </li>
-                        <li ng-click="view = 'about'" class="collection-item avatar" style="min-height:70px;cursor: pointer;">
-                            <i class="material-icons circle">info</i>
-                            <span class="title" style="font-size: 1.3rem;">About</span>
+
+                        <li ng-click="view = 'Printer'" class="collection-item avatar" style="min-height:70px;cursor: pointer;">
+                            <i class="material-icons circle" ng-class="(view === 'Printer')?'red':''">print</i>
+                            <span class="title" style="font-size: 1.35rem;display: block;margin-top:5%;" ng-class="(view === 'Printer')?'red-text':''">Printer</span>
                         </li>
+
+                        <li ng-click="view = 'Network'" class="collection-item avatar" style="min-height:70px;cursor: pointer;">
+                            <i class="material-icons circle" ng-class="(view === 'Network')?'red':''">network_check</i>
+                            <span class="title" style="font-size: 1.35rem;display: block;margin-top:5%;" ng-class="(view === 'Network')?'red-text':''">Network</span>
+                        </li>
+
+                        <li ng-click="view = 'About'" class="collection-item avatar" style="min-height:70px;cursor: pointer;">
+                            <i class="material-icons circle" ng-class="(view === 'About')?'red':''">info</i>
+                            <span class="title" style="font-size: 1.35rem;display: block;margin-top:5%;" ng-class="(view === 'About')?'red-text':''">About</span>
+                        </li>
+
                     </ul>
                 </div>
-                <div class="col s9" style="border-left: 1px solid #ddd;" ng-switch="view">
+                <div class="col s9" ng-switch="view">
 
-                    <div ng-switch-when="general" class="row">
+                    <div ng-switch-when="General" class="row">
                             <p class="title">General</p>
-                            <h6 class="settings_tittle">Orders time range:<small class="blue-grey-text"> (Default is from 8:00 to 21:30)</small></h6>
-                            <div class="col s6">
-                                <div class="input-field col s6">
-                                    <input id="orders_from" type="text" tabindex="-1" class="timepicker">
-                                    <label class="active" for="orders_from">From:</label>
-                                </div>
-                                <div class="input-field col s6">
-                                    <input id="orders_to" tabindex="-1" type="text" class="timepicker">
-                                    <label class="active" for="orders_to">To:</label>
+
+                            <div class="col s12">
+                                <div class="col s2"><p>Language</p></div>
+                                <div class="col s4">
+                                    <select style="border-color: #999999;" class="browser-default" name="language" id="lang" title="Language">
+                                        <option value="en">English</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div class="col s3">
-                                <button ng-click="updateSettings('reset-default')" class="btn blue-grey waves-effect waves-default">Reset to default</button>
-                            </div>
+
                             <div class="col s12">
                                 <h6 class="settings_tittle">
                                     Updates
@@ -76,51 +86,200 @@
                             </div>
                         </div>
 
-                    <div ng-switch-when="network" class="row">
+                    <div ng-switch-when="Orders" class="row">
+                        <p class="title">Activity</p>
+
+                        <div class="col s8">
+                            <h6 class="settings_tittle">
+                                Auto completion of orders
+                                <div class="switch right">
+                                    <label>
+                                        <input ng-change="updateSettings()" type="checkbox" ng-model="settings.ordersAutoCompletion" ng-disabled="!currentUser.is_mgr">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                                <br><small class="blue-grey-text">New orders would be marked as completed.</small>
+                            </h6>
+                        </div>
+
+                        <!--<div class="col s12">
+                            <h6 class="settings_tittle">Orders time range:<small class="blue-grey-text"> (Default is from 8:00 to 21:30)</small></h6>
+                            <div class="col s6">
+                                <div class="input-field col s6">
+                                    <input id="orders_from" type="text" tabindex="-1" name="time_picker" class="time_picker">
+                                    <label class="active" for="orders_from">From:</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input id="orders_to" tabindex="-1" name="time_picker" type="text" class="time_picker">
+                                    <label class="active" for="orders_to">To:</label>
+                                </div>
+                            </div>
+
+                            <div class="col s3">
+                                <button ng-click="updateSettings('reset-default')" class="btn blue-grey waves-effect waves-default">Reset to default</button>
+                            </div>
+                        </div>-->
+
+                        <div class="col s12">
+                            <p class="title" style="margin-top:1.5rem;">Printing</p>
+                        </div>
+
+                        <div class="col s8">
+                            <h6 class="settings_tittle">
+                                Enable printing
+                                <div class="switch right">
+                                    <label>
+                                        <input ng-change="updateSettings()" type="checkbox" ng-model="settings.printOrders" ng-disabled="!currentUser.is_mgr">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                                <br><small class="blue-grey-text"><strong>Print & save</strong> option would be enabled.</small>
+                            </h6>
+                        </div>
+
+                        <div class="col s12">
+                            <hr>
+                        </div>
+
+                        <div class="col s8">
+                            <h6 class="settings_tittle">
+                                Enable printing of order compartments
+                                <div class="switch right">
+                                    <label>
+                                        <input ng-change="updateSettings()" type="checkbox" ng-model="settings.printOrderCompartments" ng-disabled="!currentUser.is_mgr">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                                <br><small class="blue-grey-text">Printing order items to their different order categories as specified by user.</small>
+                            </h6>
+                        </div>
+
+                        <div class="col s12">
+                            <hr>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row" ng-switch-when="Printer">
+                        <p class="title">Printer</p>
+
+                        <div class="col s12" style="padding-left: 0;">
+                            <div class="col s4">
+                                <h6 class="settings_tittle">
+                                    Select default printer
+                                    <br><small class="blue-grey-text">Select from list of system printers</small>
+                                </h6>
+                            </div>
+                            <div class="col s4">
+                                <select ng-change="updateSettings()" ng-model="settings.defaultPrinter" style="border-color:#999999" name="def" id="def" class="browser-default">
+                                    <option value="" disabled>Select default printer</option>
+                                    <option ng-repeat="printer in systemPrinters track by $index" value="{{printer.name}}">{{printer.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col s12">
+                            <hr>
+                        </div>
+
+                        <div class="col s8">
+                            <h6 class="settings_tittle">
+                                Preview
+                                <div class="switch right">
+                                    <label>
+                                        <input ng-change="updateSettings()" type="checkbox" ng-model="settings.printPreview" ng-disabled="!currentUser.is_mgr">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                                <br><small class="blue-grey-text">Show a preview in new window instead of printing (useful for testing)</small>
+                            </h6>
+                        </div>
+
+                        <div class="col s12">
+                            <hr>
+                        </div>
+
+                        <div class="col s8">
+                            <h6 class="settings_tittle">
+                                <div class="col s4">
+                                    Time out per line
+                                </div>
+                                <div class="col s3">
+                                    <input style="height: 36px;" ng-change="updateSettings()" type="number" ng-model="settings.timeoutPerLine" ng-disabled="!currentUser.is_mgr">
+                                </div>
+                                <br><small class="blue-grey-text"></small>
+                            </h6>
+                        </div>
+                        <div class="col s12">
+                            <hr>
+                        </div>
+
+
+                    </div>
+
+                    <div ng-switch-when="Network" class="row">
                         <div class="col s12">
                             <h6 class="settings_tittle pink-text">
-                                Network Synchronization <br>
+                                Network  <br>
                             </h6><hr>
                             <div class="row">
-                                <div class="col s4">
-                                    Enter host address or url <br>
-                                    <small>This address represents location of principal database.</small>
-                                </div>
-                                <div class="input-field col s3">
-                                    <input type="text" placeholder="Host computer address or url">
-                                </div>
                                 <div class="col s12">
                                     <h6 class="settings_tittle">
                                         Host computer
                                         <div class="switch right">
                                             <label>
-                                                <input ng-change="updateSettings()" type="checkbox" ng-model="settings.auto_update">
+                                                <input ng-change="updateSettings()" type="checkbox" ng-model="settings.hostComputer" ng-disabled="!currentUser.is_mgr" />
                                                 <span class="lever"></span>
                                             </label>
                                         </div>
                                         <br><small class="blue-grey-text">Allow this computer to broadcast database records to peers.</small>
                                     </h6>
                                     <hr>
+                                </div>
+                                <div class="col s4"  ng-hide="settings.hostComputer">
+                                    Enter host address or url <br>
+                                    <small>This address represents location of principal database.</small>
+                                </div>
+                                <div class="col s4"  ng-show="settings.hostComputer">
+                                    Broadcast port <br>
+                                    <small>Channel used to broadcast records to peers.</small>
+                                </div>
+
+                                <div class="input-field col s3" ng-hide="settings.hostComputer">
+                                    <label for="url" class="active">Host URL</label>
+                                    <input id="url" type="text" ng-change="updateSettings()" placeholder="Host computer address or url" ng-model="settings.host_url">
+                                </div>
+                                <div class="input-field col s3" ng-hide="settings.hostComputer">
+                                    <label for="h_port" class="active">Host Port</label>
+                                    <input id="h_port" type="number" ng-change="updateSettings()" placeholder="Port" ng-model="settings.host_port">
+                                </div>
+                                <div class="input-field col s3" ng-show="settings.hostComputer">
+                                    <label for="port" class="active">Broadcast Port</label>
+                                    <input id="port" type="number" ng-change="updateSettings()" placeholder="Port" ng-model="settings.broadcast_port">
+                                </div>
+                                <div class="col s12" ng-show="settings.hostComputer">
+
                                     <h6 class="settings_tittle">
                                         Enable broadcast
                                         <div class="switch right">
                                             <label>
-                                                <input ng-change="updateSettings()" type="checkbox" ng-model="settings.back_up" />
+                                                <input ng-change="updateSettings()" type="checkbox" ng-model="settings.hostBroadcast" ng-disabled="!currentUser.is_mgr" />
                                                 <span class="lever"></span>
                                             </label>
                                         </div>
-                                        <br><small class="blue-grey-text">Automatically broadcast changes to peers.</small>
+                                        <br><small class="blue-grey-text">Allow records broadcast to peer computers.</small>
                                     </h6>
                                     <hr>
                                     <h6 class="settings_tittle">
-                                        Enable remote printing
+                                        Allow remote printing
                                         <div class="switch right">
                                             <label>
-                                                <input ng-change="updateSettings()" type="checkbox" ng-model="settings.performance_report" ng-disabled="!currentUser.is_mgr">
+                                                <input ng-change="updateSettings()" type="checkbox" ng-model="settings.remotePrinting" ng-disabled="!currentUser.is_mgr" />
                                                 <span class="lever"></span>
                                             </label>
                                         </div>
-                                        <br><small class="blue-grey-text">Enable remote printing.</small>
+                                        <br><small class="blue-grey-text">Allow print request from peer computers.</small>
                                     </h6>
                                     <hr>
                                 </div>
@@ -128,7 +287,7 @@
                         </div>
                     </div>
 
-                     <div ng-switch-when="about" class="row">
+                     <div ng-switch-when="About" class="row">
                          <p class="title">About Software</p>
                          <span>Snap Burger CMS powered by <strong>nudle</strong> </span>
                          <ul class="versions browser-default">

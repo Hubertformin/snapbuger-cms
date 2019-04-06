@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/materialicons/icone91f.css">
     <link rel="stylesheet" href="css/animate.min.css">
     <link rel="stylesheet" href="css/waitMe.min.css">
+    <link rel="stylesheet" href="css/picker.css">
     <link rel="stylesheet" href="sass/index.css">
     <script>
         var jQuery = require('jquery'),
@@ -115,7 +116,7 @@
               <!--  -->
               <ul id="nav-mobile" class="right hide-on-med-and-down">
                   
-                <li class="route_links"><a id="dashboardLink" class="sideNavLink" href="#!">Sales</a></li>
+                <li class="route_links"><a id="dashboardLink" class="sideNavLink" href="#!">Orders</a></li>
                 <li class="route_links"><a href="#!items" id="productsLink" class="sideNavLink">Items</a></li>
                 <li class="route_links"><a href="#!today" id="todaysLink" class="sideNavLink">Daily sales</a></li>
                 <li class="route_links"><a href="#!reports" class="sideNavLink" id="reportsLink">Reports</a></li>
@@ -127,11 +128,11 @@
                     </button>
                 </a></li>
                 <li><a href="#!settings" id="settingsLink" title="Settings"><i class="material-icons">settings</i></a></li>
-                <li ng-if="currentUser.is_mgr">
+                <li ng-hide="settings.hostComputer" ng-if="currentUser.is_mgr">
                     <a ng-if="!SETTINGS.connect_host" href="javascript:void(0)" ng-click="connectToHost(true)" title="connect to host"><i class="material-icons">cast</i></a>
                     <a ng-if="SETTINGS.connect_host" href="javascript:void(0)" ng-click="connectToHost(false)" title="disconnect from host"><i class="material-icons">cast_connected</i></a>
                 </li>
-                  <li ng-if="currentUser.is_mgr">
+                  <li ng-hide="settings.hostComputer" ng-if="currentUser.is_mgr">
                     <a ng-if="SETTINGS.connect_host" href="javascript:void(0)" ng-click="refreshDB()" title="refresh data"><i class="material-icons">refresh</i></a>
                   </li>
                 <li><a href="javascript:void(0)" ng-click="logOut()" title="Log out"><i class="material-icons">exit_to_app</i></a></li>
@@ -168,26 +169,26 @@
             </div>
         </footer>
         <!--  notifications-->
-        <div class="notify grey darken-4 waves-light" id="success">
+        <div class="notify close grey darken-4 waves-light" id="success">
             <div class="head">
                 <img src="img/notify-success.png" alt="success">
             </div>
             <div class="body">
                 <h6 class="title green-text"></h6>
                 <span class="msg"></span>
-                <hr class="border">
-                <button class="close right btn-flat"><i class="material-icons left">clear</i>close</button>
+                <!--<hr class="border">
+                <button class="close right btn-flat"><i class="material-icons left">clear</i>close</button>-->
             </div>
         </div>
-        <div class="notify grey darken-4 waves-light" id="error">
+        <div class="notify close grey darken-4 waves-light" id="error">
             <div class="head">
                 <img src="img/notify-failed.png" alt="failed">
             </div>
             <div class="body">
                 <h6 class="title red-text"></h6>
                 <span class="msg"></span>
-                <hr class="border">
-                <button class="close right btn-flat"><i class="material-icons left">clear</i>close</button>
+                <!--<hr class="border">
+                <button class="close right btn-flat"><i class="material-icons left">clear</i>close</button>-->
             </div>
         </div>
         <!--notification sounds -->
@@ -249,11 +250,12 @@
         document.getElementById('copyright_p').innerHTML = `&copy;${new Date().getFullYear()} A production of Silverslopescm. All rights reserved <p class="center-align"><small>Powered by Nudle</small></p>`;
 
     </script>
-    <script src="js/chart.js"></script>
+    <!--<script src="js/chart.js"></script>-->
     <script src="js/waitMe.min.js"></script>
     <script src="js/main.js"></script>
     <script src="js/sweetalert.js"></script>
     <script src="js/socket.io-min.js"></script>
+    <script src="js/picker.js"></script>
     <!--controllers-->
     <script src="js/controller.js"></script>
     <script src="js/dash-controller.js"></script>

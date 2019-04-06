@@ -1,58 +1,47 @@
 app.controller('settingsCtr',($scope)=>{
     //getting db
-    $scope.db.settings.get(1, (settings) => {
-        settings.host_url =  (settings.host_url === undefined)?"localhost":settings.host_url;
-        $scope.setting = settings;
-    })
+    $scope.db.settings.get(1).then((settings)=> {
+
+        $scope.settings = settings;
+
+        $scope.settings.host_url =  ($scope.settings.host_url === undefined)?"localhost":$scope.settings.host_url;
+        $scope.settings.host_port =  ($scope.settings.host_port === undefined)? 4000 :$scope.settings.host_port;
+        $scope.settings.hostComputer =  ($scope.settings.hostComputer === undefined)? false :$scope.settings.hostComputer;
+        $scope.settings.hostBroadcast =  ($scope.settings.hostBroadcast === undefined)? false :$scope.settings.hostBroadcast;
+        $scope.settings.remotePrinting =  ($scope.settings.remotePrinting === undefined)? false :$scope.settings.remotePrinting;
+        $scope.settings.broadcast_port =  ($scope.settings.broadcast_port === undefined)? 4000 :$scope.settings.broadcast_port;
+        $scope.settings.printOrders = $scope.settings.printOrders === undefined ? true : $scope.settings.printOrders;
+        $scope.settings.printPreview = $scope.settings.printPreview === undefined ? false : $scope.settings.printPreview;
+        $scope.settings.timeoutPerLine = $scope.settings.timeoutPerLine === undefined ? 400 : $scope.settings.timeoutPerLine;
+        $scope.settings.printOrderCompartments = $scope.settings.printOrderCompartments === undefined ? false : $scope.settings.printOrderCompartments;
+        $scope.settings.ordersAutoCompletion = $scope.settings.ordersAutoCompletion === undefined ? true : $scope.settings.ordersAutoCompletion;
+
+        $scope.$apply();
+        //jQuery('#orders_from').val($scope.settings.time_range.from);
+        //jQuery('#orders_to').val($scope.settings.time_range.to);
+    }).then(() => {
+        //getting system printers
+        ipcRenderer.on('list_printers', (event, arg) => {
+            $scope.systemPrinters = arg;
+            //checking settings
+            if(typeof $scope.settings.defaultPrinter === "undefined") {
+                $scope.settings.defaultPrinter = arg.filter(el => {
+                    return el.isDefault === true;
+                })[0].name;
+                //save
+                $scope.updateSettings();
+                $scope.$apply();
+            }
+
+        });
+        ipcRenderer.send('get_list_printers');
+    });
+
     //first thing, setting the sidenav link to active
     jQuery('.sideNavLink').removeClass('active');
     jQuery('#settingsLink').addClass('active');
-//the time picker ..
-    var elems = document.querySelectorAll('.timepicker');
-    var instances = M.Timepicker.init(elems,{
-        twelveHour:false
-    });
-    //and now lets get our specific time picker element
-    /*var instance_time_from = M.Timepicker.getInstance(jQuery('#orders_from')),
-    instance_time_to = M.Timepicker.getInstance(jQuery('#orders_to'));*/
-    //
-    jQuery('#orders_from').val($scope.settings.time_range.from);
-    jQuery('#orders_to').val($scope.settings.time_range.to);
-    //function to update settings
-    $scope.updateSettings = (con)=>{
-        if(typeof jQuery('#orders_from').val() !== 'string' || typeof jQuery('#orders_to').val() !== 'string'){
-            notifications.notify({title:"Error",type:"error",msg:"Please select time properly!"})
-            return false;
-        }
-        if(con == 'reset-default'){
-            $scope.settings.time_range.from = "8:00";
-            $scope.settings.time_range.to = "21:30";
-            jQuery('#orders_from').val("8:00");
-            jQuery('#orders_to').val("21:30");
-        }else{
-            $scope.settings.time_range.from = jQuery('#orders_from').val();
-            $scope.settings.time_range.to = jQuery('#orders_to').val();
-        }
-        //now lets make sure time ranges are valid
-        var from = $scope.settings.time_range.from.split(":");
-        var to = $scope.settings.time_range.to.split(":");
-        if(Number(from[0]) > Number(to[0]) || Number(from[0]) == Number(to[0]) && Number(from[1]) >= Number(to[1])){
-            notifications.notify({title:"Invalid Time",msg:"Starting time cannot be greater than or equal to stopping time",type:"error"});
-            jQuery('#orders_from').val("8:00");
-            jQuery('#orders_to').val("21:30");
-            return false;
-        }
+    //the time picker ..
 
-        //now updating to database
-        $scope.db.settings.put($scope.settings)
-        .then(()=>{
-            $scope.db.settings.get(1)
-            .then(res=>{
-                $scope.settings = res;
-                $scope.$apply();
-            })
-        })
-    }
     //on change of to and from inputs
     jQuery('#orders_from').change(()=>{
         $scope.settings.time_range.from = jQuery('#orders_from').val();
@@ -63,7 +52,19 @@ app.controller('settingsCtr',($scope)=>{
         $scope.updateSettings();
     })
 
-    //console log
-    console.log($scope.settings);
+    //function to update settings
+    $scope.updateSettings = ()=>{
+        //now updating to database
+        console.log($scope.settings);
+        $scope.db.settings.put($scope.settings)
+            .then(()=>{
+                $scope.db.settings.get(1)
+                    .then(res=>{
+                        $scope.settings = res;
+                        Status.insertRight(($scope.settings.hostComputer)?`<i class="material-icons blue-text">wifi_tethering</i> Host server running.`:`<i class="material-icons blue-text">nature</i> Peer computer.`);;
+                        $scope.$apply();
+                    })
+            })
+    };
 
 });

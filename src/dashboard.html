@@ -188,7 +188,7 @@
                         <option ng-repeat="user in users track by $index" value="{{user.name}}">{{user.name}}</option>
                     </select>
                 </div>
-                <div class="input-field">
+                <div class="input-field" ng-show="settings.printOrderCompartments">
                     <p>
                         <label>
                             <input type="checkbox" class="filled-in" ng-model="ORDER_COMPARTMENTS" />
@@ -200,7 +200,7 @@
             <div class="footer">
                 <button ng-click="showSaveOrder(false)" class="btn red" style="position:absolute;left:40px;">Cancel</button>
                 <button ng-click="createOrder(false)" class="btn orange" ng-disabled="order_waiter == ''" style="margin-right:.25rem;">Save</button>
-                <button ng-click="createOrder(true)" class="btn green" ng-disabled="order_waiter == ''">Save & Print</button>
+                <button ng-show="settings.printOrders" ng-click="createOrder(true)" class="btn green" ng-disabled="order_waiter == ''">Save & Print</button>
             </div>
         </div>
     </div>

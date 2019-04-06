@@ -27,7 +27,7 @@ const {app, BrowserWindow, ipcMain, Tray, Menu, Notification} = require('electro
       webPreferences: {
         nodeIntegrationInWorker: true
       }
-    })
+    });
     // and load the index.html of the app.
     win.loadFile('src/index.html');
 
@@ -35,13 +35,17 @@ const {app, BrowserWindow, ipcMain, Tray, Menu, Notification} = require('electro
     //win.webContents.openDevTools()
     //maximise windows when openned
     //win.maximize()
+    //printers
+    ipcMain.on('get_list_printers', (event) => {
+      event.sender.send('list_printers', win.webContents.getPrinters());
+    });
     
     
     //when the widow is ready to display
     win.once('ready-to-show', () => {
-      win.show()
+      win.show();
       win.maximize();
-    })
+    });
 
     // Emitted when the window is closed.
     win.on('closed', () => {
@@ -64,7 +68,7 @@ const {app, BrowserWindow, ipcMain, Tray, Menu, Notification} = require('electro
     if (process.platform !== 'darwin') {
       app.quit()
     }
-  })
+  });
 
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
@@ -72,7 +76,7 @@ const {app, BrowserWindow, ipcMain, Tray, Menu, Notification} = require('electro
     if (win === null) {
       createWindow()
     }
-  })
+  });
 
   // In this file you can include the rest of your app's specific main process
   // code. You can also put them in separate files and require them here.
@@ -92,4 +96,4 @@ ipcMain.on('asynchronous-message', (event, msg) => {
         
         break;
     }
-  })
+  });

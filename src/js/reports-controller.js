@@ -19,8 +19,11 @@ app.controller('reportsCtr',($scope, $filter)=>{
     //principal object and vars
     $scope.REPORTS =  {
         categorical:[],
-        totalOrders:0,
-        totalPrice:0,
+        filter:{
+            all:{number:0, amount:0},
+            completed:{number:0, amount:0},
+            unCompleted:{number:0, amount:0}
+        },
         orders:[],
         date_range:"today",
         users_activity:[]
@@ -31,39 +34,6 @@ app.controller('reportsCtr',($scope, $filter)=>{
     //in page functions
     $scope.toDate = (dt) => {
         return `${dt.toDateString()} at ${dt.getHours()}:${dt.getMinutes()}`
-    };
-    //search
-    $scope.searchOrders = (e)=>{
-        let val = jQuery(e.target).val().toLowerCase();
-        let tr = jQuery('#orders_table_body tr');
-        tr.each((i,el)=>{
-            el.style.display = "none";
-            let name = el.getElementsByTagName('td')[0].innerHTML.toLowerCase(),
-                staff = el.getElementsByTagName('td')[4].innerHTML.toLowerCase(),
-                items = el.getElementsByTagName('td')[1].innerText.toLowerCase(),
-                price = el.getElementsByTagName('td')[2].innerHTML.toLowerCase(),
-                qty = el.getElementsByTagName('td')[3].innerHTML.toLowerCase(),
-                time = el.getElementsByTagName('td')[5].innerHTML.toLowerCase(),
-                inv = el.getElementsByTagName('td')[6].innerHTML.toLowerCase();
-            if(name.indexOf(val)>-1){
-                el.style.display = "table-row";
-            }else if(staff.indexOf(val)>-1){
-                el.style.display = "table-row";
-            }else if(items.indexOf(val)>-1){
-                el.style.display = "table-row";
-            }
-            else if(price.indexOf(val)>-1){
-                el.style.display = "table-row";
-            }else if(qty.indexOf(val)>-1){
-                el.style.display = "table-row";
-            }else if(time.indexOf(val)>-1){
-                el.style.display = "table-row";
-            }else if(inv.indexOf(val)>-1){
-                el.style.display = "table-row";
-            } else {
-                console.log("not found!")
-            }
-        })
     };
 
     /**
@@ -80,15 +50,19 @@ app.controller('reportsCtr',($scope, $filter)=>{
             //global data
             const report_data = {
                 categorical:[],
-                totalOrders:0,
-                totalAmount:0,
-                totalQuantity:0,
+                filter:{
+                    all:{number:0, amount:0},
+                    completed:{number:0, amount:0},
+                    unCompleted:{number:0, amount:0}
+                },
                 orders:[],
                 date_range:"",
+                startDate:new Date().setHours(0,0),
+                endDate:new Date().setHours(23,59),
                 users_activity: $scope.users.map((el) => {
                     return {name: el.name,quantity:0, amount:0, orders:0}
                 })
-            }
+            };
 
             $scope.db.transaction('rw',$scope.db.categories, $scope.db.items,$scope.db.orders,()=>{
                 //checking if they're orders in the selected date range
@@ -97,9 +71,12 @@ app.controller('reportsCtr',($scope, $filter)=>{
                         jQuery("#no_records").fadeIn("fast");
                         return;
                     }
-                    $scope.REPORTS.totalOrders = count;
+                    report_data.totalOrders = count;
                     jQuery("#no_records").fadeOut("fast");
                     //if not empty
+                    report_data.startDate = startDate;
+                    report_data.endDate = endDate;
+
                     jQuery('#orders_table_body').html('');
                     //setting the date range label
                     if (startDate.toDateString() !== endDate.toDateString())
@@ -129,11 +106,18 @@ app.controller('reportsCtr',($scope, $filter)=>{
 
                         //iterating through orders
                         $scope.db.orders.where("date").between(startDate, endDate,true,true).each(order => {
-
                             //1.1 count total orders and get total Amount
-                            report_data.totalOrders += 1;
-                            report_data.totalAmount += Number(order.totalPrice);
-                            report_data.totalQuantity += Number(order.totalQuantity);
+                            report_data.filter.all.number += 1;
+                            report_data.filter.all.amount += Number(order.totalPrice);
+                            //filters
+                            if (order.completed) {
+                                report_data.filter.completed.number += 1;
+                                report_data.filter.completed.amount += Number(order.totalPrice);
+                            } else {
+                                report_data.filter.unCompleted.number += 1;
+                                report_data.filter.unCompleted.amount += Number(order.totalPrice);
+                            }
+                            //report_data.totalQuantity += Number(order.totalQuantity);
 
                             report_data.categorical.map((el) => {
                                 order.items.forEach(item => {
@@ -169,21 +153,7 @@ app.controller('reportsCtr',($scope, $filter)=>{
                             });
 
                             //other orders iterable methods...
-                            //report_data.orders.push(order);
-                            //generating static template
-                            let template = `
-                            <tr onclick="showCurrentOrder(event, ${order.id})">
-                                <td>${order.date.toDateString()} <br /> <small>At ${order.date.getHours()}:${order.date.getMinutes()}</small></td>
-                                <td style="font-weight: 700;" class="green-text">${$filter('currency')(order.totalPrice,"FCFA ",0)}</td>
-                                <td style="width:5%">${order.totalQuantity}</td>
-                                <td style="font-weight: 600;" class="red-text">${(order.waiter !== undefined)?order.waiter:"(no user)"}</td>
-                                <td>${order.staff}</td>
-                        `;
-                            template += `<td>${order.inv}</td>${($scope.currentUser.is_mgr)?`<td style="width:4%"><i onclick="deleteOrder(event,${order.id})" class="deleteOrderIcon material-icons">delete</i></td>`:''}</ul></td></tr>`;
-                            jQuery('#orders_table_body').prepend(jQuery(template));
-                            //destroy template var
-                            template = null;
-
+                            report_data.orders.push(order);
 
                         }).then(() => {
                             //console.log(report_data);
@@ -200,6 +170,7 @@ app.controller('reportsCtr',($scope, $filter)=>{
         .then((data) => {
             $scope.REPORTS = data;
             $scope.$apply();
+            //console.log($scope.REPORTS)
         });
 
     //change custom dates
@@ -275,14 +246,17 @@ app.controller('reportsCtr',($scope, $filter)=>{
     };
 
     //delete order
-    $scope.deleteOrder = (e,index) => {
+    $scope.deleteOrder = (id) => {
         if(confirm("Are you sure you want to delete?")) {
-            $scope.db.orders.delete(Number(index))
+            $scope.db.orders.delete(Number(id))
                 .then(() => {
-                    jQuery(e.target).parents("tr").remove();
+                    generateReport($scope.REPORTS.startDate, $scope.REPORTS.endDate).then((data) => {
+                        $scope.REPORTS = data;
+                        $scope.$apply();
+                    })
                 }).catch((err)=>{
                 console.error(err);
-                notifications.notify({msg:`Unable to delete sale`,title:"Unknown error",type:"error"});
+                notifications.notify({msg:`Unable to delete order`,title:"Unknown error",type:"error"});
             })
         }
     };
@@ -303,8 +277,9 @@ app.controller('reportsCtr',($scope, $filter)=>{
     $scope.currentOrder = {};
     $scope.showCurrentOrderPane = false;
 
+    //show specific orders
     $scope.showCurrentOrder = (e,id) => {
-        if (jQuery(e.target).is('i.deleteOrderIcon')) return;
+        if (jQuery(e.target).is('i.deleteOrderIcon') || jQuery(e.target).is('input') || jQuery(e.target).is('span.checkbox')) return;
         //getting order
         $scope.db.orders.get(id, (order) => {
             if (typeof order === undefined) {
@@ -316,6 +291,37 @@ app.controller('reportsCtr',($scope, $filter)=>{
             $scope.currentOrder.date = order.date.toDateString();
             $scope.$apply();
         })
+    };
+
+    //complete orders
+    $scope.onCompleteOrders = (obj) => {
+        if (obj.completed) {
+            obj.completed = true;
+            $scope.db.orders.put(obj).then(()=>{
+                generateReport($scope.REPORTS.startDate, $scope.REPORTS.endDate).then((data) => {
+                    $scope.REPORTS = data;
+                    $scope.$apply();
+                })
+            });
+        } else {
+            if (confirm("Are you sure you want to uncheck? this can cause computation errors.")) {
+                if (!$scope.currentUser.is_mgr) {
+                    obj.completed = true;
+                    notifications.notify({type:"error",title:"Operation failed!", msg:"You're not authorized to perform this operation"});
+                    return;
+                }
+                //unchecking orders
+                obj.completed = false;
+                $scope.db.orders.put(obj).then(()=>{
+                    generateReport($scope.REPORTS.startDate, $scope.REPORTS.endDate).then((data) => {
+                        $scope.REPORTS = data;
+                        $scope.$apply();
+                    })
+                });
+            } else {
+                obj.completed = true;
+            }
+        }
     }
 
 });

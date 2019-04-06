@@ -8,6 +8,7 @@ const print = remote.require('electron-thermal-printer');
 
 
 
+
 //angular module
 var app = angular.module('mainApp', ["ngRoute"]);
 app.config(($routeProvider) => {
@@ -109,7 +110,7 @@ app.controller("mainCtr", ($scope, $filter) => {
         items: [],
         orderCategories:[]
     };
-    $scope.settings = [];
+    $scope.settings = {};
     $scope.withdrawals = [];
     $scope.todaysCompletedOrders = [];
     //
@@ -160,8 +161,25 @@ app.controller("mainCtr", ($scope, $filter) => {
     //fucntion to fetch all items , used in transactions
     $scope.transactionableFetch = () => {
         $scope.db.settings.get(1)
-            .then((res) => {
-                $scope.settings = res;
+            .then((settings) => {
+                $scope.settings = settings;
+                console.log(settings);
+
+                $scope.settings.host_url =  ($scope.settings.host_url === undefined)?"localhost":$scope.settings.host_url;
+                $scope.settings.host_port =  ($scope.settings.host_port === undefined)? 4000 :$scope.settings.host_port;
+                $scope.settings.hostComputer =  ($scope.settings.hostComputer === undefined)? false :$scope.settings.hostComputer;
+                $scope.settings.hostBroadcast =  ($scope.settings.hostBroadcast === undefined)? false :$scope.settings.hostBroadcast;
+                $scope.settings.remotePrinting =  ($scope.settings.remotePrinting === undefined)? false :$scope.settings.remotePrinting;
+                $scope.settings.broadcast_port =  ($scope.settings.broadcast_port === undefined)? 4000 :$scope.settings.broadcast_port;
+                $scope.settings.printOrders = $scope.settings.printOrders === undefined ? true : $scope.settings.printOrders;
+                $scope.settings.printPreview = $scope.settings.printPreview === undefined ? false : $scope.settings.printPreview;
+                $scope.settings.timeoutPerLine = $scope.settings.timeoutPerLine === undefined ? 400 : $scope.settings.timeoutPerLine;
+                $scope.settings.printOrderCompartments = $scope.settings.printOrderCompartments === undefined ? false : $scope.settings.printOrderCompartm
+                $scope.settings.ordersAutoCompletion = $scope.settings.ordersAutoCompletion === undefined ? true : $scope.settings.ordersAutoCompletion;
+
+                $scope.db.settings.put($scope.settings);
+                //right status
+                Status.insertRight(($scope.settings.hostComputer)?`<i class="material-icons blue-text">wifi_tethering</i> Host server running.`:`<i class="material-icons blue-text">nature</i> Peer computer.`);
             });
         $scope.db.users.toArray()
             .then((data) => {
@@ -198,7 +216,7 @@ app.controller("mainCtr", ($scope, $filter) => {
         $scope.db.withdrawals.count()
             .then((count) => {
                 $scope.WITHDRAWALS_COUNT = count;
-            })
+            });
         //fetched data and now apply
         $scope.$apply();
     }
@@ -213,9 +231,9 @@ app.controller("mainCtr", ($scope, $filter) => {
                 visibility: "visible"
             })
             //jQuery('#loader').remove();
-            if ($scope.users.length == 0 && $scope.ITEMS_COUNT == 0 &&
-                $scope.ORDERS_COUNT == 0 && $scope.CATEGORIES_COUNT == 0 &&
-                $scope.WITHDRAWALS_COUNT == 0) {
+            if ($scope.users.length === 0 && $scope.ITEMS_COUNT === 0 &&
+                $scope.ORDERS_COUNT === 0 && $scope.CATEGORIES_COUNT === 0 &&
+                $scope.WITHDRAWALS_COUNT === 0) {
                 worker.postMessage('check-for-backup');
                 jQuery('section#dataDbCheck').show();
                 worker.onmessage = (e) => {
@@ -274,9 +292,98 @@ app.controller("mainCtr", ($scope, $filter) => {
                 jQuery('#login').show();
             }
         })
+        .then(() => {
+            /**
+             * @function socket create sockets on serve
+             */
+            const express = require('express');
+            const socket = require('socket.io');
+            //set up server
+            const module = express();
+            const server = module.listen(Number($scope.settings.broadcast_port), () => {
+                console.log(`listening to request on port ${$scope.settings.broadcast_port}...`);
+            });
+            $scope.io = socket(server);
+
+            let connected_peers = 0;
+            $scope.io.on("connection", (socket) => {
+                socket.emit('connected', {
+                    status: true
+                });
+                console.log("made server connection", socket.id);
+                Status.insertRight(`<i class="material-icons blue-text">wifi_tethering</i> ${connected_peers +1} peer(s) connected`);
+                //sending before sending in intervals
+                //1.0 sending overall records
+                worker.postMessage("get-reports");
+                //to get daily reports
+                //2.0 sending records of day
+                /*setInterval(() => {
+                    worker.postMessage("get-daily-reports");
+                }, 60000);*/
+                //listening to workers
+                worker.onmessage = (e)=>{
+                    try{
+                        //console.log(e);
+                        const response = JSON.parse(e.data);
+                        if(response.type === 'daily-reports') {
+                            console.log("Recieved daily records");
+                            console.log("Broadcasting daily records...");
+                            socket.emit("database", JSON.stringify(response.reports));
+                        }
+                        //for overall reports
+                        if(response.type === "overall-reports") {
+                            console.log("Recieved overall records");
+                            console.log("Broadcasting overall records...");
+                            socket.emit("records", JSON.stringify(response.reports));
+                        }
+                    }catch(e) {
+                        //console.error(e);
+                        return;
+                    }
+                };
+                //listening from client
+                socket.on('get-records', ()=>{
+                    if ($scope.settings.hostBroadcast) {
+                        worker.postMessage("get-reports");
+                    } else {
+                        socket.on('rejected', "Host computed denied request.<br> Make sure <strong>Enable broadcast</strong> is enabled in host <strong>Host > Network</strong>.")
+                    }
+                });
+
+                socket.on('process_orders', (data)=>{
+                    if ($scope.settings.remotePrinting != true) {
+                        socket.emit('process_orders_result', JSON.stringify({type:false,msg:`Host computer rejected print request.<br> Make sure <strong>"Allow remote printing"</strong> is enabled in host computer <strong>Settings > Network</strong>`}));
+                        return;
+                    }
+                    const order = JSON.parse(data);
+
+                    order.data.date = new Date(order.data.date);
+                    console.log(order);
+                    $scope.db.orders.add(order.data)
+                        .then(()=>{
+                            if(order.print) {
+                                $scope.printOrders(order.data);
+                                socket.emit('process_orders_result', JSON.stringify({type:false,msg:`Oder added to print que`}));
+                            } else {
+                                //console.log(order.data);
+                                socket.emit('process_orders_result', JSON.stringify({type:false,msg:`Oder saved.`}));
+                            }
+                        }).catch((err)=>{
+                        console.error(err);
+                        socket.emit('process_orders_result', JSON.stringify({type:false,msg:`Host computer to process request.`}));
+                        notifications.notify({
+                            type: "error",
+                            title: `Error! code: -48`,
+                            msg: `Failed to save order from peer computer`
+                        }, 4000, true)
+                    });
+                });
+
+            });
+        })
         .catch(err => {
             console.log(err)
-        })
+        });
     //=========== MANAGERIAL ACCOUNT! ========
     $scope.createManagerFxn = (login) => {
         //img = document.querySelector('#managerialImgInput').files[0];
@@ -517,7 +624,7 @@ app.controller("mainCtr", ($scope, $filter) => {
     }) => {
         switch (type) {
             case 'url':
-                shell.openExternal(msg)
+                shell.openExternal(msg);
                 break;
         }
     }
@@ -560,6 +667,16 @@ app.controller("mainCtr", ($scope, $filter) => {
         ====================== PRINTER FUCTION ======================
     */
     $scope.printOrders = (data, extra = false) => {
+        if (typeof $scope.settings.defaultPrinter !== "string") {
+            notifications.notify({
+                title: "Printer error",
+                msg: "Printer not configured, go to settings > printer and select default printer",
+                type: "error"
+            });
+
+            return;
+        }
+
         const date = `${data.date.getDate()}/${data.date.getMonth()+1}/${data.date.getFullYear()} ,${data.date.getHours()}:${data.date.getMinutes()}`;
         let print_data = [
             {
@@ -636,9 +753,9 @@ app.controller("mainCtr", ($scope, $filter) => {
         //printing....
         print.print58m({
             data: print_data,
-            preview:false,
-            deviceName: 'XP-80C',
-            timeoutPerLine: 400
+            preview: $scope.settings.printPreview,
+            deviceName: $scope.settings.defaultPrinter,
+            timeoutPerLine: $scope.settings.timeoutPerLine
         }).then((data) => {
             if (data) {
                 notifications.notify({
@@ -648,7 +765,7 @@ app.controller("mainCtr", ($scope, $filter) => {
             } else {
                 notifications.notify({
                     title: "Print error",
-                    msg: "Error printing",
+                    msg: "Error printing. <br> -Check printer configuration in settings <br> -Make sure printer is connected.",
                     type: "error"
                 });
             }
@@ -708,7 +825,7 @@ app.controller("mainCtr", ($scope, $filter) => {
             }
         }
     }
-    //fucntion to print withwrals
+    //function to print withdrawals
     $scope.printWithdrawals = (data) => {
         const date = `${data.date.getDate()}/${data.date.getMonth()+1}/${data.date.getFullYear()} ,${data.date.getHours()}:${data.date.getMinutes()}`;
         var print_data = [
@@ -770,9 +887,9 @@ app.controller("mainCtr", ($scope, $filter) => {
         //printing....
         print.print58m({
             data: print_data,
-            preview: false,
-            deviceName: 'XP-80C',
-            timeoutPerLine: 400
+            preview: $scope.settings.printPreview,
+            deviceName: $scope.settings.defaultPrinter,
+            timeoutPerLine: $scope.settings.timeoutPerLine
         }).then((data) => {
             if (data) {
                 notifications.notify({
@@ -870,110 +987,30 @@ app.controller("mainCtr", ($scope, $filter) => {
         }
     });
 
-    /**
-     * @function socket create sockets on serve
-     */
-    const express = require('express');
-    const socket = require('socket.io');
-    //set up server
-    const module = express();
-    const server = module.listen(4000, () => {
-        console.log("listening to request on port 4000..");
-    })
-    $scope.io = socket(server);
-
-    Status.insertRight(`<i class="material-icons blue-text">wifi_tethering</i> Host server running.`);
-
-
-    var connected_peers = 0;
-    $scope.io.on("connection", (socket) => {
-        socket.emit('connected', {
-            status: true
-        });
-        console.log("made server connection", socket.id);
-        Status.insertRight(`<i class="material-icons blue-text">wifi_tethering</i> ${connected_peers +1} peer(s) connected`);
-        //sending before sending in intervals
-        //1.0 sending overall records
-        worker.postMessage("get-reports");
-        //to get daily reports
-        //2.0 sending records of day
-        /*setInterval(() => {
-            worker.postMessage("get-daily-reports");
-        }, 60000);*/
-        //listening to workers
-        worker.onmessage = (e)=>{
-            try{
-                //console.log(e);
-                const response = JSON.parse(e.data);
-                if(response.type === 'daily-reports') {
-                    console.log("Recieved daily records");
-                    console.log("Broadcasting daily records...");
-                    socket.emit("database", JSON.stringify(response.reports));
-                }
-                //for overall reports
-                if(response.type === "overall-reports") {
-                    console.log("Recieved overall records");
-                    console.log("Broadcasting overall records...");
-                    socket.emit("records", JSON.stringify(response.reports));
-                }
-            }catch(e) {
-                //console.error(e);
-                return;
-            }
-        };
-        //listening from client
-        socket.on('get-records', ()=>{
-            worker.postMessage("get-reports");
-        });
-
-        socket.on('process_orders', (data)=>{
-            const order = JSON.parse(data);
-
-            order.data.date = new Date(order.data.date);
-            console.log(order);
-            $scope.db.orders.add(order.data)
-                .then(()=>{
-                    if(order.print) {
-                        $scope.printOrders(order.data);
-                    } else {
-                        console.log(order.data);
-                    }
-                }).catch((err)=>{
-                    console.error(err);
-                notifications.notify({
-                    type: "error",
-                    title: `Failed to save order`,
-                    msg: `Failed to save order from peer computer`
-                }, 4000, true)
-            });
-        });
-
-    });
-
 
 
     $scope.setPushDate = ()=>{
         $scope.PUSH_DATE_INTERVAL = jQuery('#push_select').val();
         localStorage.setItem("PUSH_DATE",$scope.PUSH_DATE_INTERVAL);
-    }
+    };
     /*
      ========================    hooks ================
     */
     //items
     //TODO uncomment the back up file from worker in controller js
-    //worker.postMessage('update-db-file');
+    worker.postMessage('update-db-file');
     Status.insertLeft(`<i class="material-icons grey-text">info</i> Configurations loaded`);
 
     $scope.client_socket = null;
 
     $scope.connectToHost = (connect) => {
         if (connect) {
-            $scope.client_socket = io.connect('http://192.168.100.54:4000');
+            $scope.client_socket = io.connect(`http://${$scope.settings.host_url}:${$scope.settings.host_port}`);
             $scope.client_socket.on('connected', ()=>{
                 //$scope.SETTINGS.connect_host = true;
                 console.log("connected.");
                 //starting progress bar
-                Status.progress(2);
+                Status.progress(1.5);
                 Status.insertLeft("Connecting to host...");
             });
             //
@@ -1023,6 +1060,31 @@ app.controller("mainCtr", ($scope, $filter) => {
                     console.error(err);
                 })
             });
+            //on printer results
+            $scope.client_socket.on('process_orders_result', (data) => {
+                const response = JSON.parse(data);
+                if (data.type) {
+                    notifications.notify({
+                        type:"success",
+                        title:"Host computer",
+                        msg:data.msg
+                    });
+                } else {
+                    notifications.notify({
+                        type:"error",
+                        title:"Host computer",
+                        msg:data.msg
+                    });
+                }
+            });
+            //rejected messages
+            $scope.client_socket.on('rejected', (msg)=>{
+                notifications.notify({
+                    type:"error",
+                    title:"Host computer",
+                    msg:msg
+                });
+            });
             //disconnect
             $scope.client_socket.on('disconnect',()=>{
                 $scope.SETTINGS.connect_host = false;
@@ -1042,6 +1104,8 @@ app.controller("mainCtr", ($scope, $filter) => {
         $scope.client_socket.emit("get-records",true);
     }
 
+    //update settings
 
 
-}) //end main controller, nothing should come after here!
+
+}); //end main controller, nothing should come after here!

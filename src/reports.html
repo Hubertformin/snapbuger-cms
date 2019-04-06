@@ -72,7 +72,7 @@
                         <div class="col s3 h-full">
                             <div class="card m-0 red white-text">
                                 <div class="card-content" style="padding: 11px 25px;">
-                                    <span>Quantity sold</span>
+                                    <span>Items sold</span>
                                     <span style="font-weight:400" class="card-title">{{currentCategoryReport.quantity | currency:"":0}}</span>
                                 </div>
                             </div>
@@ -111,30 +111,50 @@
 
 
                 <div class="row" style="height: 22%;padding-top: 15px;">
-                    <div class="col s4 h-full"><h3 class="red-text">Sales History</h3></div>
-                    <div class="col s4 h-full">
-                        <div class="card m-0 red white-text">
-                            <div class="card-content" style="padding: 11px 25px;">
-                                <span>Sales</span>
-                                <span style="font-weight:400" class="card-title">{{REPORTS.totalAmount | currency:"FCFA ":0}}</span>
+                    <div class="col s12">
+
+                        <div class="col s4 h-full">
+                            <div class="card m-0 green white-text">
+                                <div class="card-content" style="padding: 11px 20px;">
+                                    <span>All orders ({{REPORTS.filter.all.number | currency:"":0}})</span>
+                                    <span style="font-weight:400" class="card-title">{{REPORTS.filter.all.amount | currency:"FCFA ":0}}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col s4 h-full">
-                        <div class="card m-0 orange white-text">
-                            <div class="card-content" style="padding: 11px 25px;">
-                                <span>Quantity sold</span>
-                                <span style="font-weight:400" class="card-title">{{REPORTS.totalQuantity | currency:"":0}}</span>
+
+                        <div class="col s4 h-full">
+                            <div class="card m-0 red white-text">
+                                <div class="card-content" style="padding: 11px 20px;">
+                                    <span>Uncompleted orders <span class="bob">({{REPORTS.filter.unCompleted.number | currency:"":0}})</span></span>
+                                    <span style="font-weight:400" class="card-title">{{REPORTS.filter.unCompleted.amount | currency:"FCFA ":0}}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col s4 h-full">
+                            <div class="card m-0 blue white-text">
+                                <div class="card-content" style="padding: 11px 20px;">
+                                    <span>Completed orders ({{REPORTS.filter.completed.number | currency:"":0}})</span>
+                                    <span style="font-weight:400" class="card-title">{{REPORTS.filter.completed.amount | currency:"FCFA ":0}}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row" style="height: 78%;position: relative;">
+                <div class="row" style="height: 78%;position: relative;" ng-init="filter = 'all'">
                     <!--preview order-->
                     <div ng-show="showCurrentOrderPane" id="previewOrder" class="overlay" style="display:block;border-top: 1px solid #ddd;">
                         <div class="row" style="height: 15%;">
                             <div class="col s12" style="height: 45%;"> <button ng-click="showCurrentOrderPane = !showCurrentOrderPane" class="red-text btn-flat"><i class="material-icons left">arrow_back</i>Back</button></div>
-                            <div class="col s12 center-align" style="height:55%;"><img src="img/logo.png" style="height:100%;width: auto;" alt=""></div>
+                            <div class="col s3 center-align" style="height:55%;">
+                                <!--<button ng-if="currentOrder.completed" class="btn red">Mark as uncompleted</button>-->
+                                <!--<button ng-if="!currentOrder.completed" class="btn green">Mark as completed</button>-->
+                            </div>
+                            <div class="col s6 center-align" style="height:55%;"><img src="img/logo.png" style="height:100%;width: auto;" alt=""></div>
+                            <div class="col s3 center-align" style="height:55%;">
+                                <button ng-if="!currentOrder.completed" class="btn-flat red-text"><i class="material-icons left">indeterminate_check_box</i> uncompleted</button>
+                                <button ng-if="currentOrder.completed" class="btn-flat green-text"><i class="material-icons left">check_circle</i> completed</button>
+                            </div>
                         </div>
                         <div class="row" style="height:15%">
                             <div class="col s2">
@@ -185,11 +205,26 @@
 
 
                     <div class="right-align" style="height: 12%;padding: 10px;">
-                        <input ng-keyup="searchOrders($event)" style="padding:5px 10px;" title="search orders" type="search" id="" class="browser-default" placeholder="Search orders..">
+                        <div class="row">
+                            <div class="col s6">
+                                <span>Filter: </span>
+                            </div>
+                            <div class="col s3">
+                                <select title="Fileter" style="width: 100%;height: 2.5rem;border-color: #999999;" class="browser-default" ng-model="filter">
+                                    <option value="all">All</option>
+                                    <option value="true">Completed</option>
+                                    <option value="false">Uncompleted</option>
+                                </select>
+                            </div>
+                            <div class="col s3">
+                                <input onkeyup="searchTable(event,'#orders_table')" style="padding:5px 10px;width:100%;" title="search orders" type="search" id="" class="browser-default" placeholder="Search orders..">
+                            </div>
+                        </div>
                     </div>
                     <div class="table-div" style="height: 88%;">
                         <table id="orders_table" class="highlight centered">
                             <thead>
+                                <th style="width:4%;">#</th>
                                 <th>Date/Time</th>
                                 <th>Amount</th>
                                 <th style="width:5%">Qty</th>
@@ -198,20 +233,23 @@
                                 <th>Inv</th>
                                 <th ng-if="currentUser.is_mgr" style="width:4%"></th>
                             </thead>
-                            <tbody id="orders_table_body">
-                                <!--<tr ng-repeat="order in REPORTS.orders track by $index">-->
-                                    <!--<td>{{toDate(order.date)}}</td>-->
-                                    <!--<td>{{order.totalPrice}}</td>-->
-                                    <!--<td>{{order.totalQuantity}}</td>-->
-                                    <!--<td>{{(order.waiter === undefined)?'(undefined)':order.waiter}}</td>-->
-                                    <!--<td>{{order.staff}}</td>-->
-                                    <!--<td>-->
-                                        <!--<ul style="list-style-type: circle;">-->
-                                            <!--<li ng-repeat="item in order.items track by $index">{{item.name}} ({{item.quantity}})</li>-->
-                                        <!--</ul>-->
-                                    <!--</td>-->
-                                    <!--<td>{{order.inv}}</td>-->
-                                <!--</tr>-->
+                            <tbody>
+                                <tr ng-repeat="order in REPORTS.orders | orderBy:'id':'false'" class="lighten-5" ng-click="showCurrentOrder($event, order.id)"
+                                    ng-class="(order.completed)?'green':'red'" ng-if="filter == 'all' || filter == order.completed.toString()">
+                                    <td style="width:4%;">
+                                        <label>
+                                            <input ng-change="onCompleteOrders(order)" type="checkbox" class="filled-in" ng-model="order.completed" />
+                                            <span class="checkbox"></span>
+                                        </label>
+                                    </td>
+                                    <td>{{toDate(order.date)}}</td>
+                                    <td class="green-text">{{order.totalPrice | currency:"FCFA ":0}}</td>
+                                    <td>{{order.totalQuantity | currency:"":0}}</td>
+                                    <td class="red-text">{{(order.waiter === undefined)?'(undefined)':order.waiter}}</td>
+                                    <td>{{order.staff}}</td>
+                                    <td>{{order.inv}}</td>
+                                    <td ng-show="currentUser.is_mgr" style="width:4%"><i ng-click="deleteOrder(order.id)" class="deleteOrderIcon material-icons">delete</i></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

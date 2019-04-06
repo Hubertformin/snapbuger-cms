@@ -2,12 +2,33 @@ app.controller("dashCtr", ($scope,$filter) => {
     //first thing, setting the sidenav link to active
     jQuery('.sideNavLink').removeClass('active');
     jQuery('#dashboardLink').addClass('active');
-    
+    //
+    //getting settings
+    $scope.db.settings.get(1).then((settings)=> {
+
+        $scope.settings = settings;
+
+        $scope.settings.host_url =  ($scope.settings.host_url === undefined)?"localhost":$scope.settings.host_url;
+        $scope.settings.host_port =  ($scope.settings.host_port === undefined)? 4000 :$scope.settings.host_port;
+        $scope.settings.hostComputer =  ($scope.settings.hostComputer === undefined)? false :$scope.settings.hostComputer;
+        $scope.settings.hostBroadcast =  ($scope.settings.hostBroadcast === undefined)? false :$scope.settings.hostBroadcast;
+        $scope.settings.remotePrinting =  ($scope.settings.remotePrinting === undefined)? false :$scope.settings.remotePrinting;
+        $scope.settings.broadcast_port =  ($scope.settings.broadcast_port === undefined)? 4000 :$scope.settings.broadcast_port;
+        $scope.settings.printOrders = $scope.settings.printOrders === undefined ? true : $scope.settings.printOrders;
+        $scope.settings.printPreview = $scope.settings.printPreview === undefined ? false : $scope.settings.printPreview;
+        $scope.settings.timeoutPerLine = $scope.settings.timeoutPerLine === undefined ? 400 : $scope.settings.timeoutPerLine;
+        $scope.settings.printOrderCompartments = $scope.settings.printOrderCompartments === undefined ? false : $scope.settings.printOrderCompartments;
+        $scope.settings.ordersAutoCompletion = $scope.settings.ordersAutoCompletion === undefined ? true : $scope.settings.ordersAutoCompletion;
+
+        $scope.$apply();
+        //jQuery('#orders_from').val($scope.settings.time_range.from);
+        //jQuery('#orders_to').val($scope.settings.time_range.to);
+    })
     //====================== FETCH AND COMPUTE =======================
     const today = new Date().toDateString();
 
     $scope.order_waiter = "";
-    $scope.ORDER_COMPARTMENTS = true;
+    $scope.ORDER_COMPARTMENTS = ($scope.settings.printOrderCompartments);
 
     $scope.fetchAndComputeOrders = () => {
         //fetched users and now fetching categories
@@ -57,48 +78,7 @@ app.controller("dashCtr", ($scope,$filter) => {
         }
         e.preventDefault();
     });*/
-    //add order numbers buttons
-    $scope.addOrderNumber = (e,i)=>{
-        if(jQuery(e.target).is('i')){
-            var val = Number(jQuery(e.target).parent().siblings('input').val());
-            if(val == 1 && i < 0) return false;
-            //console.log(val +i)
-            //console.log(num) 
-            jQuery(e.target).parent().siblings('input').val(val+i);
-        }else{
-            var val = Number(jQuery(e.target).siblings('input').val())
-            if(val == 1 && i < 0) return false;
-                jQuery(e.target).siblings('input').val(val + i);
-        }
-    }
-    //=========== add items to selected Items array but first let's define remove item array
-    /*$scope.removeItem = (e,name)=>{
-        if(name == 'deleteAll'){
-            var viewSelectedModal = M.Modal.getInstance(jQuery('#viewSelectedORders'));
-            $scope.currentOrder.items = [];
-            $scope.currentOrder.totalPrice = 0;
-            $scope.currentOrder.totalQuantity = 0;
-            //activate all buttons
-            $scope.products.items.forEach(el=>{
-                el.added = false;
-            })
-            viewSelectedModal.close();
-            jQuery('input.qty').val(1);
-            return true;
-        }
-        for(var i=0;i<$scope.currentOrder.items.length;i++){
-            if($scope.currentOrder.items[i].name === name){
-                $scope.currentOrder.items.splice(i,1);
-                break;
-            }
-        }
-        if(e != null){
-            jQuery(e.target).siblings('div.inputDiv').children('input.qty').val(1);
-        }
-        //jQuery('input.qty').val(1);
-        //$scope.currentOrder.items = array
-        console.log()
-    }*/
+
     $scope.addItem = (e,i) =>{
         var btn = jQuery(e.target), selectedItem = $scope.products.items[i];
         selectedItem.quantity = btn.siblings('.inputDiv').children('input.qty').val();
@@ -281,6 +261,7 @@ app.controller("dashCtr", ($scope,$filter) => {
         $scope.currentOrder.staff = staff.name;
         $scope.currentOrder.waiter = $scope.order_waiter;
         const current = $scope.currentOrder;
+        current.completed = $scope.settings.ordersAutoCompletion;
         //and now pushing to main --
         $scope.db.orders.add(current)
         .then(()=>{
@@ -311,7 +292,7 @@ app.controller("dashCtr", ($scope,$filter) => {
                         swal("Order saved","added to printer queue","success");
                         $scope.printOrders(data, $scope.ORDER_COMPARTMENTS);
                         //$scope.printOrders(data);
-                        $scope.ORDER_COMPARTMENTS = true;
+                        $scope.ORDER_COMPARTMENTS = ($scope.settings.printOrderCompartments);
                         //deleting current id because next order would still have that id
                         //and dexie would return an exception.
                         delete current.id;
