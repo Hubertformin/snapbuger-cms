@@ -11,3 +11,6 @@ clone repository and run
 ```bash
 npm install
 ```
+
+# License
+Apache License 2.0
