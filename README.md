@@ -6,7 +6,7 @@ Records orders
 print invoices
 generates reports on order activity
 
-#installation
+# Installation
 clone repository and run
 ```bash
 npm install
