@@ -2,9 +2,9 @@
 A simple restaurant management desktop app.
 
 ## Features
-Records orders
-print invoices
-generates reports on order activity
+Records orders,
+print invoices,
+generates reports on order activities
 
 # Installation
 clone repository and run
