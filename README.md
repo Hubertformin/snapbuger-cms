@@ -1,2 +1,2 @@
-# Nudle
-Food store app
+# SNAPBURGER-CMS
+Private application
