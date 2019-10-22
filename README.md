@@ -1,10 +1,10 @@
-# Nudle
-A simple restaurant management desktop app.
+# Snap burger-cms
+A simple restaurant management desktop app. powered by nudle
 
 ## Features
 Records orders,
 print invoices,
-generates reports on order activities
+generates reports on sale activities
 
 # Installation
 clone repository and run
