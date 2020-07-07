@@ -17,7 +17,7 @@
     "cryptr": "^4.0.2",
     "dexie": "^2.0.4",
     "dexie-observable": "^1.0.0-beta.5",
-    "electron": "^2.0.9",
+    "electron": "^7.2.4",
     "electron-thermal-printer": "0.0.5",
     "express": "^4.16.4",
     "file-saverjs": "^1.3.6",
