@@ -1,4 +1,4 @@
-# Snpr-cms
+# Snp-cms
 A content management application.
 
 ## Features
