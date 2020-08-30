@@ -1,5 +1,5 @@
-# Snap burger-cms
-A simple restaurant management desktop app. powered by nudle
+# Snpr-cms
+A content management application.
 
 ## Features
 Records orders,
